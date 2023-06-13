@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8773a613c012a324ebad6dfc48daa98e, type: 3}
+  m_Name: DefaultPlayerSettings
+  m_EditorClassIdentifier: 
+  playerSpeedWalking: 0.05
+  playerSpeedRunning: 0.1
+  lookSpeed: 10
+  health: 100
+  baseXPToLevelUp: 100
+  xpIncreasePerLevel: 50
+  healthBarPrefab: {fileID: 2593937649716986227, guid: 135ffb6527a5e164ebb94f4f551f410e, type: 3}

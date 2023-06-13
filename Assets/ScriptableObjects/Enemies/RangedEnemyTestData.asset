@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b56a63eb18fc9a44a8be0364a30aa95b, type: 3}
+  m_Name: RangedEnemyTestData
+  m_EditorClassIdentifier: 
+  health: 100
+  healthBarPrefab: {fileID: 2593937649716986227, guid: 135ffb6527a5e164ebb94f4f551f410e, type: 3}
+  attackDamage: 10
+  enemySpeed: 10
+  lookSpeed: 10
+  minDistToObject: 10
+  defaultMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  deathMat: {fileID: 2100000, guid: 90926d853aba7fc4787e8f1b54f7fba2, type: 2}
+  dropLoot: 1
+  lootTable: {fileID: 11400000, guid: 647fc6efdd2f038438c584c8e6396f8a, type: 2}
+  maxNumberOfDrops: 3
+  dropRadius: 1
+  memoryTime: 2
+  projectilePrefab: {fileID: 60430134869750427, guid: 9a2ad71586f5d5048b94229531fb09a4, type: 3}
+  fireRate: 0.5
+  projectileSpeed: 10
+  projectileLifetime: 3
+  tagToIgnore:
+  - Item

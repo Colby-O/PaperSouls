@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e83535c71425054bbbfef2387a9a8ab, type: 3}
+  m_Name: Coin
+  m_EditorClassIdentifier: 
+  id: -1
+  displayName: Coin
+  description: This is a test item!
+  itemPrefab: {fileID: 230301453563810707, guid: 4b0c3e090cb1d5f478cfd107b788995c, type: 3}
+  icon: {fileID: 1579162496, guid: 93556d56d272a294080280e79cafe293, type: 3}
+  pickupType: 0
+  rarity: 0
+  maxStackSize: 32
+  slotType: 1

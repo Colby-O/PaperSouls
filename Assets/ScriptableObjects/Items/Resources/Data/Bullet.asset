@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e83535c71425054bbbfef2387a9a8ab, type: 3}
+  m_Name: Bullet
+  m_EditorClassIdentifier: 
+  id: -1
+  displayName: Ammo
+  description: 
+  itemPrefab: {fileID: 60430134869750427, guid: 195f439e6e01c2844b3e337425f9cae2, type: 3}
+  icon: {fileID: 21300000, guid: c8c586a251356c04abf06c15fdb55a66, type: 3}
+  pickupType: 1
+  rarity: 0
+  maxStackSize: 1
+  slotType: 0
