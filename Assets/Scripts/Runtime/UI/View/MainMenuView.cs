@@ -1,43 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using PaperSouls.Core;
 
-public class MainMenuView : View
+namespace PaperSouls.Runtime.UI.View
 {
-    public Button playButton;
-    public Button settingsButton;
-    public Button quitButton;
-
-    public void StartGame()
+    public class MainMenuView : View
     {
-        GameManger.UpdateGameState(GameState.Playing);
-        SceneManager.LoadScene("TestScene");
-    }
+        [SerializeField] private Button _playButton;
+        [SerializeField] private Button _settingsButton;
+        [SerializeField] private Button _quitButton;
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
+        /// <summary>
+        /// Starts the game
+        /// </summary>
+        private void StartGame()
+        {
+            GameManger.UpdateGameState(GameState.Playing);
+            SceneManager.LoadScene("TestScene");
+        }
 
-    public void OpenSettings()
-    {
-        ViewManger.Show<SettingsView>();
-    }
+        /// <summary>
+        /// Quits the game
+        /// </summary>
+        private void QuitGame()
+        {
+            Application.Quit();
+        }
 
-    public override void Init()
-    {
-        playButton.onClick.AddListener(StartGame);
-        settingsButton.onClick.AddListener(OpenSettings);
-        quitButton.onClick.AddListener(QuitGame);
-    }
+        /// <summary>
+        /// Open the Settings Menu
+        /// </summary>
+        private void OpenSettings()
+        {
+            ViewManger.Show<SettingsView>();
+        }
 
-    public override void Show()
-    {
-        base.Show();
-        GameManger.UpdateGameState(GameState.InMainMenu);
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
+        public override void Init()
+        {
+            _playButton.onClick.AddListener(StartGame);
+            _settingsButton.onClick.AddListener(OpenSettings);
+            _quitButton.onClick.AddListener(QuitGame);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+            GameManger.UpdateGameState(GameState.InMainMenu);
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
     }
 }

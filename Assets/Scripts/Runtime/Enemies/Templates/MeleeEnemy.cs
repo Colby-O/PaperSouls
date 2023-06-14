@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MeleeEnemy : Enemy
+namespace PaperSouls.Runtime.Enemy
 {
-    protected MeleeEnemyData meleeEnemyData;
-
-    protected override void Awake()
+    public abstract class MeleeEnemy : Enemy
     {
-        base.Awake();
-        meleeEnemyData = (MeleeEnemyData)base.enemyData;
-        timeSinceLastAttack = meleeEnemyData.timeBetweenAttacks;
+        protected MeleeEnemyData _meleeEnemyData;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _meleeEnemyData = (MeleeEnemyData)base.Data;
+            _timeSinceLastAttack = _meleeEnemyData.timeBetweenAttacks;
+        }
     }
 }

@@ -2,83 +2,119 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.Items;
 
-[System.Serializable]
-public class InventorySlot
+namespace PaperSouls.Runtime.Inventory
 {
-    public Item itemData;
-    public int stackSize;
-    public SlotType slotType = SlotType.Any;
 
-    public InventorySlot()
+    [System.Serializable]
+    public class InventorySlot
     {
-        ClearSlot();
-    }
+        public Item ItemData;
+        public int StackSize;
+        public SlotType InventorySlotType = SlotType.Any;
 
-    public InventorySlot(Item itemData, int stackSize)
-    {
-        this.itemData = itemData;
-        this.stackSize = stackSize;
-    }
-
-    public void ClearSlot()
-    {
-        this.itemData = null;
-        this.stackSize = -1;
-    }
-
-    public void AssignItem(InventorySlot slot)
-    {
-        if (itemData == slot.itemData) AddToStack(slot.stackSize);
-        else
+        /// <summary>
+        /// Create an empty slot
+        /// </summary>
+        public InventorySlot()
         {
-            itemData = slot.itemData;
-            stackSize = 0; 
-            AddToStack(slot.stackSize);
-        }
-    }
-
-    public void UpdateInventorySlot(Item item, int amount)
-    {
-        itemData = item;
-        stackSize = amount;
-    }
-
-    public bool CheckRoomLeftInStack(int amount)
-    {
-        return (stackSize + amount <= itemData.maxStackSize);
-    }
-
-    public bool CheckRoomLeftInStack(int amount, out int amountLeft)
-    {
-        amountLeft = itemData.maxStackSize - stackSize;
-
-        return CheckRoomLeftInStack(amount);
-    }
-
-    public void AddToStack(int amount)
-    {
-        if (CheckRoomLeftInStack(amount)) stackSize += amount;
-    }
-    public void RemoveFromStack(int amount)
-    {
-        stackSize -= amount;
-    }
-
-    public bool SplitStack(out InventorySlot slot)
-    {
-        if (stackSize <= 1)
-        {
-            slot = null;
-            return false;
+            ClearSlot();
         }
 
-        int halfStack = Mathf.RoundToInt(stackSize / 2);
+        /// <summary>
+        /// Create a slot with ItemData and StackSize
+        /// </summary>
+        public InventorySlot(Item itemData, int stackSize)
+        {
+            this.ItemData = itemData;
+            this.StackSize = stackSize;
+        }
 
-        stackSize -= halfStack;
+        /// <summary>
+        /// Clears the slot
+        /// </summary>
+        public void ClearSlot()
+        {
+            this.ItemData = null;
+            this.StackSize = -1;
+        }
 
-        slot = new InventorySlot(itemData, halfStack);
+        /// <summary>
+        /// Assigns a another inventory slots values to this slot
+        /// </summary>
+        public void AssignItem(InventorySlot slot)
+        {
+            if (ItemData == slot.ItemData) AddToStack(slot.StackSize);
+            else
+            {
+                ItemData = slot.ItemData;
+                StackSize = 0;
+                AddToStack(slot.StackSize);
+            }
+        }
 
-        return true;
+        /// <summary>
+        /// Updates the slots data
+        /// </summary>
+        public void UpdateInventorySlot(Item item, int amount)
+        {
+            ItemData = item;
+            StackSize = amount;
+        }
+
+        /// <summary>
+        /// Checks if there is room left in the slot
+        /// </summary>
+        public bool CheckRoomLeftInStack(int amount)
+        {
+            return (StackSize + amount <= ItemData.maxStackSize);
+        }
+
+        /// <summary>
+        /// Checks if there is room left in the slot and returns the amount left
+        /// </summary>
+        public bool CheckRoomLeftInStack(int amount, out int amountLeft)
+        {
+            amountLeft = ItemData.maxStackSize - StackSize;
+
+            return CheckRoomLeftInStack(amount);
+        }
+
+        /// <summary>
+        /// Add an amount to a existing item stack
+        /// </summary>
+        public void AddToStack(int amount)
+        {
+            if (CheckRoomLeftInStack(amount)) StackSize += amount;
+        }
+
+        /// <summary>
+        /// Removes an amount to a existing item stack
+        /// </summary>
+        public void RemoveFromStack(int amount)
+        {
+            StackSize -= amount;
+        }
+
+        /// <summary>
+        /// Splits a stack in half and assigns the other half to an inputed slot
+        /// </summary>
+        public bool SplitStack(out InventorySlot slot)
+        {
+            if (StackSize <= 1)
+            {
+                slot = null;
+                return false;
+            }
+
+            int halfStack = Mathf.RoundToInt(StackSize / 2);
+
+            StackSize -= halfStack;
+
+            slot = new InventorySlot(ItemData, halfStack);
+
+            return true;
+        }
     }
 }

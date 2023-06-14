@@ -1,8 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IDamageable
+namespace PaperSouls.Runtime.Interfaces
 {
-    public void Damage(float dmg);
+    public interface IDamageable
+    {
+        /// <summary>
+        /// Damges an object
+        /// </summary>
+        public void Damage(float dmg);
+    }
 }

@@ -1,21 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Core;
+using PaperSouls.Runtime.Player;
 
-[CreateAssetMenu(menuName = "Items/Effects/ExpPotionEffect")]
-public class ExpPotionEffect : UseableItemEffect
+namespace PaperSouls.Runtime.Items
 {
-    public float expIncrease = 30;
-
-    public override bool ExcuteEffect(UseableItem item, PlayerManger player)
+    [CreateAssetMenu(menuName = "Items/Effects/ExpPotionEffect")]
+    public class ExpPotionEffect : UseableItemEffect
     {
-        if (player != null)
-        {
-            AudioManger.Instance.PlaySFX("Health Potion Use");
-            player.AddXP(expIncrease);
-            return true;
-        }
+        [SerializeField] private float _expIncrease = 30;
 
-        return false;
+        /// <summary>
+        /// Applies a Exp boost effect to the player
+        /// </summary>
+        public override bool ExcuteEffect(UseableItem item, PlayerManger player)
+        {
+            if (player != null)
+            {
+                AudioManger.Instance.PlaySFX("Health Potion Use");
+                player.AddXP(_expIncrease);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

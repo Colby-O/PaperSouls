@@ -1,47 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using PaperSouls.Runtime.Interfaces;
+using PaperSouls.Runtime.Helpers;
+using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.Player;
 
-public class ChestInventory : InventoryHolder, IInteractable
+namespace PaperSouls.Runtime.Inventory
 {
-    public UnityAction<IInteractable> OnInteractionComplete { get; set; }
-
-    public bool spawnLoot = true;
-    public LootTable lootTable = null;
-    [Range(0f, 1f)] public float lootSpawnProbability = 0.3f;
-
-    public void Interact(Interactor interactor, out bool successful)
+    public class ChestInventory : InventoryHolder, IInteractable
     {
-        OnDynamicInventoryDisplayRequest?.Invoke(inventoryManger);
+        public UnityAction<IInteractable> OnInteractionComplete { get; set; }
 
-        successful = true;
-    }
-    public void EndInteraction()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+        public bool spawnLoot = true;
+        public LootTable lootTable = null;
+        [Range(0f, 1f)] public float lootSpawnProbability = 0.3f;
 
-    protected void SpawnLoot()
-    {
-        int inventorySize = inventoryManger.numOfInventorySlots;
-
-        for (int i = 0; i < inventorySize; i++)
+        /// <summary>
+        /// Spawns Loot within the inventory
+        /// </summary>
+        protected void SpawnLoot()
         {
-            if (lootSpawnProbability >= Random.value)
+            int inventorySize = InventoryManger.NumOfInventorySlots;
+
+            for (int i = 0; i < inventorySize; i++)
             {
-                Item item = lootTable.GetItem();
-                inventoryManger.AddToInventory(item, RandomGenerator.GetRandomSkewed(1, item.maxStackSize), i);
+                if (lootSpawnProbability >= Random.value)
+                {
+                    Item item = lootTable.GetItem();
+                    InventoryManger.AddToInventory(item, RandomGenerator.GetRandomSkewed(1, item.maxStackSize), i);
+                }
             }
         }
-    }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        ResizeInventory(inventorySize);
+        public void Interact(Interactor interactor, out bool successful)
+        {
+            OnDynamicInventoryDisplayRequest?.Invoke(InventoryManger);
 
-        if (spawnLoot && lootTable != null) SpawnLoot();
+            successful = true;
+        }
+        public void EndInteraction()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            ResizeInventory(_inventorySize);
+
+            if (spawnLoot && lootTable != null) SpawnLoot();
+        }
     }
 }

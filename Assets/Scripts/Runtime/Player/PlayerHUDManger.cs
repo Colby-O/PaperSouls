@@ -3,119 +3,163 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using PaperSouls.Runtime.UI;
+using PaperSouls.Runtime.Inventory;
 
-public class PlayerHUDManger : MonoBehaviour
+namespace PaperSouls.Runtime.Player
 {
-    public UISliderController healthBar;
-    public UISliderController xpBar;
-    public TextMeshProUGUI levelGUI;
-    public TextMeshProUGUI ammoCountGUI;
-    public int ammoCount;
-    public int level;
 
-    public InventoryHolder equipmentInventory;
-    public Sprite defaultSprite;
-    public Image rangedWeappon;
-    public Image meleeWeappon;
-    public SpriteRenderer meleeWeapponHolster;
-
-    public void UpdateAmmoCount(int amount)
+    public class PlayerHUDManger : MonoBehaviour
     {
-        ammoCount += amount;
-        ammoCountGUI.text = ammoCount.ToString();
-    }
+        [SerializeField] private UISliderController _healthBar;
+        [SerializeField] private UISliderController _xpBar;
+        [SerializeField] private TextMeshProUGUI _levelGUI;
+        [SerializeField] private TextMeshProUGUI _ammoCountGUI;
+        public InventoryHolder EquipmentInventory;
+        public UnityEngine.Sprite DefaultSprite;
+        public Image RangedWeappon;
+        public Image MeleeWeappon;
+        public SpriteRenderer MeleeWeapponHolster;
 
-    public void IncrementAmmoCount()
-    {
-        UpdateAmmoCount(1);
-    }
+        private int _ammoCount;
+        private int _level;
 
-    public void DecrementAmmoCount()
-    {
-        UpdateAmmoCount(-1);
-    }
-
-    public int GetAmmoCount()
-    {
-        return ammoCount;
-    }
-
-    public void SetMaxPlayerHealth(float maxHealth)
-    {
-        healthBar.SetMaxValue(maxHealth);
-    }
-
-    public void IncreasePlayerHealthToMax()
-    {
-        healthBar.IncreaseToMax();
-    }
-
-    public void UpdatePlayerHealth(float health)
-    {
-        healthBar.SetValue(health);
-    }
-
-    public void UpdatePlayerXP(float xp)
-    {
-        xpBar.SetValue(xp);
-    }
-
-    public void SetMaxPlayerXP(float maxXP)
-    {
-        xpBar.SetMaxValue(maxXP);
-    }
-
-    public int GetCurrentLevel()
-    {
-        return level;
-    }
-
-    public void LevelUp()
-    {
-        level++;
-        levelGUI.text = level.ToString();
-    }
-
-    public void UpdateMeleeWeaponSlot()
-    {
-        if (equipmentInventory.inventoryManger.inventorySlots[5].itemData != null)
+        /// <summary>
+        /// Updates UI ammo count
+        /// </summary>
+        public void UpdateAmmoCount(int amount)
         {
-            Sprite meleeWeaponSprite = equipmentInventory.inventoryManger.inventorySlots[5].itemData.icon;
-            meleeWeappon.sprite = meleeWeaponSprite;
-            if (meleeWeapponHolster != null) meleeWeapponHolster.sprite = meleeWeappon.sprite;
+            _ammoCount += amount;
+            _ammoCountGUI.text = _ammoCount.ToString();
         }
-        else
-        {
-            meleeWeappon.sprite = defaultSprite;
-            if (meleeWeapponHolster != null) meleeWeapponHolster.sprite = meleeWeappon.sprite;
-        }
-    }
 
-    public void UpdateRangeWeaponSlot()
-    {
-        if (equipmentInventory.inventoryManger.inventorySlots[4].itemData != null)
+        /// <summary>
+        /// Increases the ammo count by 1
+        /// </summary>
+        public void IncrementAmmoCount()
         {
-            Sprite rangedWeaponSprite = equipmentInventory.inventoryManger.inventorySlots[4].itemData.icon;
-            rangedWeappon.sprite = rangedWeaponSprite;
+            UpdateAmmoCount(1);
         }
-        else
+
+        /// <summary>
+        /// Decreases the ammo count by 1
+        /// </summary>
+        public void DecrementAmmoCount()
         {
-            rangedWeappon.sprite = defaultSprite;
+            UpdateAmmoCount(-1);
         }
-    }
+        /// <summary>
+        /// Gets the current ammo count
+        /// </summary>
+        public int GetAmmoCount()
+        {
+            return _ammoCount;
+        }
 
-    private void Start()
-    {
-        int.TryParse(ammoCountGUI.text, out ammoCount);
-        int.TryParse(levelGUI.text, out level);
-        UpdateRangeWeaponSlot();
-        UpdateMeleeWeaponSlot();
-    }
+        /// <summary>
+        /// Sets the player max health in the UI
+        /// </summary>
+        public void SetMaxPlayerHealth(float maxHealth)
+        {
+            _healthBar.SetMaxValue(maxHealth);
+        }
 
-    private void Update()
-    {
-        // TODO: Make Below OnChange Events
-        UpdateRangeWeaponSlot();
-        UpdateMeleeWeaponSlot();
+        /// <summary>
+        /// Increasees the players max health to max value
+        /// </summary>
+        public void IncreasePlayerHealthToMax()
+        {
+            _healthBar.IncreaseToMax();
+        }
+
+        /// <summary>
+        /// Updates the players health in the UI
+        /// </summary>
+        public void UpdatePlayerHealth(float health)
+        {
+            _healthBar.SetValue(health);
+        }
+
+        /// <summary>
+        /// Updates the players exp in the UI
+        /// </summary>
+        public void UpdatePlayerXP(float xp)
+        {
+            _xpBar.SetValue(xp);
+        }
+
+        /// <summary>
+        /// Sets the player max exp in the UI
+        /// </summary>
+        public void SetMaxPlayerXP(float maxXP)
+        {
+            _xpBar.SetMaxValue(maxXP);
+        }
+
+        /// <summary>
+        /// Gets the players current level
+        /// </summary>
+        public int GetCurrentLevel()
+        {
+            return _level;
+        }
+
+        /// <summary>
+        /// Increases the players level in the UI
+        /// </summary>
+        public void LevelUp()
+        {
+            _level++;
+            _levelGUI.text = _level.ToString();
+        }
+
+        /// <summary>
+        /// Update Melee weapon slot
+        /// </summary>
+        public void UpdateMeleeWeaponSlot()
+        {
+            if (EquipmentInventory.InventoryManger.InventorySlots[5].ItemData != null)
+            {
+                UnityEngine.Sprite meleeWeaponSprite = EquipmentInventory.InventoryManger.InventorySlots[5].ItemData.icon;
+                MeleeWeappon.sprite = meleeWeaponSprite;
+                if (MeleeWeapponHolster != null) MeleeWeapponHolster.sprite = MeleeWeappon.sprite;
+            }
+            else
+            {
+                MeleeWeappon.sprite = DefaultSprite;
+                if (MeleeWeapponHolster != null) MeleeWeapponHolster.sprite = MeleeWeappon.sprite;
+            }
+        }
+
+        /// <summary>
+        /// Update Ranged weapon slot
+        /// </summary>
+        public void UpdateRangeWeaponSlot()
+        {
+            if (EquipmentInventory.InventoryManger.InventorySlots[4].ItemData != null)
+            {
+                UnityEngine.Sprite rangedWeaponSprite = EquipmentInventory.InventoryManger.InventorySlots[4].ItemData.icon;
+                RangedWeappon.sprite = rangedWeaponSprite;
+            }
+            else
+            {
+                RangedWeappon.sprite = DefaultSprite;
+            }
+        }
+
+        private void Start()
+        {
+            int.TryParse(_ammoCountGUI.text, out _ammoCount);
+            int.TryParse(_levelGUI.text, out _level);
+            UpdateRangeWeaponSlot();
+            UpdateMeleeWeaponSlot();
+        }
+
+        private void Update()
+        {
+            // TODO: Make Below OnChange Events
+            UpdateRangeWeaponSlot();
+            UpdateMeleeWeaponSlot();
+        }
     }
 }

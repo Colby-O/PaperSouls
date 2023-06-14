@@ -1,27 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InventoryView : View
+namespace PaperSouls.Runtime.UI.View
 {
-    public GameObject invenotryView;
-    public GameObject dyanmicView;
-    public GameObject equipmentView;
-
-    public override void Init() { }
-
-    public override void Hide()
+    public abstract class InventoryView : View
     {
-        base.Hide();
-        invenotryView.SetActive(false);
-        dyanmicView.SetActive(false);
-        equipmentView.SetActive(false);
-    }
+        [SerializeField] protected GameObject _invenotryView;
+        [SerializeField] protected GameObject _dyanmicView;
+        [SerializeField] protected GameObject _equipmentView;
 
-    public override void Show()
-    {
-        base.Show();
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
+        public override void Init() { }
+
+        public override void Hide()
+        {
+            base.Hide();
+            _invenotryView.SetActive(false);
+            _dyanmicView.SetActive(false);
+            _equipmentView.SetActive(false);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
     }
 }

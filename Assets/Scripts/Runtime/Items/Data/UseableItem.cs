@@ -1,30 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.Interfaces;
+using PaperSouls.Runtime.Player;
 
-[CreateAssetMenu(fileName = "UseableItem", menuName = "Items/Usable Item", order = 2)]
-public class UseableItem : Item, IUseables
+namespace PaperSouls.Runtime.Items
 {
-    [Header("Effects")]
-    public List<UseableItemEffect> effects;
-
-    public virtual void Use(PlayerManger player)
+    [CreateAssetMenu(fileName = "UseableItem", menuName = "Items/Usable Item", order = 2)]
+    public class UseableItem : Item, IUseables
     {
-        foreach (UseableItemEffect effect in effects)
-        {
-            effect.ExcuteEffect(this, player);
-        }
-    }
+        [Header("Effects")]
+        public List<UseableItemEffect> effects;
 
-    public virtual void Use(PlayerManger player, out bool sucessful)
-    {
-        int effectExceutedSucessfully = 0;
-        foreach (UseableItemEffect effect in effects)
+        public virtual void Use(PlayerManger player)
         {
-            bool excuted = effect.ExcuteEffect(this, player);
-            if (excuted) effectExceutedSucessfully += 1;
+            foreach (UseableItemEffect effect in effects)
+            {
+                effect.ExcuteEffect(this, player);
+            }
         }
 
-        sucessful = effectExceutedSucessfully > 0;
+        public virtual void Use(PlayerManger player, out bool sucessful)
+        {
+            int effectExceutedSucessfully = 0;
+            foreach (UseableItemEffect effect in effects)
+            {
+                bool excuted = effect.ExcuteEffect(this, player);
+                if (excuted) effectExceutedSucessfully += 1;
+            }
+
+            sucessful = effectExceutedSucessfully > 0;
+        }
     }
 }

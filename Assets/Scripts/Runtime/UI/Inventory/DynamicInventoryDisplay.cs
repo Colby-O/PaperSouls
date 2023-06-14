@@ -1,46 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using PaperSouls.Runtime.Inventory;
 
-public class DynamicInventoryDisplay : InventoryDisplay
+namespace PaperSouls.Runtime.UI.Inventory
 {
-    public InventorySlotsUI slotPrefab;
-
-    public void RefreshDynamicInventory(InventoryManger inventory)
+    public class DynamicInventoryDisplay : InventoryDisplay
     {
-        ClearAllSLots();
-        inventoryManger = inventory;
-        AssignSlot(inventory);
-    }
+        [SerializeField] private InventorySlotsUI _slotPrefab;
 
-    private void ClearAllSLots()
-    {
-        foreach (Transform item in transform.Cast<Transform>())
+        /// <summary>
+        /// Refresh the inventory when a new external inventory is opened
+        /// </summary>
+        public void RefreshDynamicInventory(InventoryManger inventory)
         {
-            GameObject.Destroy(item.gameObject);
+            ClearAllSLots();
+            _inventoryManger = inventory;
+            AssignSlot(inventory);
         }
 
-        if (slotDictionary != null) slotDictionary.Clear();
-    }
-
-    public override void AssignSlot(InventoryManger inventory)
-    {
-        slotDictionary = new();
-
-        if (inventory == null) return;
-
-        for (int i = 0; i < inventory.numOfInventorySlots; i++)
+        /// <summary>
+        /// Clears all slots in the inventory
+        /// </summary>
+        private void ClearAllSLots()
         {
-            InventorySlotsUI slot = Instantiate(slotPrefab, transform);
-            slotDictionary.Add(slot, inventory.inventorySlots[i]);
-            slot.Init(inventory.inventorySlots[i]);
-            slot.UpdateSlot();
-        }
-    }
+            foreach (Transform item in transform.Cast<Transform>())
+            {
+                GameObject.Destroy(item.gameObject);
+            }
 
-    protected override void Awake()
-    {
-        base.Awake();
+            if (_slotDictionary != null) _slotDictionary.Clear();
+        }
+
+        public override void AssignSlot(InventoryManger inventory)
+        {
+            _slotDictionary = new();
+
+            if (inventory == null) return;
+
+            for (int i = 0; i < inventory.NumOfInventorySlots; i++)
+            {
+                InventorySlotsUI slot = Instantiate(_slotPrefab, transform);
+                _slotDictionary.Add(slot, inventory.InventorySlots[i]);
+                slot.Init(inventory.InventorySlots[i]);
+                slot.UpdateSlot();
+            }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+        }
     }
 }

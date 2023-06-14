@@ -1,85 +1,110 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using PaperSouls.Runtime.Inventory;
+using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.Player;
 
-public class InventorySlotsUI : MonoBehaviour
+namespace PaperSouls.Runtime.UI.Inventory
 {
-    public Image itemSprite;
-    public TextMeshProUGUI itemCount;
-    public InventorySlot inventorySlot;
-    public InventoryDisplay display {get; private set;}
-
-    private GUIClickController button;
-
-    public void Init(InventorySlot slot)
+    public class InventorySlotsUI : MonoBehaviour
     {
-        inventorySlot = slot;
-        UpdateSlot(slot);
-    }
+        [SerializeField] private Image _itemSprite;
+        [SerializeField] private TextMeshProUGUI _itemCount;
+        public InventorySlot InventorySlot;
+        public InventoryDisplay Display { get; set; }
 
-    public void UpdateSlot(InventorySlot slot)
-    {
-        if (slot.itemData != null)
+        private GUIClickController _button;
+
+        /// <summary>
+        /// Initializes UI inventory slot with a InventorySlot
+        /// </summary>
+        public void Init(InventorySlot slot)
         {
-            itemSprite.sprite = slot.itemData.icon;
-            itemSprite.color = Color.white;
-            itemCount.text = (slot.stackSize > 1) ? slot.stackSize.ToString() : "";
+            InventorySlot = slot;
+            UpdateSlot(slot);
         }
-        else ClearSlot();
-    }
 
-    public void UpdateSlot()
-    {
-        if (inventorySlot != null) UpdateSlot(inventorySlot);
-    }
-
-    public void OnSlotClick()
-    {
-        display?.SlotClicked(this);
-    }
-
-    public void ClearSlot()
-    {
-        inventorySlot?.ClearSlot();
-        itemSprite.sprite = null;
-        itemSprite.color = Color.clear;
-        itemCount.text = "";
-    }
-
-    private void UseItem(UseableItem item)
-    {
-        PlayerManger player = FindObjectOfType<PlayerManger>();
-        item.Use(player, out bool sucessful);
-
-        if (!sucessful) return;
-
-        if (inventorySlot.stackSize > 1) inventorySlot.RemoveFromStack(1);
-        else inventorySlot.ClearSlot();
-
-        UpdateSlot();
-    }
-
-    public void InteractWithSlot()
-    {
-        if (inventorySlot.itemData != null)
+        /// <summary>
+        /// Update the inventory slots data given a InventorySlot
+        /// </summary>
+        public void UpdateSlot(InventorySlot slot)
         {
-            Item item = inventorySlot.itemData;
-            if (item is UseableItem) UseItem(item as UseableItem);
+            if (slot.ItemData != null)
+            {
+                _itemSprite.sprite = slot.ItemData.icon;
+                _itemSprite.color = Color.white;
+                _itemCount.text = (slot.StackSize > 1) ? slot.StackSize.ToString() : "";
+            }
+            else ClearSlot();
         }
-    }
 
-    private void Awake()
-    {
-        ClearSlot();
+        /// <summary>
+        /// Update the inventory slots data with currently assigned Slot
+        /// </summary>
+        public void UpdateSlot()
+        {
+            if (InventorySlot != null) UpdateSlot(InventorySlot);
+        }
 
-        button = GetComponent<GUIClickController>();
-        if (button == null) button = this.gameObject.AddComponent(typeof(GUIClickController)) as GUIClickController;
+        /// <summary>
+        /// Process a OnClick event
+        /// </summary>
+        public void OnSlotClick()
+        {
+            Display?.SlotClicked(this);
+        }
 
-        button?.onLeft.AddListener(OnSlotClick);
-        button?.onRight.AddListener(InteractWithSlot);
+        /// <summary>
+        /// Clears the inventory slot
+        /// </summary>
+        public void ClearSlot()
+        {
+            InventorySlot?.ClearSlot();
+            _itemSprite.sprite = null;
+            _itemSprite.color = Color.clear;
+            _itemCount.text = "";
+        }
 
-        display = transform.parent.GetComponent<InventoryDisplay>();
+        /// <summary>
+        /// Uses a UseableItem
+        /// </summary>
+        private void UseItem(UseableItem item)
+        {
+            PlayerManger player = FindObjectOfType<PlayerManger>();
+            item.Use(player, out bool sucessful);
+
+            if (!sucessful) return;
+
+            if (InventorySlot.StackSize > 1) InventorySlot.RemoveFromStack(1);
+            else InventorySlot.ClearSlot();
+
+            UpdateSlot();
+        }
+
+        /// <summary>
+        /// Interact with item in slot
+        /// </summary>
+        public void InteractWithSlot()
+        {
+            if (InventorySlot.ItemData != null)
+            {
+                Item item = InventorySlot.ItemData;
+                if (item is UseableItem) UseItem(item as UseableItem);
+            }
+        }
+
+        private void Awake()
+        {
+            ClearSlot();
+
+            _button = GetComponent<GUIClickController>();
+            if (_button == null) _button = gameObject.AddComponent(typeof(GUIClickController)) as GUIClickController;
+
+            _button?.OnLeft.AddListener(OnSlotClick);
+            _button?.OnRight.AddListener(InteractWithSlot);
+
+            Display = transform.parent.GetComponent<InventoryDisplay>();
+        }
     }
 }

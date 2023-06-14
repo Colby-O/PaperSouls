@@ -1,105 +1,143 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.UI.View;
 
-public class ViewManger : MonoBehaviour
+namespace PaperSouls.Core
 {
-    private static ViewManger instance;
-    public static ViewManger Instance
+    public class ViewManger : MonoBehaviour
     {
-        get
+        private static ViewManger _instance;
+        private static readonly object Padlock = new();
+
+        public static ViewManger Instance
         {
-            if (instance == null) Debug.Log("UI Manger is null!!!");
-
-            return instance;
-        }
-
-        private set { }
-    }
-
-    public View startingView;
-    public View[] views;
-
-    [SerializeField] private View currentView;
-    private readonly Stack<View> history = new();
-
-    public static bool GetCurrentViewIs<T>() where T : View
-    {
-        return instance.currentView is T;
-    }
-
-    public static T GetCurrentView<T>() where T : View
-    {
-        if (GetCurrentViewIs<T>()) return instance.currentView as T;
-        else return null;
-    }
-
-    public static T GetView<T>() where T : View
-    {
-        foreach (View view in instance.views)
-        {
-            if (view is T viewOfType)
+            get
             {
-                return viewOfType;
+                lock (Padlock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new();
+                    }
+
+                    return _instance;
+                }
             }
         }
 
-        return null;
-    }
+        [SerializeField] private View _startingView;
+        [SerializeField] private View[] _views;
 
-    public static void Show<T>(bool remeber = true) where T : View
-    {
-        foreach (View view in instance.views)
+        private View _currentView;
+        private readonly Stack<View> _history = new();
+
+        /// <summary>
+        /// Checks if current View is of type T
+        /// </summary>
+        public static bool GetCurrentViewIs<T>() where T : View
         {
-            if (view is T)
+            return _instance._currentView is T;
+        }
+
+        /// <summary>
+        /// Gets the current view if the view is of type T
+        /// </summary>
+        public static T GetCurrentView<T>() where T : View
+        {
+            if (GetCurrentViewIs<T>()) return _instance._currentView as T;
+            else return null;
+        }
+
+        /// <summary>
+        /// Gets a View of type T from the master view list
+        /// </summary>
+        public static T GetView<T>() where T : View
+        {
+            foreach (View view in _instance._views)
             {
-                if (instance.currentView != null)
+                if (view is T viewOfType)
                 {
-                    if (remeber) instance.history.Push(instance.currentView);
-                    instance.currentView.Hide();
+                    return viewOfType;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Displays a view of type T. Remeber parameter indicates if to add the view
+        /// to the history or not. 
+        /// </summary>
+        public static void Show<T>(bool remeber = true) where T : View
+        {
+            foreach (View view in _instance._views)
+            {
+                if (view is T)
+                {
+                    if (_instance._currentView != null)
+                    {
+                        if (remeber) _instance._history.Push(_instance._currentView);
+                        _instance._currentView.Hide();
+                    }
+
+                    view.Show();
+                    _instance._currentView = view;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Displays a view given the view as an input. Remeber parameter indicates
+        /// if to add the view to the history or not. 
+        /// </summary>
+        public static void Show(View view, bool remeber = true)
+        {
+            if (view != null)
+            {
+                if (_instance._currentView != null)
+                {
+                    if (remeber) _instance._history.Push(_instance._currentView);
+                    _instance._currentView.Hide();
                 }
 
                 view.Show();
-                instance.currentView = view;
+                _instance._currentView = view;
             }
         }
-    }
-    public static void Show(View view, bool remeber = true)
-    {
-        if (view != null)
+
+        /// <summary>
+        /// Displays the last view in the history
+        /// </summary>
+        public static void ShowLast()
         {
-            if (instance.currentView != null)
+            if (_instance._history.Count != 0)
             {
-                if (remeber) instance.history.Push(instance.currentView);
-                instance.currentView.Hide();
+                Show(_instance._history.Pop(), false);
+            }
+        }
+
+        /// <summary>
+        /// Initalizes each view and displays the starting views if one exists.
+        /// </summary>
+        private void Init()
+        {
+            foreach (View view in _views)
+            {
+                view.Init();
+                view.Hide();
             }
 
-            view.Show();
-            instance.currentView = view;
+            if (_startingView != null) Show(_startingView, true);
         }
-    }
 
-    public static void ShowLast()
-    {
-        if (instance.history.Count != 0)
+        private void Awake()
         {
-            Show(instance.history.Pop(), false);
+            _instance = this;
         }
-    }
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
-    private void Start()
-    {
-        foreach (View view in views)
+        private void Start()
         {
-            view.Init();
-            view.Hide();
+            Init();
         }
-
-        if (startingView != null) Show(startingView, true);
     }
 }

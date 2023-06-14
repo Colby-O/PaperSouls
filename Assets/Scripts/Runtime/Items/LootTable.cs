@@ -2,56 +2,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Drop
+namespace PaperSouls.Runtime.Items
 {
-    public Item item;
-    [Range(0.01f, 1f)] public float probability = 0.01f;
 
-    public Drop(Item item, float probability)
+    [System.Serializable]
+    public class Drop
     {
-        this.item = item;
-        this.probability = probability;
-    }
-}
+        public Item item;
+        [Range(0.01f, 1f)] public float probability = 0.01f;
 
-[CreateAssetMenu(fileName = "LootTable", menuName = "Loot/Table")]
-public class LootTable : ScriptableObject
-{
-    public List<Drop> table;
-
-    public Item GetItem()
-    {
-        if (table.Count <= 0) return null;
-
-        Item item =null;
-        do
+        public Drop(Item item, float probability)
         {
-            float rollRarity = Random.value;
-            float itemRarity = Random.value;
-            int itemIndex = Random.Range(0, table.Count);
+            this.item = item;
+            this.probability = probability;
+        }
+    }
 
-            Drop drop = table[itemIndex];
+    [CreateAssetMenu(fileName = "LootTable", menuName = "Loot/Table")]
+    public class LootTable : ScriptableObject
+    {
+        [SerializeField] private List<Drop> table;
 
-            if (drop.item.GetRarityInfo().probability >= rollRarity)
+        /// <summary>
+        /// Fetches a random item from the table
+        /// </summary>
+        public Item GetItem()
+        {
+            if (table.Count <= 0) return null;
+
+            Item item = null;
+            do
             {
-                if (drop.probability >= itemRarity) item = drop.item;
-            }
+                float rollRarity = Random.value;
+                float itemRarity = Random.value;
+                int itemIndex = Random.Range(0, table.Count);
 
-        } while (item == null);
+                Drop drop = table[itemIndex];
 
-        return item;
-    }
+                if (drop.item.GetRarityInfo().probability >= rollRarity)
+                {
+                    if (drop.probability >= itemRarity) item = drop.item;
+                }
 
-    public List<Item> GetListOfItem(int numberOfItems)
-    {
-        List<Item> items = new();
+            } while (item == null);
 
-        for (int i = 0; i < numberOfItems; i++)
-        {
-            items.Add(GetItem());
+            return item;
         }
 
-        return items;
+        /// <summary>
+        /// Fetches N random item from the table
+        /// </summary>
+        public List<Item> GetListOfItem(int numberOfItems)
+        {
+            List<Item> items = new();
+
+            for (int i = 0; i < numberOfItems; i++)
+            {
+                items.Add(GetItem());
+            }
+
+            return items;
+        }
     }
 }
+

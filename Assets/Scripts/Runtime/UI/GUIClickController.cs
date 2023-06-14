@@ -1,26 +1,32 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-public class GUIClickController : MonoBehaviour, IPointerClickHandler
-{
-    public UnityEvent onLeft;
-    public UnityEvent onRight;
-    public UnityEvent onMiddle;
 
-    public void OnPointerClick(PointerEventData eventData)
+namespace PaperSouls.Runtime.UI
+{
+    public class GUIClickController : MonoBehaviour, IPointerClickHandler
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        public UnityEvent OnLeft;
+        public UnityEvent OnRight;
+        public UnityEvent OnMiddle;
+
+        /// <summary>   
+        /// Determines what action the user performed while hovering over a UI element
+        /// </summary>
+        public void OnPointerClick(PointerEventData eventData)
         {
-            onLeft.Invoke();
-        }
-        else if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            onRight.Invoke();
-        }
-        else if (eventData.button == PointerEventData.InputButton.Middle)
-        {
-            onMiddle.Invoke();
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                OnLeft.Invoke();
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                OnRight.Invoke();
+            }
+            else if (eventData.button == PointerEventData.InputButton.Middle)
+            {
+                OnMiddle.Invoke();
+            }
         }
     }
 }

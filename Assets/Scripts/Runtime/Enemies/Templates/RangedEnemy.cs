@@ -1,26 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.Weapons;
 
-public abstract class RangedEnemy : Enemy
+namespace PaperSouls.Runtime.Enemy
 {
-    protected RangedEnemyData rangedEnemyData;
-
-    protected virtual void SpawnProjectile(Ray path)
+    public abstract class RangedEnemy : Enemy
     {
-        GameObject projectileObj = GameObject.Instantiate(rangedEnemyData.projectilePrefab, transform.position, Quaternion.identity);
-        Projectile projectile = projectileObj.GetComponent<Projectile>();
-        projectile.damage = rangedEnemyData.attackDamage;
-        projectile.speed = rangedEnemyData.projectileSpeed;
-        projectile.AddTagsToIgnore(rangedEnemyData.tagToIgnore);
-        projectile.AddTagsToIgnore(transform.tag);
-        projectile.SetRay(path);
-    }
+        protected RangedEnemyData _rangedEnemyData;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        rangedEnemyData = (RangedEnemyData)base.enemyData;
-        timeSinceLastAttack = rangedEnemyData.fireRate;
+        protected virtual void SpawnProjectile(Ray path)
+        {
+            GameObject projectileObj = GameObject.Instantiate(_rangedEnemyData.projectilePrefab, transform.position, Quaternion.identity);
+            Projectile projectile = projectileObj.GetComponent<Projectile>();
+            projectile.Damage = _rangedEnemyData.attackDamage;
+            projectile.Speed = _rangedEnemyData.projectileSpeed;
+            projectile.AddTagsToIgnore(_rangedEnemyData.tagToIgnore);
+            projectile.AddTagsToIgnore(transform.tag);
+            projectile.SetRay(path);
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _rangedEnemyData = (RangedEnemyData)base.Data;
+            _timeSinceLastAttack = _rangedEnemyData.fireRate;
+        }
     }
 }

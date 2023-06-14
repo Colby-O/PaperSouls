@@ -1,39 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UISliderController : MonoBehaviour
+namespace PaperSouls.Runtime.UI
 {
-    public Slider slider;
-
-    public void IncreaseToMax()
+    public class UISliderController : MonoBehaviour
     {
-        slider.value = slider.maxValue;
-    }
+        [SerializeField] private Slider _slider;
 
-    public void DecreaseToMin()
-    {
-        slider.value = slider.minValue;
-    }
+        /// <summary>   
+        /// Update the slider values to it's maximum value.
+        /// </summary>
+        public void IncreaseToMax()
+        {
+            _slider.value = _slider.maxValue;
+        }
 
-    public void SetMaxValue(float val)
-    {
-        slider.maxValue = val;
-    }
+        /// <summary>   
+        /// Update the slider values to it's minimum value.
+        /// </summary>
+        public void DecreaseToMin()
+        {
+            _slider.value = _slider.minValue;
+        }
 
-    public void SetValue(float val)
-    {
-        slider.value = val;
-    }
+        /// <summary>   
+        /// Sets the maximum value for the slider
+        /// </summary>
+        public void SetMaxValue(float val)
+        {
+            _slider.maxValue = val;
+        }
 
-    public float GetValue()
-    {
-        return slider.value;
-    }
+        /// <summary>   
+        /// Sets the current slider value
+        /// </summary>
+        public void SetValue(float val)
+        {
+            _slider.value = val;
+        }
 
-    private void Awake()
-    {
-        slider = this.GetComponent<Slider>();
+        /// <summary>   
+        /// Gets the current slider value
+        /// </summary>
+        public float GetValue()
+        {
+            return _slider.value;
+        }
+
+        private void Awake()
+        {
+            _slider = GetComponent<Slider>();
+        }
     }
 }

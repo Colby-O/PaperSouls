@@ -1,14 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PaperSouls.Core;
 
-public class ControlSettingsView : View
+namespace PaperSouls.Runtime.UI.View
 {
-    public Button backButton;
-
-    public override void Init()
+    public class ControlSettingsView : View
     {
-        backButton.onClick.AddListener(ViewManger.ShowLast);
+        [SerializeField] private Button _backButton;
+
+        public override void Init()
+        {
+            _backButton.onClick.AddListener(ViewManger.ShowLast);
+        }
     }
 }

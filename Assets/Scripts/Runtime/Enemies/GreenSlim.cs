@@ -1,26 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.Interfaces;
 
-public class GreenSlim : MeleeEnemy
+namespace PaperSouls.Runtime.Enemy
 {
-    protected override void ActiveMovement()
+    public class GreenSlim : MeleeEnemy
     {
-        Vector3 newPosition = enemyData.enemySpeed * Time.deltaTime * directionToPlayer;
-        gameObject.transform.Translate(new Vector3(newPosition.x, 0.0f, newPosition.z));
-    }
-
-    protected override void Attack(IDamageable damageable, float dmg)
-    {
-        if (meleeEnemyData.timeBetweenAttacks < timeSinceLastAttack)
+        protected override void ActiveMovement()
         {
-            damageable.Damage(dmg);
-            timeSinceLastAttack = 0.0f;
+            Vector3 newPosition = Data.enemySpeed * Time.deltaTime * _directionToPlayer;
+            gameObject.transform.Translate(new Vector3(newPosition.x, 0.0f, newPosition.z));
         }
-    }
 
-    protected override void PassiveMovement()
-    {
-        
+        protected override void PassiveMovement()
+        {
+
+        }
+
+        protected override void Attack(IDamageable damageable, float dmg)
+        {
+            if (_meleeEnemyData.timeBetweenAttacks < _timeSinceLastAttack)
+            {
+                damageable.Damage(dmg);
+                _timeSinceLastAttack = 0.0f;
+            }
+        }
     }
 }

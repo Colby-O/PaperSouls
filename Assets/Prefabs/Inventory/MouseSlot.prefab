@@ -186,11 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f557c0ed13cbd434e8e273343732f5e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 8592082115454043455}
-  count: {fileID: 3308340888726479117}
-  inventorySlot:
-    itemData: {fileID: 0}
-    stackSize: -1
+  _sprite: {fileID: 8592082115454043455}
+  _count: {fileID: 3308340888726479117}
 --- !u!1 &3576657662805739506
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using PaperSouls.Runtime.Player;
 
-public interface IUseables
+namespace PaperSouls.Runtime.Interfaces
 {
-    public void Use(PlayerManger player);
-    public void Use(PlayerManger player, out bool sucessful);
+    public interface IUseables
+    {
+        /// <summary>
+        /// Use an object
+        /// </summary>
+        public void Use(PlayerManger player);
+
+        /// <summary>
+        /// Use an object and output wheather was sucessfully used or not
+        /// </summary>
+        public void Use(PlayerManger player, out bool sucessful);
+    }
 }

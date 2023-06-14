@@ -1,10 +1,22 @@
 using UnityEngine;
 
-public abstract class View : MonoBehaviour
+namespace PaperSouls.Runtime.UI.View
 {
-    public abstract void Init();
+    public abstract class View : MonoBehaviour
+    {
+        /// <summary>
+        /// Initialzes a view. 
+        /// </summary>
+        public abstract void Init();
 
-    public virtual void Hide() => gameObject.SetActive(false);
+        /// <summary>
+        /// Hides a view. 
+        /// </summary>
+        public virtual void Hide() => gameObject.SetActive(false);
 
-    public virtual void Show() => gameObject.SetActive(true);
+        /// <summary>
+        /// Displays a view. 
+        /// </summary>
+        public virtual void Show() => gameObject.SetActive(true);
+    }
 }

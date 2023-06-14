@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ExternalInventoryView : InventoryView
+namespace PaperSouls.Runtime.UI.View
 {
-    public override void Show()
+    public class ExternalInventoryView : InventoryView
     {
-        base.Show();
-        invenotryView.SetActive(true);
-        dyanmicView.SetActive(true);
-        equipmentView.SetActive(false);
+        public override void Show()
+        {
+            base.Show();
+            _invenotryView.SetActive(true);
+            _dyanmicView.SetActive(true);
+            _equipmentView.SetActive(false);
+        }
     }
 }

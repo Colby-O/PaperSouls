@@ -1,30 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PaperSouls.Core;
 
-public class SettingsView : View
-{
-    public Button graphicSettingsButton;
-    public Button controlSettingsButton;
-    public Button soundSettingsButton;
-    public Button backButton;
-
-
-    public void OpenSoundSettings()
+namespace PaperSouls.Runtime.UI.View { 
+    public class SettingsView : View
     {
-        ViewManger.Show<SoundSettingsView>();
-    }
+        [SerializeField] private Button _graphicSettingsButton;
+        [SerializeField] private Button _controlSettingsButton;
+        [SerializeField] private Button _soundSettingsButton;
+        [SerializeField] private Button _backButton;
 
-    public void OpenControlSettings()
-    {
-        ViewManger.Show<ControlSettingsView>();
-    }
 
-    public override void Init()
-    {
-        controlSettingsButton.onClick.AddListener(OpenControlSettings);
-        soundSettingsButton.onClick.AddListener(OpenSoundSettings);
-        backButton.onClick.AddListener(ViewManger.ShowLast);
+        /// <summary>
+        /// Opens the Sounds Settings Menu 
+        /// </summary>
+        private void OpenSoundSettings()
+        {
+            ViewManger.Show<SoundSettingsView>();
+        }
+
+        /// <summary>
+        /// Opens the Control Settings Menu 
+        /// </summary>
+        private void OpenControlSettings()
+        {
+            ViewManger.Show<ControlSettingsView>();
+        }
+
+        public override void Init()
+        {
+            _controlSettingsButton.onClick.AddListener(OpenControlSettings);
+            _soundSettingsButton.onClick.AddListener(OpenSoundSettings);
+            _backButton.onClick.AddListener(ViewManger.ShowLast);
+        }
     }
 }
