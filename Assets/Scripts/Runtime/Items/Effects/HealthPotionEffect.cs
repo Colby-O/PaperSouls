@@ -1,21 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Core;
+using PaperSouls.Runtime.Player;
 
-[CreateAssetMenu(menuName = "Items/Effects/HealthPotionEffect")]
-public class HealthPotionEffect : UseableItemEffect
+namespace PaperSouls.Runtime.Items
 {
-    public float healthIncrease = 30;
-
-    public override bool ExcuteEffect(UseableItem item, PlayerManger player)
+    [CreateAssetMenu(menuName = "Items/Effects/HealthPotionEffect")]
+    public class HealthPotionEffect : UseableItemEffect
     {
-        if (player != null && !player.IsFullHealth())
-        {
-            AudioManger.Instance.PlaySFX("Health Potion Use");
-            player.AddHealth(healthIncrease);
-            return true;
-        }
+        [SerializeField] private float _healthIncrease = 30;
 
-        return false;
+        /// <summary>
+        /// Applies a Health boost effect to the player
+        /// </summary>
+        public override bool ExcuteEffect(UseableItem item, PlayerManger player)
+        {
+            if (player != null && !player.IsFullHealth())
+            {
+                AudioManger.Instance.PlaySFX("Health Potion Use");
+                player.AddHealth(_healthIncrease);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

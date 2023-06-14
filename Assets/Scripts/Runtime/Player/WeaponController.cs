@@ -1,111 +1,131 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
+using PaperSouls.Core;
+using PaperSouls.Runtime.Interfaces;
+using PaperSouls.Runtime.Weapons;
 
-[RequireComponent(typeof(PlayerInput), typeof(PlayerManger))]
-public class WeaponController : MonoBehaviour
+namespace PaperSouls.Runtime.Player
 {
-    public float meleeAttackDamage = 10;
-    public float attackCooldown = 2;
-    public float minAttackDistance = 1;
-    public bool canAttack = true;
-    public GameObject head;
-    public GameObject bulletPrefab;
-    public VisualEffect swordEffect;
-
-    private PlayerManger player;
-    private PlayerInput playerInput;
-
-    InputAction meleeAttackAction;
-    InputAction rangedAttackAction;
-
-    private IDamageable interactingWith;
-    private float hitDistance;
-    private Ray ray;
-
-    private IEnumerator ProcessAttackCooldown(float attackCooldown)
+    [RequireComponent(typeof(PlayerInput), typeof(PlayerManger))]
+    public class WeaponController : MonoBehaviour
     {
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
-    }
+        [SerializeField] private float _meleeAttackDamage = 10;
+        [SerializeField] private float _attackCooldown = 2;
+        [SerializeField] private float _minAttackDistance = 1;
+        [SerializeField] private bool _canAttack = true;
+        [SerializeField] private GameObject _head;
+        [SerializeField] private GameObject _bulletPrefab;
+        [SerializeField] private VisualEffect _swordEffect;
 
-    private IEnumerator ProcessSwordDraw(float drawTime)
-    {
-        yield return new WaitForSeconds(drawTime);
-        player.playerHUD.meleeWeapponHolster.gameObject.SetActive(true);
-    }
+        private PlayerManger _player;
+        private PlayerInput _playerInput;
 
-    public void MeleeAttack()
-    {
-        if (GameManger.accpetPlayerInput && canAttack && player.playerHUD.equipmentInventory.inventoryManger.inventorySlots[5].itemData != null)
+        private InputAction _meleeAttackAction;
+        private InputAction _rangedAttackAction;
+
+        private IDamageable _interactingWith;
+        private float _hitDistance;
+        private Ray _ray;
+
+        /// <summary>
+        /// Coroutine to process attack cooldown
+        /// </summary>
+        private IEnumerator ProcessAttackCooldown(float _attackCooldown)
         {
-            canAttack = false;
-            player.playerHUD.meleeWeapponHolster.gameObject.SetActive(false);
-            StartCoroutine(ProcessSwordDraw(attackCooldown));
+            yield return new WaitForSeconds(_attackCooldown);
+            _canAttack = true;
+        }
 
-            if (swordEffect != null) swordEffect.Play();
-            if (AudioManger.Instance != null) AudioManger.Instance.PlaySFX("Sword Slash");
+        /// <summary>
+        /// Coroutine to process sword draw effect
+        /// </summary>
+        private IEnumerator ProcessSwordDraw(float drawTime)
+        {
+            yield return new WaitForSeconds(drawTime);
+            _player.PlayerHUD.MeleeWeapponHolster.gameObject.SetActive(true);
+        }
 
-            if (interactingWith != null && minAttackDistance >= hitDistance)
+        /// <summary>
+        /// Process a Melee Attack
+        /// </summary>
+        public void MeleeAttack()
+        {
+            if (GameManger.AccpetPlayerInput && _canAttack && _player.PlayerHUD.EquipmentInventory.InventoryManger.InventorySlots[5].ItemData != null)
             {
-                interactingWith.Damage(meleeAttackDamage);
-                interactingWith = null;
+                _canAttack = false;
+                _player.PlayerHUD.MeleeWeapponHolster.gameObject.SetActive(false);
+                StartCoroutine(ProcessSwordDraw(_attackCooldown));
+
+                if (_swordEffect != null) _swordEffect.Play();
+                if (AudioManger.Instance != null) AudioManger.Instance.PlaySFX("Sword Slash");
+
+                if (_interactingWith != null && _minAttackDistance >= _hitDistance)
+                {
+                    _interactingWith.Damage(_meleeAttackDamage);
+                    _interactingWith = null;
+                }
+
+                StartCoroutine(ProcessAttackCooldown(_attackCooldown));
             }
-
-            StartCoroutine(ProcessAttackCooldown(attackCooldown));
         }
-    }
 
-    public void RangeAttack()
-    {
-        if (player.playerHUD.GetAmmoCount() <= 0) return;
-
-        if (GameManger.accpetPlayerInput && canAttack && player.playerHUD.equipmentInventory.inventoryManger.inventorySlots[4].itemData != null)
+        /// <summary>
+        /// Process a  Ranged Attack
+        /// </summary>
+        public void RangeAttack()
         {
-            player.playerHUD.DecrementAmmoCount();
-            GameObject bulletObj = GameObject.Instantiate(bulletPrefab, head.transform.position, Quaternion.identity);
-            Projectile bullet = bulletObj.GetComponent<Projectile>();
-            bullet.AddTagsToIgnore("Player");
-            bullet.SetRay(ray);
-        }
-    }
+            if (_player.PlayerHUD.GetAmmoCount() <= 0) return;
 
-    public void ProcessVision()
-    {
-        ray = new(head.transform.position, transform.forward.normalized);
-        Debug.DrawRay(ray.origin, ray.origin + ray.direction * 100, Color.cyan);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
-        {
-            if (hit.transform.TryGetComponent(out IDamageable damageable))
+            if (GameManger.AccpetPlayerInput && _canAttack && _player.PlayerHUD.EquipmentInventory.InventoryManger.InventorySlots[4].ItemData != null)
             {
-                interactingWith = damageable;
-                hitDistance = Vector3.Distance(head.transform.position, hit.point);
+                _player.PlayerHUD.DecrementAmmoCount();
+                GameObject bulletObj = GameObject.Instantiate(_bulletPrefab, _head.transform.position, Quaternion.identity);
+                Projectile bullet = bulletObj.GetComponent<Projectile>();
+                bullet.AddTagsToIgnore("Player");
+                bullet.SetRay(_ray);
             }
-            else interactingWith = null;
         }
-        else interactingWith = null;
-    }
 
-    void Awake()
-    {
-        canAttack = true;
+        /// <summary>
+        /// Get any objects in the player's line-of-sight
+        /// </summary>
+        public void ProcessVision()
+        {
+            _ray = new(_head.transform.position, transform.forward.normalized);
+            Debug.DrawRay(_ray.origin, _ray.origin + _ray.direction * 100, Color.cyan);
+            if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity))
+            {
+                if (hit.transform.TryGetComponent(out IDamageable damageable))
+                {
+                    _interactingWith = damageable;
+                    _hitDistance = Vector3.Distance(_head.transform.position, hit.point);
+                }
+                else _interactingWith = null;
+            }
+            else _interactingWith = null;
+        }
 
-        player = GetComponent<PlayerManger>();
-        playerInput = GetComponent<PlayerInput>();
+        void Awake()
+        {
+            _canAttack = true;
 
-        rangedAttackAction = playerInput.actions["PrimaryAttack"];
-        meleeAttackAction = playerInput.actions["SecondaryAttack"];
+            _player = GetComponent<PlayerManger>();
+            _playerInput = GetComponent<PlayerInput>();
 
-        rangedAttackAction.performed += e => RangeAttack();
-        meleeAttackAction.performed += e => MeleeAttack();
+            _rangedAttackAction = _playerInput.actions["PrimaryAttack"];
+            _meleeAttackAction = _playerInput.actions["SecondaryAttack"];
 
-        playerInput.actions.Enable();
-    }
+            _rangedAttackAction.performed += e => RangeAttack();
+            _meleeAttackAction.performed += e => MeleeAttack();
 
-    void Update()
-    {
-        ProcessVision();
+            _playerInput.actions.Enable();
+        }
+
+        void Update()
+        {
+            ProcessVision();
+        }
     }
 }

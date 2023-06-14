@@ -2,28 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using PaperSouls.Runtime.Items;
 
-[System.Serializable]
-public class InventoryHolder : MonoBehaviour
+namespace PaperSouls.Runtime.Inventory
 {
-    public Vector2Int inventorySize;
-    public InventoryManger inventoryManger;
-    public List<SlotType> slotTypes;
-
-    public static UnityAction<InventoryManger> OnDynamicInventoryDisplayRequest;
-
-    public void ResizeInventory(Vector2Int inventorySize)
+    [System.Serializable]
+    public class InventoryHolder : MonoBehaviour
     {
-        inventoryManger = new(inventorySize);
+        [SerializeField] protected Vector2Int _inventorySize;
+        [SerializeField] protected List<SlotType> _slotTypes;
+        public InventoryManger InventoryManger;
 
-        if (slotTypes.Count != inventoryManger.inventorySlots.Count) return;
+        public static UnityAction<InventoryManger> OnDynamicInventoryDisplayRequest;
 
-        for (int i = 0; i < slotTypes.Count; i++)
+        /// <summary>
+        /// Resizes the inventory given a Vector2Int (width, height)
+        /// </summary>
+        public void ResizeInventory(Vector2Int inventorySize)
         {
-            inventoryManger.inventorySlots[i].slotType = slotTypes[i];
+            InventoryManger = new(inventorySize);
+
+            if (_slotTypes.Count != InventoryManger.InventorySlots.Count) return;
+
+            for (int i = 0; i < _slotTypes.Count; i++)
+            {
+                InventoryManger.InventorySlots[i].InventorySlotType = _slotTypes[i];
+            }
         }
+
+        protected virtual void Awake() { }
     }
-
-    protected virtual void Awake() { }
-
 }

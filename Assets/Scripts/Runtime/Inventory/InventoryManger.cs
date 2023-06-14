@@ -3,88 +3,114 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using PaperSouls.Runtime.Items;
 
-[System.Serializable]
-public class InventoryManger
+namespace PaperSouls.Runtime.Inventory
 {
-    public List<InventorySlot> inventorySlots;
-    public int numOfInventorySlots => inventorySlots.Count;
-
-    private Vector2Int inventorySize;
-
-    public UnityAction<InventorySlot> OnInventoryChange;
-
-    public InventoryManger(int numRows, int numCols) : this(new Vector2Int(numRows, numCols)) { }
-
-    public InventoryManger(Vector2Int inventorySize)
+    [System.Serializable]
+    public class InventoryManger
     {
-        this.inventorySize = inventorySize;
-        int size = inventorySize.x * inventorySize.y;
-        inventorySlots = new(size);
+        public List<InventorySlot> InventorySlots;
+        public int NumOfInventorySlots => InventorySlots.Count;
 
-        for (int i = 0; i < size; i++) inventorySlots.Add(new());
-    }
+        public UnityAction<InventorySlot> OnInventoryChange;
 
-    public bool GetInventorySlotForItem(Item item, out List<InventorySlot> inventorySlots)
-    {
-        inventorySlots = this.inventorySlots.Where(inventorySlots => inventorySlots.itemData == item).ToList();
+        private Vector2Int _inventorySize;
 
-        return inventorySlots.Count > 0;
-    }
+        /// <summary>
+        /// Create an inventory of size numRows by numCols
+        /// </summary>
+        public InventoryManger(int numRows, int numCols) : this(new Vector2Int(numRows, numCols)) { }
 
-    public bool GetFreeInventorySlot(out InventorySlot slot)
-    {
-        slot = inventorySlots.FirstOrDefault(i => i.itemData == null);
-
-        return slot != null;
-    }
-
-    public bool AddToInventoryFreeSlot(Item item, int amount)
-    {
-        if (GetFreeInventorySlot(out InventorySlot freeSlot))
+        /// <summary>
+        /// Create an inventory of size given by a Vector2Int
+        /// </summary>
+        public InventoryManger(Vector2Int inventorySize)
         {
-            freeSlot.UpdateInventorySlot(item, amount);
-            OnInventoryChange?.Invoke(freeSlot);
-            return true;
+            this._inventorySize = inventorySize;
+            int size = inventorySize.x * inventorySize.y;
+            InventorySlots = new(size);
+
+            for (int i = 0; i < size; i++) InventorySlots.Add(new());
         }
 
-        return false;
-    }
-
-    public bool AddToInventory(Item item, int amount)
-    {
-        if (GetInventorySlotForItem(item, out List<InventorySlot> inventorySlots))
+        /// <summary>
+        /// Gets the inventory slot that contains an item
+        /// </summary>
+        public bool GetInventorySlotForItem(Item item, out List<InventorySlot> inventorySlots)
         {
-            foreach (InventorySlot slot in inventorySlots)
+            inventorySlots = this.InventorySlots.Where(inventorySlots => inventorySlots.ItemData == item).ToList();
+
+            return inventorySlots.Count > 0;
+        }
+
+        /// <summary>
+        /// Gets the inventory slot that is empty
+        /// </summary>
+        public bool GetFreeInventorySlot(out InventorySlot slot)
+        {
+            slot = InventorySlots.FirstOrDefault(i => i.ItemData == null);
+
+            return slot != null;
+        }
+
+        /// <summary>
+        /// Add an item to a empty inventory slot
+        /// </summary>
+        public bool AddToInventoryFreeSlot(Item item, int amount)
+        {
+            if (GetFreeInventorySlot(out InventorySlot freeSlot))
             {
-                if (slot.CheckRoomLeftInStack(amount))
+                freeSlot.UpdateInventorySlot(item, amount);
+                OnInventoryChange?.Invoke(freeSlot);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Add an item to the next available inventory slot
+        /// </summary>
+        public bool AddToInventory(Item item, int amount)
+        {
+            if (GetInventorySlotForItem(item, out List<InventorySlot> inventorySlots))
+            {
+                foreach (InventorySlot slot in inventorySlots)
                 {
-                    slot.AddToStack(amount);
-                    OnInventoryChange?.Invoke(slot);
-                    return true;
+                    if (slot.CheckRoomLeftInStack(amount))
+                    {
+                        slot.AddToStack(amount);
+                        OnInventoryChange?.Invoke(slot);
+                        return true;
+                    }
                 }
             }
+
+            return AddToInventoryFreeSlot(item, amount);
         }
 
-        return AddToInventoryFreeSlot(item, amount);
-    }
-
-    public bool AddToInventory(Item item, int amount, int index)
-    {
-        if (index >= numOfInventorySlots) return false;
-
-        if (inventorySlots[index].itemData == null)
+        /// <summary>
+        /// Add an item to ith inventory slot if available
+        /// </summary>
+        public bool AddToInventory(Item item, int amount, int index)
         {
-            inventorySlots[index].UpdateInventorySlot(item, amount);
-            OnInventoryChange?.Invoke(inventorySlots[index]);
-            return true;
-        } else if (inventorySlots[index].CheckRoomLeftInStack(amount))
-        {
-            inventorySlots[index].AddToStack(amount);
-            OnInventoryChange?.Invoke(inventorySlots[index]);
-            return true;
+            if (index >= NumOfInventorySlots) return false;
+
+            if (InventorySlots[index].ItemData == null)
+            {
+                InventorySlots[index].UpdateInventorySlot(item, amount);
+                OnInventoryChange?.Invoke(InventorySlots[index]);
+                return true;
+            }
+            else if (InventorySlots[index].CheckRoomLeftInStack(amount))
+            {
+                InventorySlots[index].AddToStack(amount);
+                OnInventoryChange?.Invoke(InventorySlots[index]);
+                return true;
+            }
+
+            return false;
         }
-
-        return false;
     }
 }

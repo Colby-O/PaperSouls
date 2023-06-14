@@ -1,69 +1,97 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
+using PaperSouls.Core;
+using PaperSouls.Runtime.Interfaces;
 
-public class PlayerManger : MonoBehaviour, IDamageable
+namespace PaperSouls.Runtime.Player
 {
-    public PlayerSettings playerSettings;
-    public PlayerHUDManger playerHUD;
 
-    private float currentHealth;
-    private float currentXP;
-    private float maxXP;
-
-    public bool IsFullHealth()
+    public class PlayerManger : MonoBehaviour, IDamageable
     {
-        return currentHealth >= playerSettings.health;
-    }
+        public PlayerSettings PlayerSettings;
+        public PlayerHUDManger PlayerHUD;
 
-    public void AddHealth(float health)
-    {
-        currentHealth += health;
-        playerHUD.UpdatePlayerHealth(currentHealth);
-    }
+        private float _currentHealth;
+        private float _currentXP;
+        private float _maxXP;
 
-    public void AddXP(float xp)
-    {
-        currentXP += xp;
-        playerHUD.UpdatePlayerXP(currentXP);
-    }
-
-    public void Damage(float dmg)
-    {
-        AddHealth(-dmg);
-
-        if (currentHealth <= 0) Destroy();
-    }
-
-    public void Destroy()
-    {
-        GameManger.UpdateGameState(GameState.PlayerDead);
-        GameObject.Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        currentHealth = playerSettings.health;
-        maxXP = playerSettings.baseXPToLevelUp;
-        currentXP = 0;
-
-        playerHUD.SetMaxPlayerHealth(currentHealth);
-        playerHUD.SetMaxPlayerXP(maxXP);
-        playerHUD.UpdatePlayerHealth(currentHealth);
-        playerHUD.UpdatePlayerXP(currentXP);
-    }
-
-    private void Update()
-    {
-        if (currentXP >= maxXP)
+        /// <summary>
+        /// Checks of the player's health is full
+        /// </summary>
+        public bool IsFullHealth()
         {
-            float leftOverXP = currentXP - maxXP;
-            playerHUD.LevelUp();
-            maxXP = playerSettings.baseXPToLevelUp + playerSettings.xpIncreasePerLevel * (playerHUD.GetCurrentLevel() - 1);
-            playerHUD.SetMaxPlayerXP(maxXP);
-            currentXP = leftOverXP;
-            playerHUD.UpdatePlayerXP(currentXP);
+            return _currentHealth >= PlayerSettings.health;
+        }
+
+        /// <summary>
+        /// Adds health to the player
+        /// </summary>
+        public void AddHealth(float health)
+        {
+            _currentHealth += health;
+            PlayerHUD.UpdatePlayerHealth(_currentHealth);
+        }
+
+        /// <summary>
+        /// Adds Exp to the player
+        /// </summary>
+        public void AddXP(float xp)
+        {
+            _currentXP += xp;
+            PlayerHUD.UpdatePlayerXP(_currentXP);
+        }
+
+        /// <summary>
+        /// Deals Damage to the player
+        /// </summary>
+        public void Damage(float dmg)
+        {
+            AddHealth(-dmg);
+
+            if (_currentHealth <= 0) Destroy();
+        }
+       
+        /// <summary>
+        /// Process the players current level
+        /// </summary>
+        private void ProcessLevel()
+        {
+            if (_currentXP >= _maxXP)
+            {
+                float leftOverXP = _currentXP - _maxXP;
+                PlayerHUD.LevelUp();
+                _maxXP = PlayerSettings.baseXPToLevelUp + PlayerSettings.xpIncreasePerLevel * (PlayerHUD.GetCurrentLevel() - 1);
+                PlayerHUD.SetMaxPlayerXP(_maxXP);
+                _currentXP = leftOverXP;
+                PlayerHUD.UpdatePlayerXP(_currentXP);
+            }
+        }
+
+        /// <summary>
+        /// Desotry the player object
+        /// </summary>
+        public void Destroy()
+        {
+            GameManger.UpdateGameState(GameState.PlayerDead);
+            GameObject.Destroy(gameObject);
+        }
+
+        private void Start()
+        {
+            _currentHealth = PlayerSettings.health;
+            _maxXP = PlayerSettings.baseXPToLevelUp;
+            _currentXP = 0;
+
+            PlayerHUD.SetMaxPlayerHealth(_currentHealth);
+            PlayerHUD.SetMaxPlayerXP(_maxXP);
+            PlayerHUD.UpdatePlayerHealth(_currentHealth);
+            PlayerHUD.UpdatePlayerXP(_currentXP);
+        }
+
+        private void Update()
+        {
+            ProcessLevel();
         }
     }
 }

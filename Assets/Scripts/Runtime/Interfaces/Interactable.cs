@@ -1,13 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
+using PaperSouls.Runtime.Player;
 
-public interface IInteractable
+namespace PaperSouls.Runtime.Interfaces
 {
-    public UnityAction<IInteractable> OnInteractionComplete { get; set; }
+    public interface IInteractable
+    {
+        /// <summary>
+        /// Callback to run once an interaction is complete.
+        /// </summary>
+        public UnityAction<IInteractable> OnInteractionComplete { get; set; }
 
-    public void Interact(Interactor interactor, out bool successful);
+        /// <summary>
+        /// Interaction with a Interactor
+        /// </summary>
+        public void Interact(Interactor interactor, out bool successful);
 
-    public void EndInteraction();
+        /// <summary>
+        /// Method to be called once Interaction is complete
+        /// </summary>
+        public void EndInteraction();
+    }
 }

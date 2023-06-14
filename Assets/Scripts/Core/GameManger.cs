@@ -1,70 +1,87 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using PaperSouls.Runtime.Items;
 
-public enum GameState
+namespace PaperSouls.Core
 {
-    InMainMenu,
-    Playing,
-    InMenu,
-    PlayerDead
-}
 
-public class GameManger : MonoBehaviour
-{
-    private static GameManger instance;
-    public static GameManger Instance
+    /// <summary>
+    /// List of GameStates
+    /// </summary>
+    public enum GameState
     {
-        get
+        InMainMenu,
+        Playing,
+        InMenu,
+        PlayerDead
+    }
+
+    public class GameManger : MonoBehaviour
+    {
+        private static GameManger _instance;
+        private static readonly object Padlock = new();
+
+        public static GameManger Instance
         {
-            if (instance == null) Debug.Log("Game Manger is null!!!");
-            return instance;
+            get
+            {
+                lock (Padlock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new();
+                    }
+
+                    return _instance;
+                }
+            }
         }
-        private set {}
-    }
 
-    public GameObject player;
-    public ItemDatabase itemDatabase;
-    public GameState state;
+        public GameObject Player { get; private set; }
+        [SerializeField] private ItemDatabase _itemDatabase;
+        private GameState State { get; set; }
 
-    public static bool accpetPlayerInput { get; private set; }
+        public static bool AccpetPlayerInput { get; private set; }
 
-    public static void UpdateGameState(GameState newState)
-    {
-        instance.state = newState;
-
-        switch (instance.state)
+        /// <summary>
+        /// Updates the GameState and run any corrspounding logic. 
+        /// </summary>
+        public static void UpdateGameState(GameState newState)
         {
-            case GameState.InMainMenu:
-                break;
-            case GameState.Playing:
-                accpetPlayerInput = true;
-                break;
-            case GameState.InMenu:
-                accpetPlayerInput = false;
-                break;
-            case GameState.PlayerDead:
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                UpdateGameState(GameState.Playing);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(instance.state), instance.state, null);
+            _instance.State = newState;
+
+            switch (_instance.State)
+            {
+                case GameState.InMainMenu:
+                    break;
+                case GameState.Playing:
+                    AccpetPlayerInput = true;
+                    break;
+                case GameState.InMenu:
+                    AccpetPlayerInput = false;
+                    break;
+                case GameState.PlayerDead:
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    UpdateGameState(GameState.Playing);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(_instance.State), _instance.State, null);
+            }
         }
-    }
 
-    void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-        instance = this;
-        itemDatabase.SetItemIDs();
-        state = GameState.Playing;
-        accpetPlayerInput = true;
-    }
+        private void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+            _instance = this;
+            _itemDatabase.SetItemIDs();
+            State = GameState.Playing;
+            AccpetPlayerInput = true;
+        }
 
-    private void Update()
-    {
-        if (instance.player == null) instance.player = GameObject.Find("Player");
+        private void Update()
+        {
+            if (_instance.Player == null) _instance.Player = GameObject.Find("Player");
+        }
     }
 }

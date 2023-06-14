@@ -2,48 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PaperSouls.Runtime.Interfaces;
 
-[RequireComponent(typeof(PlayerInput))]
-public class Interactor : MonoBehaviour
+namespace PaperSouls.Runtime.Player
 {
-    public Transform interactionPoint;
-    public LayerMask interactionLayer;
-    public float interactionRadius = 0.1f;
-    public bool isInteracting;
 
-    private PlayerInput playerInput;
-
-    private InputAction interactAction;
-
-    void StartInteraction(IInteractable interactable)
+    [RequireComponent(typeof(PlayerInput))]
+    public class Interactor : MonoBehaviour
     {
-        interactable.Interact(this, out isInteracting);
-    }
+        [SerializeField] private Transform _interactionPoint;
+        [SerializeField] private LayerMask _interactionLayer;
+        [SerializeField] private float _interactionRadius = 0.1f;
 
-    void EndInteraction()
-    {
-        isInteracting = false;
-    }
+        private bool _isInteracting;
+        private PlayerInput _playerInput;
+        private InputAction _interactAction;
 
-    private void Awake()
-    {
-        playerInput = GetComponent<PlayerInput>();
-
-        interactAction = playerInput.actions["Interact"];
-    }
-
-    private void Update()
-    {
-        Collider[] colliders = Physics.OverlapSphere(interactionPoint.position, interactionRadius, interactionLayer);
-
-        if (interactAction.WasPressedThisFrame())
+        /// <summary>
+        /// Start an interaction
+        /// </summary>
+        void StartInteraction(IInteractable interactable)
         {
-            if (colliders.Length == 0) EndInteraction();
+            interactable.Interact(this, out _isInteracting);
+        }
 
-            for (int i = 0; i < colliders.Length; i++)
+        /// <summary>
+        /// Ends an interaction
+        /// </summary>
+        void EndInteraction()
+        {
+            _isInteracting = false;
+        }
+
+        private void Awake()
+        {
+            _playerInput = GetComponent<PlayerInput>();
+
+            _interactAction = _playerInput.actions["Interact"];
+        }
+
+        private void Update()
+        {
+            Collider[] colliders = Physics.OverlapSphere(_interactionPoint.position, _interactionRadius, _interactionLayer);
+
+            if (_interactAction.WasPressedThisFrame())
             {
-                IInteractable interactable = colliders[i].GetComponent<IInteractable>();
-                if (interactable != null) StartInteraction(interactable);
+                if (colliders.Length == 0) EndInteraction();
+
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    IInteractable interactable = colliders[i].GetComponent<IInteractable>();
+                    if (interactable != null) StartInteraction(interactable);
+                }
             }
         }
     }

@@ -1913,9 +1913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d964272ccb9304abc0e9cdb9677828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  itemDatabase: {fileID: 11400000, guid: abc1eb9b623590d41b644d8ee4c37207, type: 2}
-  state: 0
+  _itemDatabase: {fileID: 11400000, guid: abc1eb9b623590d41b644d8ee4c37207, type: 2}
 --- !u!1 &470331288
 GameObject:
   m_ObjectHideFlags: 0
@@ -3252,7 +3250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6110fbfbc2ba29d49b46ef8c115ac32c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backButton: {fileID: 1327757067}
+  _backButton: {fileID: 1327757067}
 --- !u!1 &658906301
 GameObject:
   m_ObjectHideFlags: 0
@@ -8323,10 +8321,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faff8c28581a5a24a9995157809c3f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overallSound: {fileID: 1161449493}
-  musicSound: {fileID: 514931442}
-  sfxSound: {fileID: 2013698439}
-  backButton: {fileID: 1521422023}
+  _overallSound: {fileID: 1161449493}
+  _musicSound: {fileID: 514931442}
+  _sfxSound: {fileID: 2013698439}
+  _backButton: {fileID: 1521422023}
 --- !u!1 &1471971858
 GameObject:
   m_ObjectHideFlags: 0
@@ -8456,19 +8454,19 @@ MonoBehaviour:
   overallSound: 1
   sfxSound: 1
   musicSound: 1
-  musicSounds: []
-  sfxSounds:
+  _musicSounds: []
+  _sfxSounds:
   - id: 0
-    name: Sword Slash
-    audio: {fileID: 8300000, guid: e2ad44df5b580c4429a0233570c7bd11, type: 3}
-  - id: 1
     name: Item Pickup
     audio: {fileID: 8300000, guid: 7cfeee9de613d21459357d1393172754, type: 3}
-  - id: 2
+  - id: 1
     name: Health Potion Use
     audio: {fileID: 8300000, guid: e91c3aa0f4050cf4a98e448c32113a2e, type: 3}
-  musicSource: {fileID: 331350387}
-  sfxSource: {fileID: 1401285145}
+  - id: 2
+    name: Sword Slash
+    audio: {fileID: 8300000, guid: e2ad44df5b580c4429a0233570c7bd11, type: 3}
+  _musicSource: {fileID: 331350387}
+  _sfxSource: {fileID: 1401285145}
 --- !u!1 &1521422021
 GameObject:
   m_ObjectHideFlags: 0
@@ -10315,9 +10313,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7be1bb353663d8b47bdd17d6351369b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playButton: {fileID: 939342653}
-  settingsButton: {fileID: 453097375}
-  quitButton: {fileID: 1054645313}
+  _playButton: {fileID: 939342653}
+  _settingsButton: {fileID: 453097375}
+  _quitButton: {fileID: 1054645313}
 --- !u!1 &1724644641
 GameObject:
   m_ObjectHideFlags: 0
@@ -10640,10 +10638,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d079d2978543349a1188180616e3dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphicSettingsButton: {fileID: 450519830}
-  controlSettingsButton: {fileID: 979088351}
-  soundSettingsButton: {fileID: 1530211449}
-  backButton: {fileID: 1175434834}
+  _graphicSettingsButton: {fileID: 450519830}
+  _controlSettingsButton: {fileID: 979088351}
+  _soundSettingsButton: {fileID: 1530211449}
+  _backButton: {fileID: 1175434834}
 --- !u!1 &1972974319
 GameObject:
   m_ObjectHideFlags: 0
@@ -10725,13 +10723,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5506b2af49a098e48b0ac51968ea76e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingView: {fileID: 1698823314}
-  views:
+  _startingView: {fileID: 1698823314}
+  _views:
   - {fileID: 1698823314}
   - {fileID: 1848973570}
   - {fileID: 1447635404}
   - {fileID: 641260944}
-  currentView: {fileID: 0}
 --- !u!1 &2007082888
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,71 +1,107 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime;
 
-public class AudioManger : MonoBehaviour
+namespace PaperSouls.Core
 {
-    private static AudioManger instance; 
-    public static AudioManger Instance
+    public class AudioManger : MonoBehaviour
     {
-        get
-        {
-            if (instance == null) Debug.Log("Audio Manger is null!!!");
+        private static AudioManger _instance;
+        private static readonly object Padlock = new();
 
-            return instance;
+        public static AudioManger Instance
+        {
+            get
+            {
+                lock (Padlock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new();
+                    }
+
+                    return _instance;
+                }
+            }
         }
 
-        private set { }
-    }
+        [Header("Settings")]
+        [Range(0f, 1f)] public float overallSound = 1.0f;
+        [Range(0f, 1f)] public float sfxSound = 1.0f;
+        [Range(0f, 1f)] public float musicSound = 1.0f;
 
-    [Header("Settings")]
-    [Range(0f, 1f)] public float overallSound = 1.0f;
-    [Range(0f, 1f)] public float sfxSound = 1.0f;
-    [Range(0f, 1f)] public float musicSound = 1.0f;
+        [Header("Audio Clips/Sources")]
+        [SerializeField] private List<Audio> _musicSounds;
+        [SerializeField] private List<Audio> _sfxSounds;
 
-    [HeaderAttribute("Audio Clips/Sources")]
-    public List<Audio> musicSounds;
-    public List<Audio> sfxSounds;
+        [SerializeField] private AudioSource _musicSource;
+        [SerializeField] private AudioSource _sfxSource;
 
-    public AudioSource musicSource;
-    public AudioSource sfxSource;
+        /// <summary>   
+        /// Private member that plays music given an audioclip and sound level between 0 and 1. 
+        /// Music is play to compleation and only one audio clip can be played at once.
+        /// </summary>
+        private void PlayMusic(AudioClip audio, float sound)
+        {
+            _musicSource.volume = sound;
+            _musicSource.clip = audio;
+            _musicSource.Play();
+        }
 
-    public void PlayMusic(string name)
-    {
-        Audio music = musicSounds.Find(e => name.CompareTo(e.name) == 1);
-        if (music == null) return;
-        musicSource.volume = overallSound * musicSound;
-        musicSource.clip = music.audio;
-        musicSource.Play();
-    }
+        /// <summary>   
+        /// Private member that plays SfX sound given an audioclip and sound level between 0 and 1.
+        /// Multiple audio files can be played at once. 
+        /// </summary>
+        private void PlaySfX(AudioClip audio, float sound)
+        {
+            _sfxSource.volume = sound;
+            _sfxSource.PlayOneShot(audio);
+        }
 
-    public void PlayMusic(int id)
-    {
-        Audio music = musicSounds.Find(e => id == e.id);
-        if (music == null) return;
-        musicSource.volume = overallSound * musicSound;
-        musicSource.clip = music.audio;
-        musicSource.Play();
-    }
+        /// <summary>   
+        /// Finds and plays music with a given name if such an Audio file exist.
+        /// </summary>
+        public void PlayMusic(string name)
+        {
+            Audio music = _musicSounds.Find(e => name.CompareTo(e.name) == 1);
+            if (music == null) return;
+            PlayMusic(music.audio, overallSound * musicSound);
+        }
 
-    public void PlaySFX(string name)
-    {
-        Audio sfx = sfxSounds.Find(e => name.CompareTo(e.name) == 0);
-        if (sfx == null) return;
-        sfxSource.volume = overallSound * sfxSound;
-        sfxSource.PlayOneShot(sfx.audio);
-    }
+        /// <summary>   
+        /// Finds and plays music with a given an id if such an Audio file exist.
+        /// </summary>
+        public void PlayMusic(int id)
+        {
+            Audio music = _musicSounds.Find(e => id == e.id);
+            if (music == null) return;
+            PlayMusic(music.audio, overallSound * musicSound);
+        }
 
-    public void PlaySFX(int id)
-    {
-        Audio sfx = sfxSounds.Find(e => id == e.id);
-        if (sfx == null) return;
-        sfxSource.volume = overallSound * sfxSound;
-        sfxSource.PlayOneShot(sfx.audio);
-    }
+        /// <summary>   
+        /// Finds and plays a SfX sound with a given name if such an Audio file exist.
+        /// </summary>
+        public void PlaySFX(string name)
+        {
+            Audio sfx = _sfxSounds.Find(e => name.CompareTo(e.name) == 0);
+            if (sfx == null) return;
+            PlaySfX(sfx.audio, overallSound * sfxSound);
+        }
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-        instance = this;
+        /// <summary>   
+        /// Finds and plays a SfX sound with a given an id if such an Audio file exist.
+        /// </summary>
+        public void PlaySFX(int id)
+        {
+            Audio sfx = _sfxSounds.Find(e => id == e.id);
+            if (sfx == null) return;
+            PlaySfX(sfx.audio, overallSound * sfxSound);
+        }
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+            _instance = this;
+        }
     }
 }

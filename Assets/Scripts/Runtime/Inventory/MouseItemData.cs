@@ -1,102 +1,132 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using PaperSouls.Core;
+using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.UI.Inventory;
 
-public class MouseItemData : MonoBehaviour
+namespace PaperSouls.Runtime.Inventory
 {
-    public Image sprite;
-    public TextMeshProUGUI count;
-    public InventorySlot inventorySlot;
-
-    public InventorySlotsUI fromSlot;
-
-    public void ReturnItem()
+    public class MouseItemData : MonoBehaviour
     {
-        Debug.Log("Here!");
-        fromSlot?.inventorySlot.AssignItem(inventorySlot);
-        fromSlot?.UpdateSlot();
-        ClearSlot();
-    }
+        [SerializeField] private Image _sprite;
+        [SerializeField] private TextMeshProUGUI _count;
+        public InventorySlot InventorySlot;
+        private InventorySlotsUI _fromSlot;
 
-    public void ClearSlotData()
-    {
-        inventorySlot?.ClearSlot();
-        inventorySlot.slotType = SlotType.Any;
-        sprite.color = Color.clear;
-        count.text = "";
-        sprite.sprite = null;
-    }
-
-    public void ClearSlot()
-    {
-        ClearSlotData();
-        fromSlot = null;
-    }
-
-    public void UpdateSlot(InventorySlot slot)
-    {
-        inventorySlot.AssignItem(slot);
-        inventorySlot.slotType = slot.itemData.slotType;
-        sprite.sprite = slot.itemData.icon;
-        sprite.color = Color.white;
-        count.text = slot.stackSize.ToString();
-    }
-
-    public void UpdateSlot(InventorySlotsUI fromSlot)
-    {
-        this.fromSlot = fromSlot;
-        UpdateSlot(fromSlot.inventorySlot);
-    }
-
-    public void UpdateSlot(InventorySlot slot, InventorySlotsUI fromSlot)
-    {
-        this.fromSlot = fromSlot;
-        UpdateSlot(slot);
-    }
-
-    private void DropItems()
-    {
-        for (int i = 0; i < inventorySlot.stackSize; i++)
+        /// <summary>
+        /// Returns the item in the mouse cursor to ir's orignal slot
+        /// </summary>
+        public void ReturnItem()
         {
-            Vector3 playerFrontLocaton = GameManger.Instance.player.transform.position + 2 * GameManger.Instance.player.transform.forward;
-            Vector3 dropLocaton = new Vector3(playerFrontLocaton.x + 0.1f * i, 0, playerFrontLocaton.z + 0.1f * i);
-            GameObject.Instantiate(inventorySlot.itemData.itemPrefab, new Vector3(dropLocaton.x, 0, dropLocaton.z), Quaternion.identity);
+            _fromSlot?.InventorySlot.AssignItem(InventorySlot);
+            _fromSlot?.UpdateSlot();
+            ClearSlot();
         }
 
-        ClearSlot();
-    }
-
-    private void FollowCursor()
-    {
-        if (inventorySlot.itemData != null)
+        /// <summary>
+        /// Clear the slots data
+        /// </summary>
+        public void ClearSlotData()
         {
-            transform.position = Mouse.current.position.ReadValue();
-
-            if (Mouse.current.leftButton.wasPressedThisFrame && !IsPointerOverUIObject()) DropItems();
+            InventorySlot?.ClearSlot();
+            InventorySlot.InventorySlotType = SlotType.Any;
+            _sprite.color = Color.clear;
+            _count.text = "";
+            _sprite.sprite = null;
         }
-    }
 
-    public static bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrent = new(EventSystem.current);
-        eventDataCurrent.position = Mouse.current.position.ReadValue();
-        List<RaycastResult> res = new();
-        EventSystem.current.RaycastAll(eventDataCurrent, res);
+        /// <summary>
+        /// Clear the slots data and the _fromSlot
+        /// </summary>
+        public void ClearSlot()
+        {
+            ClearSlotData();
+            _fromSlot = null;
+        }
 
-        return res.Count > 0;
-    }
+        /// <summary>
+        /// Updates the slots data given a slot
+        /// </summary>
+        public void UpdateSlot(InventorySlot slot)
+        {
+            InventorySlot.AssignItem(slot);
+            InventorySlot.InventorySlotType = slot.ItemData.slotType;
+            _sprite.sprite = slot.ItemData.icon;
+            _sprite.color = Color.white;
+            _count.text = slot.StackSize.ToString();
+        }
 
-    private void Awake()
-    {
-        ClearSlot();
-    }
+        /// <summary>
+        /// Updates the slots data given a UI slot
+        /// </summary>
+        public void UpdateSlot(InventorySlotsUI fromSlot)
+        {
+            this._fromSlot = fromSlot;
+            UpdateSlot(fromSlot.InventorySlot);
+        }
 
-    private void Update()
-    {
-        FollowCursor();
+        /// <summary>
+        /// Updates the slots data given a slot and a from slot
+        /// </summary>
+        public void UpdateSlot(InventorySlot slot, InventorySlotsUI fromSlot)
+        {
+            this._fromSlot = fromSlot;
+            UpdateSlot(slot);
+        }
+
+        /// <summary>
+        /// Drops the items in the mosue slot
+        /// </summary>
+        private void DropItems()
+        {
+            for (int i = 0; i < InventorySlot.StackSize; i++)
+            {
+                Vector3 playerFrontLocaton = GameManger.Instance.Player.transform.position + 2 * GameManger.Instance.Player.transform.forward;
+                Vector3 dropLocaton = new Vector3(playerFrontLocaton.x + 0.1f * i, 0, playerFrontLocaton.z + 0.1f * i);
+                GameObject.Instantiate(InventorySlot.ItemData.itemPrefab, new Vector3(dropLocaton.x, 0, dropLocaton.z), Quaternion.identity);
+            }
+
+            ClearSlot();
+        }
+
+        /// <summary>
+        /// Moves the mouse slot to the current cursor position
+        /// </summary>
+        private void FollowCursor()
+        {
+            if (InventorySlot.ItemData != null)
+            {
+                transform.position = Mouse.current.position.ReadValue();
+
+                if (Mouse.current.leftButton.wasPressedThisFrame && !IsPointerOverUIObject()) DropItems();
+            }
+        }
+
+        /// <summary>
+        /// Checks if mouse cursor is over UI or not
+        /// </summary>
+        public static bool IsPointerOverUIObject()
+        {
+            PointerEventData eventDataCurrent = new(EventSystem.current);
+            eventDataCurrent.position = Mouse.current.position.ReadValue();
+            List<RaycastResult> res = new();
+            EventSystem.current.RaycastAll(eventDataCurrent, res);
+
+            return res.Count > 0;
+        }
+
+        private void Awake()
+        {
+            ClearSlot();
+        }
+
+        private void Update()
+        {
+            FollowCursor();
+        }
     }
 }

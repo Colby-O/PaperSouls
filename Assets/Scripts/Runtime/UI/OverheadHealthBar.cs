@@ -1,39 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class OverheadHealthBar : MonoBehaviour
+namespace PaperSouls.Runtime.UI
 {
-    private Vector3 localScale;
-    private GameObject healthBarPrefab;
-    private GameObject healthBar;
-    private GameObject parnet;
-
-    public void HealthBarInit(Vector3 position, Quaternion rotation, GameObject healthBarPrefab, GameObject parnet)
+    public class OverheadHealthBar : MonoBehaviour
     {
-        this.healthBarPrefab = healthBarPrefab;
-        this.parnet = parnet;
-        healthBar = Instantiate(healthBarPrefab, position, rotation);
-        healthBar.transform.parent = parnet.transform;
-        localScale = healthBar.transform.localScale;
-    }
+        private Vector3 _localScale;
+        private GameObject _healthBarPrefab;
+        private GameObject _healthBar;
+        private GameObject _parnet;
 
-    public void UpdateHealthBar(float healthPercentage)
-    {
-        localScale.x *= healthPercentage;
-        healthBar.transform.localScale = localScale;
-    }
+        /// <summary>   
+        /// Initalizes The Health Bar and instantiates. 
+        /// </summary>
+        public void HealthBarInit(Vector3 position, Quaternion rotation, GameObject _healthBarPrefab, GameObject _parnet)
+        {
+            this._healthBarPrefab = _healthBarPrefab;
+            this._parnet = _parnet;
+            _healthBar = Instantiate(this._healthBarPrefab, position, rotation);
+            _healthBar.transform.parent = this._parnet.transform;
+            _localScale = _healthBar.transform.localScale;
+        }
 
-    void RotateTowardsCamera()
-    {
-        Quaternion fromRotate = healthBar.transform.rotation;
-        Quaternion toRotate = Quaternion.Euler(fromRotate.eulerAngles.x, Camera.main.transform.rotation.eulerAngles.y, fromRotate.eulerAngles.z);
+        /// <summary>   
+        /// Update the health value
+        /// </summary>
+        public void UpdateHealthBar(float healthPercentage)
+        {
+            _localScale.x *= healthPercentage;
+            _healthBar.transform.localScale = _localScale;
+        }
 
-        healthBar.transform.rotation = toRotate;
-    }
+        /// <summary>   
+        /// Rotates the sprite towards Canera.
+        /// TODO: just inherit from Billboard???
+        /// </summary>
+        private void RotateTowardsCamera()
+        {
+            Quaternion fromRotate = _healthBar.transform.rotation;
+            Quaternion toRotate = Quaternion.Euler(fromRotate.eulerAngles.x, Camera.main.transform.rotation.eulerAngles.y, fromRotate.eulerAngles.z);
 
-    private void Update()
-    {
-        RotateTowardsCamera();
+            _healthBar.transform.rotation = toRotate;
+        }
+
+        private void Update()
+        {
+            RotateTowardsCamera();
+        }
     }
 }

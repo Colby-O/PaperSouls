@@ -99,7 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0361d1e402b908949bf07676adf30694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateTarget: {fileID: 0}
 --- !u!135 &230301453563810718
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -125,5 +124,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869087d924ffd7d4fb503cfda690aa37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickUpRadius: 0.1
-  itemData: {fileID: 11400000, guid: 9adee76d6afaaf3439327af81faabfe9, type: 2}
+  _pickUpRadius: 0.1
+  _itemData: {fileID: 11400000, guid: 9adee76d6afaaf3439327af81faabfe9, type: 2}

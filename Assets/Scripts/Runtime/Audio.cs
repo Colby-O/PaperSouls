@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Audio
+namespace PaperSouls.Runtime
 {
-    public int id;
-    public string name;
-    public AudioClip audio;
+    [System.Serializable]
+    public class Audio
+    {
+        public int id;
+        public string name;
+        public AudioClip audio;
+    }
 }

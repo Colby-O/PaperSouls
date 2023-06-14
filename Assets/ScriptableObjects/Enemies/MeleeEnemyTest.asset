@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   healthBarPrefab: {fileID: 2593937649716986227, guid: 135ffb6527a5e164ebb94f4f551f410e, type: 3}
+  xpGain: 50
   attackDamage: 10
   enemySpeed: 10
   lookSpeed: 10
-  minDistToObject: 2
+  minDistToObject: 1
   defaultMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   deathMat: {fileID: 2100000, guid: 90926d853aba7fc4787e8f1b54f7fba2, type: 2}
   dropLoot: 1
@@ -25,4 +26,4 @@ MonoBehaviour:
   maxNumberOfDrops: 3
   dropRadius: 1
   memoryTime: 2
-  timeBetweenAttacks: 2
+  timeBetweenAttacks: 1

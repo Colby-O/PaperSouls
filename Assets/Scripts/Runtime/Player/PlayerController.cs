@@ -2,231 +2,280 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PaperSouls.Core;
+using PaperSouls.Runtime.Sprite;
+using PaperSouls.Runtime.Inventory;
+using PaperSouls.Runtime.Items;
 
-[RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
-public class PlayerController : Billboard
+namespace PaperSouls.Runtime.Player
 {
-    public float turnSpeed = 10.0f;
-    public float lookSpeed = 10.0f;
-    [Range(-90, 0)] public float minViewY;
-    [Range(0, 90)] public float maxViewY;
-    public Vector2 sensitivity;
-    public float jumpHeight = 10;
-    public float jumpFalloff = 0.5f;
-    public float gravityMultiplier = 3;
-    public UseableItem quickUseItem;
 
-    public GameObject playerUI;
-    public GameObject inventoryUI;
-
-    private PlayerInput playerInput;
-    private PlayerManger playerManger;
-    private CharacterController characterController;
-    private Animator animator;
-
-    private bool isWalking;
-
-    private bool isSprinting;
-    private Vector3 jumpForce;
-    private Vector3 jumpVel;
-    private float gravity = -9.81f;
-    private float gravityForceOnPlayer = 0.0f;
-    private float verticalMovement;
-    private float horizontalMovement;
-
-    private float cameraOffsetZ;
-    private float cameraOffsetY;
-
-    private float mouseScrollY;
-
-    private InputAction moveAction;
-    private InputAction lookAction;
-    private InputAction zoomAction;
-    private InputAction jumpAction;
-    private InputAction sprintAction;
-    private InputAction quickUseAction;
-
-    private Vector3 targetDirection;
-    private Vector2 cameraAngle;
-
-    private Vector2 rawMovementInput;
-    [SerializeField] private Vector2 rawMousePosition;
-
-    void GetPlayerTargetDirection()
+    [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
+    public class PlayerController : Billboard
     {
-        horizontalMovement = rawMovementInput.x;
-        verticalMovement = rawMovementInput.y;
+        [SerializeField] private float _turnSpeed = 10.0f;
+        [SerializeField] private float _lookSpeed = 10.0f;
+        [SerializeField] [Range(-90, 0)] private float _minViewY;
+        [SerializeField] [Range(0, 90)] private float _maxViewY;
+        [SerializeField] private Vector2 _sensitivity;
+        [SerializeField] private float _jumpHeight = 10;
+        [SerializeField] private float _jumpFalloff = 0.5f;
+        [SerializeField] private float _gravityMultiplier = 3;
+        [SerializeField] private UseableItem _quickUseItem;
 
-        Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
-        forward.y = 0;
+        [SerializeField] private GameObject _playerUI;
+        [SerializeField] private GameObject _inventoryUI;
 
-        Vector3 right = Camera.main.transform.TransformDirection(Vector3.right);
+        private PlayerInput _playerInput;
+        private PlayerManger _playerManger;
+        private CharacterController _characterController;
+        private Animator _animator;
 
-        targetDirection = horizontalMovement * right + verticalMovement * forward;
+        private bool _isWalking;
+        private bool _isSprinting;
+        private Vector3 _jumpForce;
+        private Vector3 _jumpVel;
+        private float _gravity = -9.81f;
+        private float _gravityForceOnPlayer = 0.0f;
+        private float _verticalMovement;
+        private float _horizontalMovement;
 
-        isWalking = targetDirection.magnitude > 0;
-    }
+        private float _cameraOffsetZ;
+        private float _cameraOffsetY;
 
-    void ProcessPlayerMovement()
-    { 
-        Vector3 playerMovement = targetDirection * ((isSprinting) ? playerManger.playerSettings.playerSpeedRunning : playerManger.playerSettings.playerSpeedWalking);
-        
-        characterController.Move(playerMovement);
-    }
+        private float _mouseScrollY;
 
-    void ApplyGravity()
-    {
-        if (characterController.isGrounded && gravityForceOnPlayer < 0.0f) gravityForceOnPlayer = -1.0f;
-        else gravityForceOnPlayer += gravity * gravityMultiplier * Time.deltaTime;
-        targetDirection.y = gravityForceOnPlayer;
-    }
+        private InputAction _moveAction;
+        private InputAction _lookAction;
+        private InputAction _zoomAction;
+        private InputAction _jumpAction;
+        private InputAction _sprintAction;
+        private InputAction _quickUseAction;
 
-    void ProcessJump()
-    {
-        jumpForce = Vector3.SmoothDamp(jumpForce, Vector3.zero, ref jumpVel, jumpFalloff);
-        targetDirection += jumpForce;
-    }
-    
-    void Jump()
-    {
-        if (characterController.isGrounded && GameManger.accpetPlayerInput)
+        private Vector3 _targetDirection;
+        private Vector2 _cameraAngle;
+
+        private Vector2 _rawMovementInput;
+        private Vector2 _rawMousePosition;
+
+        /// <summary>
+        /// Gets the direction the player is facing
+        /// </summary>
+        void GetPlayerTargetDirection()
         {
-            jumpForce = Vector3.up * jumpHeight;
-            gravityForceOnPlayer = 0;
+            _horizontalMovement = _rawMovementInput.x;
+            _verticalMovement = _rawMovementInput.y;
+
+            Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
+            forward.y = 0;
+
+            Vector3 right = Camera.main.transform.TransformDirection(Vector3.right);
+
+            _targetDirection = _horizontalMovement * right + _verticalMovement * forward;
+
+            _isWalking = _targetDirection.magnitude > 0;
         }
-    }
 
-    void RotateAroundTarget(Vector3 axis, float angle)
-    {
-        Camera.main.transform.RotateAround(transform.position, axis, angle);
-    }
-
-    void FollowPlayer()
-    {
-        Vector3 cameraPosition = new(transform.position.x, transform.position.y + cameraOffsetY, transform.position.z + cameraOffsetZ);
-        Camera.main.transform.position = cameraPosition;
-        Camera.main.transform.rotation = Quaternion.identity;
-    }
-
-    void CheckCameriaCollision()
-    {
-        Vector3 direction = Camera.main.transform.position - transform.position;
-        Ray ray = new(transform.position, direction.normalized);
-
-        Debug.DrawLine(ray.origin, ray.origin + direction.magnitude * ray.direction, Color.blue);
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, direction.magnitude))
+        /// <summary>
+        /// Processes the players movement
+        /// </summary>
+        void ProcessPlayerMovement()
         {
-            if (hitInfo.transform.tag.CompareTo("Player") == 1) Camera.main.transform.position = hitInfo.point;
+            Vector3 playerMovement = _targetDirection * ((_isSprinting) ? _playerManger.PlayerSettings.playerSpeedRunning : _playerManger.PlayerSettings.playerSpeedWalking);
+
+            _characterController.Move(playerMovement);
         }
-    }
 
-    void UpdateCameraAngle()
-    {
-        cameraAngle += rawMousePosition;
-        cameraAngle.y = Mathf.Clamp(cameraAngle.y, minViewY, maxViewY);
-    }
+        /// <summary>
+        /// Apply a gravity force to the player
+        /// </summary>
+        void ApplyGravity()
+        {
+            if (_characterController.isGrounded && _gravityForceOnPlayer < 0.0f) _gravityForceOnPlayer = -1.0f;
+            else _gravityForceOnPlayer += _gravity * _gravityMultiplier * Time.deltaTime;
+            _targetDirection.y = _gravityForceOnPlayer;
+        }
 
-    void ProcessCameraZoom()
-    {
-        if (mouseScrollY > 0) cameraOffsetZ += 1;
-        else if (mouseScrollY < 0) cameraOffsetZ -= 1;
-    }
+        /// <summary>
+        /// Process a jump
+        /// </summary>
+        void ProcessJump()
+        {
+            _jumpForce = Vector3.SmoothDamp(_jumpForce, Vector3.zero, ref _jumpVel, _jumpFalloff);
+            _targetDirection += _jumpForce;
+        }
 
-    void ProcessCamera()
-    {
-        ProcessCameraZoom();
-        FollowPlayer();
-        UpdateCameraAngle();
-        RotateAroundTarget(Camera.main.transform.up, cameraAngle.x);
-        RotateAroundTarget(-Camera.main.transform.right, cameraAngle.y);
-        CheckCameriaCollision();
-    }
+        /// <summary>
+        /// Mkae the player Jump
+        /// </summary>
+        void Jump()
+        {
+            if (_characterController.isGrounded && GameManger.AccpetPlayerInput)
+            {
+                _jumpForce = Vector3.up * _jumpHeight;
+                _gravityForceOnPlayer = 0;
+            }
+        }
 
-    void ProcessPlayer()
-    {
-        GetPlayerTargetDirection();
-        ApplyGravity();
-        ProcessJump();
-        ProcessPlayerMovement();
-    }
+        /// <summary>
+        /// Rotates around the player
+        /// </summary>
+        void RotateAroundTarget(Vector3 axis, float angle)
+        {
+            Camera.main.transform.RotateAround(transform.position, axis, angle);
+        }
 
-    void HandleAnimations()
-    {
-        animator.SetBool("isWalking", isWalking);
-        animator.speed = (isSprinting) ? 2 : 1;
-    }
+        /// <summary>
+        /// Makes the camera follow the player
+        /// </summary>
+        void FollowPlayer()
+        {
+            Vector3 cameraPosition = new(transform.position.x, transform.position.y + _cameraOffsetY, transform.position.z + _cameraOffsetZ);
+            Camera.main.transform.position = cameraPosition;
+            Camera.main.transform.rotation = Quaternion.identity;
+        }
 
-    void QickUse()
-    {
-        InventoryHolder inventoryHolder = GetComponentInChildren<InventoryHolder>();
-        if (inventoryHolder == null) return;
+        /// <summary>
+        /// Check if there is any object in the way of the cameras view of the player
+        /// </summary>
+        void CheckCameriaCollision()
+        {
+            Vector3 direction = Camera.main.transform.position - transform.position;
+            Ray ray = new(transform.position, direction.normalized);
 
-        InventorySlot slot = inventoryHolder.inventoryManger.inventorySlots.Find(e => (e.itemData != null)  ? e.itemData.id == quickUseItem.id : false );
-        if (slot == null) return;
+            Debug.DrawLine(ray.origin, ray.origin + direction.magnitude * ray.direction, Color.blue);
 
-        UseableItem item = slot.itemData as UseableItem;
-        if (item == null) return;
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, direction.magnitude))
+            {
+                if (hitInfo.transform.tag.CompareTo("Player") == 1) Camera.main.transform.position = hitInfo.point;
+            }
+        }
 
-        item.Use(playerManger, out bool sucessful);
-        if (!sucessful) return;
+        /// <summary>
+        /// Updates the angle of the camera
+        /// </summary>
+        void UpdateCameraAngle()
+        {
+            _cameraAngle += _rawMousePosition;
+            _cameraAngle.y = Mathf.Clamp(_cameraAngle.y, _minViewY, _maxViewY);
+        }
 
-        if (slot.stackSize > 1) slot.RemoveFromStack(1);
-        else slot.ClearSlot();
+        /// <summary>
+        /// Process how far the camera should orbit the player
+        /// </summary>
+        void ProcessCameraZoom()
+        {
+            if (_mouseScrollY > 0) _cameraOffsetZ += 1;
+            else if (_mouseScrollY < 0) _cameraOffsetZ -= 1;
+        }
 
-        inventoryHolder.inventoryManger.OnInventoryChange?.Invoke(slot);
-    }
+        /// <summary>
+        /// Process all camera movement
+        /// </summary>
+        void ProcessCamera()
+        {
+            ProcessCameraZoom();
+            FollowPlayer();
+            UpdateCameraAngle();
+            RotateAroundTarget(Camera.main.transform.up, _cameraAngle.x);
+            RotateAroundTarget(-Camera.main.transform.right, _cameraAngle.y);
+            CheckCameriaCollision();
+        }
 
-    public override void Awake()
-    {
-        base.Awake();
+        /// <summary>
+        /// Process all player movement
+        /// </summary>
+        void ProcessPlayer()
+        {
+            GetPlayerTargetDirection();
+            ApplyGravity();
+            ProcessJump();
+            ProcessPlayerMovement();
+        }
 
-        characterController = GetComponent<CharacterController>();
-        playerInput = GetComponent<PlayerInput>();
-        playerManger = GetComponent<PlayerManger>();
-        animator = GetComponentInChildren<Animator>();
+        /// <summary>
+        /// Walking animation
+        /// </summary>
+        void HandleAnimations()
+        {
+            _animator.SetBool("isWalking", _isWalking);
+            _animator.speed = (_isSprinting) ? 2 : 1;
+        }
 
-        playerUI.SetActive(true);
-        inventoryUI.SetActive(true);
+        /// <summary>
+        /// Use a Useable item selected to quick use
+        /// </summary>
+        void QickUse()
+        {
+            InventoryHolder inventoryHolder = GetComponentInChildren<InventoryHolder>();
+            if (inventoryHolder == null) return;
 
-        isWalking = false;
-        isSprinting = false;
+            InventorySlot slot = inventoryHolder.InventoryManger.InventorySlots.Find(e => (e.ItemData != null) ? e.ItemData.id == _quickUseItem.id : false);
+            if (slot == null) return;
 
-        cameraOffsetZ = Camera.main.transform.position.z - transform.position.z;
-        cameraOffsetY = Camera.main.transform.position.y - transform.position.y;
-        cameraAngle = new(0, 0);
+            UseableItem item = slot.ItemData as UseableItem;
+            if (item == null) return;
 
-        moveAction = playerInput.actions["Movement"];
-        lookAction = playerInput.actions["View"];
-        zoomAction = playerInput.actions["Zoom"];
-        jumpAction = playerInput.actions["Jump"];
-        sprintAction = playerInput.actions["Sprint"];
-        quickUseAction = playerInput.actions["QuickUse"];
+            item.Use(_playerManger, out bool sucessful);
+            if (!sucessful) return;
 
-        moveAction.performed += e => rawMovementInput = (GameManger.accpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
-        lookAction.performed += e => rawMousePosition = (GameManger.accpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
-        zoomAction.performed += e => mouseScrollY = (GameManger.accpetPlayerInput) ? e.ReadValue<float>() : 0.0f;
-        jumpAction.performed += e => Jump();
-        sprintAction.performed += e => isSprinting = !isSprinting;
-        sprintAction.canceled += e => isSprinting = !isSprinting;
-        quickUseAction.performed += e => QickUse();
+            if (slot.StackSize > 1) slot.RemoveFromStack(1);
+            else slot.ClearSlot();
 
-        playerInput.actions.Enable();
+            inventoryHolder.InventoryManger.OnInventoryChange?.Invoke(slot);
+        }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+        public override void Awake()
+        {
+            base.Awake();
 
-    private void Start()
-    {
-        playerUI.SetActive(true);
-        inventoryUI.SetActive(false);
-    }
+            _characterController = GetComponent<CharacterController>();
+            _playerInput = GetComponent<PlayerInput>();
+            _playerManger = GetComponent<PlayerManger>();
+            _animator = GetComponentInChildren<Animator>();
 
-    void Update()
-    {
-        ProcessPlayer();
-        ProcessCamera();
-        HandleAnimations();
+            _playerUI.SetActive(true);
+            _inventoryUI.SetActive(true);
+
+            _isWalking = false;
+            _isSprinting = false;
+
+            _cameraOffsetZ = Camera.main.transform.position.z - transform.position.z;
+            _cameraOffsetY = Camera.main.transform.position.y - transform.position.y;
+            _cameraAngle = new(0, 0);
+
+            _moveAction = _playerInput.actions["Movement"];
+            _lookAction = _playerInput.actions["View"];
+            _zoomAction = _playerInput.actions["Zoom"];
+            _jumpAction = _playerInput.actions["Jump"];
+            _sprintAction = _playerInput.actions["Sprint"];
+            _quickUseAction = _playerInput.actions["QuickUse"];
+
+            _moveAction.performed += e => _rawMovementInput = (GameManger.AccpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
+            _lookAction.performed += e => _rawMousePosition = (GameManger.AccpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
+            _zoomAction.performed += e => _mouseScrollY = (GameManger.AccpetPlayerInput) ? e.ReadValue<float>() : 0.0f;
+            _jumpAction.performed += e => Jump();
+            _sprintAction.performed += e => _isSprinting = !_isSprinting;
+            _sprintAction.canceled += e => _isSprinting = !_isSprinting;
+            _quickUseAction.performed += e => QickUse();
+
+            _playerInput.actions.Enable();
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        private void Start()
+        {
+            _playerUI.SetActive(true);
+            _inventoryUI.SetActive(false);
+        }
+
+        void Update()
+        {
+            ProcessPlayer();
+            ProcessCamera();
+            HandleAnimations();
+        }
     }
 }

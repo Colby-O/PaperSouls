@@ -100,7 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0361d1e402b908949bf07676adf30694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateTarget: {fileID: 0}
 --- !u!135 &60430134869750422
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -126,9 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d599ee5350e8da242b4d5f508b949cf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
-  lifeTime: 2
-  speed: 100
+  Damage: 10
+  Speed: 100
+  _lifeTime: 2
 --- !u!54 &3618753265965024329
 Rigidbody:
   m_ObjectHideFlags: 0

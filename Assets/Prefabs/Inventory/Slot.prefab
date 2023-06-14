@@ -188,12 +188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16bad08780509b4499adb6762b711c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSprite: {fileID: 8444719770526160327}
-  itemCount: {fileID: 3451173796612878837}
-  inventorySlot:
-    itemData: {fileID: 0}
-    stackSize: -1
-    slotType: 1
+  _itemSprite: {fileID: 8444719770526160327}
+  _itemCount: {fileID: 3451173796612878837}
 --- !u!114 &5543506296870098937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,13 +246,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7bfcf8d99033d4a94e52a6e03c705f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onLeft:
+  OnLeft:
     m_PersistentCalls:
       m_Calls: []
-  onRight:
+  OnRight:
     m_PersistentCalls:
       m_Calls: []
-  onMiddle:
+  OnMiddle:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &3723995284871124746

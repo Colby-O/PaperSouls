@@ -1,70 +1,95 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.Interfaces;
 
-public class Projectile : MonoBehaviour
+namespace PaperSouls.Runtime.Weapons
 {
-    public Ray ray;
-    public float damage;
-    public float lifeTime = 2;
-    public float speed = 10;
-    private float time;
-
-    private List<string> tagsToIgnore;
-
-    public void AddTagsToIgnore(List<string> tags)
+    public class Projectile : MonoBehaviour
     {
-        tagsToIgnore.AddRange(tags);
-    }
+        [HideInInspector] public Ray ProjectilePath;
+        public float Damage = 10;
+        public float Speed = 10;
 
-    public void AddTagsToIgnore(string tag)
-    {
-        tagsToIgnore.Add(tag);
-    }
+        [SerializeField] private float _lifeTime = 2;
 
-    public void ResetTagsToIgnore()
-    {
-        tagsToIgnore = new();
-    }
+        private float _time;
 
-    public List<string> GetTagsToIgnore()
-    {
-        return tagsToIgnore;
-    }
+        // Projectile won't interact with objects with tags in this List. 
+        private List<string> _tagsToIgnore;
 
-    public void SetRay(Ray ray)
-    {
-        this.ray = ray;
-    }
-
-    private bool IgnoreCollider(GameObject other)
-    {
-        return tagsToIgnore.Contains(other.tag);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (IgnoreCollider(other.gameObject)) return;
-        IDamageable damageable = other.transform.GetComponent<IDamageable>();
-        if (damageable != null) damageable.Damage(damage);
-        Destroy(transform.gameObject);
-    }
-
-    private void Awake()
-    {
-        time = Time.time;
-        tagsToIgnore = new();
-        tagsToIgnore.Add("Item");
-    }
-    void FixedUpdate()
-    {
-        if (Time.time - time > lifeTime)
+        /// <summary>
+        /// Appends a list of tags to the tags to ignore list. 
+        /// </summary>
+        public void AddTagsToIgnore(List<string> tags)
         {
+            _tagsToIgnore.AddRange(tags);
+        }
+
+        /// <summary>
+        /// Appends a tags to the tags to ignore list. 
+        /// </summary>
+        public void AddTagsToIgnore(string tag)
+        {
+            _tagsToIgnore.Add(tag);
+        }
+
+        /// <summary>
+        /// Resets the tags to ignore List to an empty List. 
+        /// </summary>
+        public void ResetTagsToIgnore()
+        {
+            _tagsToIgnore = new();
+        }
+
+        /// <summary>
+        /// Getter for the tags to ignore list. 
+        /// </summary>
+        public List<string> GetTagsToIgnore()
+        {
+            return _tagsToIgnore;
+        }
+
+        /// <summary>
+        /// Sets the ray that defines the path the bullet will follow
+        /// </summary>
+        public void SetRay(Ray ray)
+        {
+            ProjectilePath = ray;
+        }
+
+        /// <summary>
+        /// Check if the GameObject is ignored or not
+        /// </summary>
+        private bool IgnoreCollider(GameObject other)
+        {
+            return _tagsToIgnore.Contains(other.tag);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (IgnoreCollider(other.gameObject)) return;
+            IDamageable damageable = other.transform.GetComponent<IDamageable>();
+            if (damageable != null) damageable.Damage(Damage);
             Destroy(transform.gameObject);
-        } else
+        }
+
+        private void Awake()
         {
-            transform.position = ray.origin + ray.direction * (Time.time - time) * speed;
+            _time = Time.time;
+            _tagsToIgnore = new();
+            _tagsToIgnore.Add("Item");
+        }
+        void FixedUpdate()
+        {
+            if (Time.time - _time > _lifeTime)
+            {
+                Destroy(transform.gameObject);
+            }
+            else
+            {
+                transform.position = ProjectilePath.origin + ProjectilePath.direction * (Time.time - _time) * Speed;
+            }
         }
     }
-
 }

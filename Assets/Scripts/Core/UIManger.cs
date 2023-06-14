@@ -1,93 +1,114 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PaperSouls.Runtime.Inventory;
+using PaperSouls.Runtime.UI.Inventory;
+using PaperSouls.Runtime.UI.View;
 
-[RequireComponent(typeof(ViewManger), typeof(PlayerInput))]
-public class UIManger : MonoBehaviour
-{
-    private static UIManger instance;
-    public static UIManger Instance
+namespace PaperSouls.Core 
+{ 
+    [RequireComponent(typeof(ViewManger), typeof(PlayerInput))]
+    public class UIManger : MonoBehaviour
     {
-        get
+        private static UIManger _instance;
+        private static readonly object Padlock = new();
+        public static UIManger Instance
         {
-            if (instance == null) Debug.Log("UI Manger is null!!!");
+            get
+            {
+                lock (Padlock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new();
+                    }
 
-            return instance;
+                    return _instance;
+                }
+            }
         }
 
-        private set { }
-    }
+        [SerializeField] private DynamicInventoryDisplay _inventoryDisplay;
 
-    public DynamicInventoryDisplay inventoryDisplay;
+        private PlayerInput _uiInput;
 
-    private PlayerInput uiInput;
+        private InputAction _menuAction;
+        private InputAction _closeAction;
 
-    private InputAction menuAction;
-    private InputAction closeAction;
-
-    void DisplayInventory(InventoryManger inventory)
-    {
-        if (!OpenExternalInventory()) return;
+        /// <summary>
+        /// Displays an external inventory such as chests. On get called when 
+        /// InventoryHolder.OnDynamicInventoryDisplayRequest Action is Invoked.
+        /// </summary>
+        void DisplayInventory(InventoryManger inventory)
+        {
+            if (!OpenExternalInventory()) return;
         
-        inventoryDisplay.RefreshDynamicInventory(inventory);
-    }
-
-    public static bool OpenExternalInventory()
-    {
-        if (ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            _inventoryDisplay.RefreshDynamicInventory(inventory);
+        }
+        /// <summary>
+        /// Displays an external inventory such as chests
+        /// </summary>
+        public static bool OpenExternalInventory()
         {
-            ViewManger.Show<ExternalInventoryView>();
-            GameManger.UpdateGameState(GameState.InMenu);
-            return true;
+            if (ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            {
+                ViewManger.Show<ExternalInventoryView>();
+                GameManger.UpdateGameState(GameState.InMenu);
+                return true;
+            }
+
+            return false;
         }
 
-        return false;
-    }
-
-    static void CloseCurrent()
-    {
-        if (!ViewManger.GetCurrentViewIs<PlayerHUDView>())
+        /// <summary>
+        /// Close out of the current menu
+        /// </summary>
+        static void CloseCurrent()
         {
-            ViewManger.ShowLast();
-            if (ViewManger.GetCurrentViewIs<PlayerHUDView>()) GameManger.UpdateGameState(GameState.Playing);
+            if (!ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            {
+                ViewManger.ShowLast();
+                if (ViewManger.GetCurrentViewIs<PlayerHUDView>()) GameManger.UpdateGameState(GameState.Playing);
+            }
         }
-    }
 
-    static void ToggleInventory()
-    {
-        if (ViewManger.GetCurrentViewIs<PlayerHUDView>())
+        /// <summary>
+        /// Toogle the inventory (Opens/Closes)
+        /// </summary>
+        static void ToggleInventory()
         {
-            GameManger.UpdateGameState(GameState.InMenu);
-            ViewManger.Show<MenuInventoryView>();
+            if (ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            {
+                GameManger.UpdateGameState(GameState.InMenu);
+                ViewManger.Show<MenuInventoryView>();
+            }
+            else CloseCurrent();
         }
-        else CloseCurrent();
-    }
 
-    private void OnEnable()
-    {
-        InventoryHolder.OnDynamicInventoryDisplayRequest += DisplayInventory;
-    }
+        private void OnEnable()
+        {
+            InventoryHolder.OnDynamicInventoryDisplayRequest += DisplayInventory;
+        }
 
-    private void OnDisable()
-    {
-        InventoryHolder.OnDynamicInventoryDisplayRequest -= DisplayInventory;
-    }
+        private void OnDisable()
+        {
+            InventoryHolder.OnDynamicInventoryDisplayRequest -= DisplayInventory;
+        }
 
-    private void Awake()
-    {
-        instance = this;
-    }
+        private void Awake()
+        {
+            _instance = this;
+        }
 
-    private void Start()
-    {
-        uiInput = GetComponent<PlayerInput>();
+        private void Start()
+        {
+            _uiInput = GetComponent<PlayerInput>();
 
-        menuAction = uiInput.actions["Inventory"];
-        closeAction = uiInput.actions["Close"];
+            _menuAction = _uiInput.actions["Inventory"];
+            _closeAction = _uiInput.actions["Close"];
 
-        menuAction.performed += e => ToggleInventory();
-        closeAction.performed += e => CloseCurrent();
+            _menuAction.performed += e => ToggleInventory();
+            _closeAction.performed += e => CloseCurrent();
 
+        }
     }
 }
