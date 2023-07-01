@@ -77,12 +77,12 @@ namespace PaperSouls.Runtime.UI.Inventory
             {
                 if (isShiftPressed && slot.InventorySlot.SplitStack(out InventorySlot halfStackSlot))
                 {
-                    _mouseItemData.UpdateSlot(halfStackSlot, slot);
+                    _mouseItemData.UpdateSlot(halfStackSlot, slot, _inventoryManger);
                     slot.UpdateSlot();
                 }
                 else
                 {
-                    _mouseItemData.UpdateSlot(slot);
+                    _mouseItemData.UpdateSlot(slot, _inventoryManger);
                     slot.ClearSlot();
                 }
 
@@ -119,4 +119,6 @@ namespace PaperSouls.Runtime.UI.Inventory
         protected virtual void Awake() { }
     }
 }
+
+// "word" - Roo 2K23
 
