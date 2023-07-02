@@ -53,5 +53,13 @@ namespace PaperSouls.Runtime.Items
         {
             return _itemDatabase.Find(e => e.id == id);
         }
+
+        /// <summary>
+        /// Fetches an item from the database with a gven id
+        /// </summary>
+        public Item GetItem(string name)
+        {
+            return _itemDatabase.Find(e => e.displayName == name);
+        }
     }
 }
