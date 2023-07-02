@@ -94,7 +94,10 @@ namespace PaperSouls.Runtime.Inventory
         /// </summary>
         public void RemoveFromStack(int amount)
         {
-            StackSize -= amount;
+            StackSize = Mathf.Max(0, StackSize - amount);
+            if (StackSize == 0) {
+                UpdateInventorySlot(null, 0);
+            }
         }
 
         /// <summary>

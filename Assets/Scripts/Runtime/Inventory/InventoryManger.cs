@@ -112,5 +112,41 @@ namespace PaperSouls.Runtime.Inventory
 
             return false;
         }
+
+        /// <summary>
+        /// Returns true if item is in inventory
+        /// </summary>
+        public bool HasItem(Item item, int count = 1)
+        {
+            int countInInv = 
+                InventorySlots
+                    .Where(slot => slot.ItemData == item)
+                    .Sum(slot => slot.StackSize);
+            return countInInv >= count;
+        }
+
+        /// <summary>
+        /// Takes 'count' items from the inventory if theres enought space
+        /// Returns true if there were enough items else false
+        /// </summary>
+        public bool TakeItem(Item item, int count)
+        {
+            if (!HasItem(item, count)) return false;
+
+            IEnumerable<InventorySlot> slotsOfItem = InventorySlots.Where(
+                slot => slot.ItemData == item
+            );
+
+            int leftToRemove = count;
+            foreach (var slot in slotsOfItem) {
+                int toRemove = Mathf.Min(slot.StackSize, leftToRemove);
+                slot.RemoveFromStack(toRemove);
+                leftToRemove -= toRemove;
+                OnInventoryChange?.Invoke(slot);
+                if (leftToRemove == 0) break;
+            }
+
+            return true;
+        }
     }
 }
