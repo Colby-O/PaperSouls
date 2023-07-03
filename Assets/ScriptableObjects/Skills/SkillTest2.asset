@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fdec752d056e524b8758f98d22992de, type: 3}
+  m_Name: SkillTest2
+  m_EditorClassIdentifier: 
+  ID: 2
+  SkillName: Test3
+  Description: This is another test skill.
+  Icon: {fileID: 21300000, guid: 4da274d970a82a943ae3979e7833f3dd, type: 3}
+  Parnet: {fileID: 11400000, guid: 850f7e4fb2ec022429da775b569744d1, type: 2}
+  Children: []
