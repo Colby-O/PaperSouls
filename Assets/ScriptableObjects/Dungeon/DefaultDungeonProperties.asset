@@ -15,26 +15,27 @@ MonoBehaviour:
   Scale: {x: 1, y: 1, z: 1}
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 1}
-  GridSize: 300
+  GridSize: 200
   LoopProabilty: 0.2
-  RoomSize: {x: 5, y: 10}
+  RoomSize: {x: 5, y: 15}
   NumberOfRooms: {x: 5, y: 15}
   NumberOfExits: {x: 2, y: 5}
   RoomSpacing: 10
   StrightHallway: {fileID: 8016355262488674176, guid: 8d7bc1e69f7477240b7c2a25d07f13c0, type: 3}
   CurvedHallway: {fileID: 7576471161998938267, guid: d0745dcfb2be7aa4c9a27a8c74ad62fb, type: 3}
   ThreeWayHallway: {fileID: 6328252842807809934, guid: c4675cf0a1bf25a459552c646ef12f3e, type: 3}
-  FourWayHallway: {fileID: 5573197932425755762, guid: bec135c8842a12546849ff75120f0f28, type: 3}
-  EnterenceHallway: {fileID: 5573197932425755762, guid: bec135c8842a12546849ff75120f0f28, type: 3}
+  FourWayHallway: {fileID: 4789275956471527350, guid: e686f61cd3de67f4eaa40713c0dd17ef, type: 3}
+  EnterenceHallway: {fileID: 6341567081579246582, guid: 7c7f315e4b367d3418c2a9603b23fdaf, type: 3}
   Weights:
     EMPTY: 10
     ROOM: 1000000
     HALLWAY: 5
     HALLWAY_AND_ROOM: 1000000
-    ROOM_SPACING: 100
-    TURN_PENAILITY: 3
+    ROOM_SPACING: 20
+    TURN_PENAILITY: 2
+    HALLWAY_SPACING: 5
   UseShortestPath: 1
   UseRandomRoomSizes: 0
-  AllowGridExtensions: 0
+  AllowGridExtensions: 1
   GridExtension: 50
   MaxNumberOfRoomPlacementTries: 20

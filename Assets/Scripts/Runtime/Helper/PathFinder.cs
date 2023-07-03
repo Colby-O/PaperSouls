@@ -75,6 +75,10 @@ namespace PaperSouls.Runtime.Helpers
                     if (_tileWeights.TURN_PENAILITY == -1) weight = Mathf.Infinity;
                     else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.ROOM_SPACING;
                     break;
+                case TileType.HallwaySpacing:
+                    if (_tileWeights.HALLWAY_SPACING == -1) weight = Mathf.Infinity;
+                    else weight = _tileWeights.HALLWAY_SPACING;
+                    break;
             }
 
             return weight;

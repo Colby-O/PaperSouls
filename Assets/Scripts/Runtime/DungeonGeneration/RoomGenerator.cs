@@ -48,13 +48,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             List<int> enterenceIndices = new();
 
-            if (_numEnterences > (int)(2 * _wallCount.x + 2 * _wallCount.y)) _numEnterences = (int)(2 * _wallCount.x + 2 * _wallCount.y);
+            if (_numEnterences > (int)(2 * _wallCount.x + 2 * _wallCount.y - 8)) _numEnterences = (int)(2 * _wallCount.x + 2 * _wallCount.y - 8);
 
             for (int i = 0; i < _numEnterences; i++)
             {
                 int rand = Random.Range(-2 * (int)_wallCount.x, 2 * (int)_wallCount.y + 1);
 
-                while (rand == 0 || enterenceIndices.Contains(rand)) rand = Random.Range(-2 * (int)_wallCount.x, 2 * (int)_wallCount.y + 1);
+                while (rand == 0 || rand == -1 || rand == -(int)_wallCount.x - 1 || rand == 1 || rand == _wallCount.y + 1 ||rand == -2 * (int)_wallCount.x || rand == -(int)_wallCount.x || rand == 2 * (int)_wallCount.y  || rand == (int)_wallCount.y || enterenceIndices.Contains(rand)) rand = Random.Range(-2 * (int)_wallCount.x, 2 * (int)_wallCount.y + 1);
 
                 enterenceIndices.Add(rand);
             }
@@ -97,8 +97,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             for (int i = 0; i < _wallCount.x; i++)
             {
-                Vector3 positionRight = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _wallSize * scale.x / 2 + i * scale.x * _wallSize, 0, _roomSize.y / 2f);
-                Vector3 positionLeft = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _wallSize * scale.x / 2 + i * scale.x * _wallSize, 0, -_roomSize.y / 2f);
+                Vector3 positionRight = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _wallSize * scale.x / 2f + i * scale.x * _wallSize, 0, _roomSize.y / 2f);
+                Vector3 positionLeft = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _wallSize * scale.x / 2f + i * scale.x * _wallSize, 0, -_roomSize.y / 2f);
 
                 Quaternion rotation = _parnet.transform.rotation;
                 Vector3 scaleVector = new(scale.x, 1, 1);
@@ -406,7 +406,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _mesh.transform.parent = _parnet.transform;
             _exits.transform.parent = _parnet.transform;
 
-
+            /*
             _wallSize = Mathf.Max
             (
                 _roomData.wallObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.x, 
@@ -418,6 +418,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 _roomData.floorObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.x, 
                 _roomData.floorObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.z
             );
+            */
 
             _subRooms = BinarySpacePartitioning(
                 new(
@@ -444,7 +445,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             CreateWalls();
             CreateFloors();
-            //CreateSubRooms(_subRooms);
+            CreateSubRooms(_subRooms);
             CreatePillar();
         }
         
@@ -461,8 +462,20 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Creates a room
         /// </summary>
-        public Room CreateRoom(GameObject parnet, Vector2Int roomSize, int numEnterences, int roomID)
+        public Room CreateRoom(GameObject parnet, Vector2Int roomSize, Vector3 tileSize, int numEnterences, int roomID)
         {
+            _wallSize = Mathf.Max
+            (
+                tileSize.x,
+                tileSize.z
+            );
+
+            _floorSize = new Vector2
+            (
+                tileSize.x,
+                tileSize.z
+            );
+
             InitRoom(parnet, roomSize, numEnterences);
 
             GenerateRoom();
