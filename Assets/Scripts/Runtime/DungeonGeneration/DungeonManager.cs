@@ -42,6 +42,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         [SerializeField] private bool _drawMST = false;
         [SerializeField] private bool _drawFinalGraph = false;
         [SerializeField] private bool _drawHallwayPaths = false;
+        [SerializeField] private bool _drawGridTiles = false;
         private int _numberOfMainRooms;
 
         /// <summary>
@@ -201,6 +202,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
                     roomSize = new(Random.Range(_properties.RoomSize.x, _properties.RoomSize.y), Random.Range(_properties.RoomSize.x, _properties.RoomSize.y));
 
+                    if (roomSize.x % 2 == 0) roomSize.x += 1;
+                    if (roomSize.y % 2 == 0) roomSize.y += 1;
+
                     numberOfPlacementTries += 1;
                     if (_properties.MaxNumberOfRoomPlacementTries < numberOfPlacementTries)
                     {
@@ -225,7 +229,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             parnet.transform.position = position;
 
             Vector2Int sizeScale = new((int)_tileSize.x, (int)_tileSize.z);
-            Room room = _roomGenerator.CreateRoom(parnet, roomSize * sizeScale, Random.Range(numberOfExits.x, numberOfExits.y + 1), roomID);
+            Room room = _roomGenerator.CreateRoom(parnet, roomSize * sizeScale, _tileSize, Random.Range(numberOfExits.x, numberOfExits.y + 1), roomID);
             room.Prefab.transform.parent = _dungeonHolder.transform;
             _roomList.Add(room);
         }
@@ -242,6 +246,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 Vector2Int roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
 
                 Vector2Int roomSize = new(Random.Range(_properties.RoomSize.x, _properties.RoomSize.y), Random.Range(_properties.RoomSize.x, _properties.RoomSize.y));
+                if (roomSize.x % 2 == 0) roomSize.x += 1;
+                if (roomSize.y % 2 == 0) roomSize.y += 1;
 
                 bool foundVaildRoom = GenerateRandomPosition(ref roomPosition, ref roomSize);
 
@@ -274,7 +280,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             GameObject newParent = new("Room" + _roomList[roomID].ID);
             newParent.transform.position = roomPos;
-            Room newRoom = _roomGenerator.CreateRoom(newParent, new((int)_roomList[roomID].Size.x, (int)_roomList[roomID].Size.z), numberOfExitsNeeded, _roomList[roomID].ID);
+            newParent.transform.parent = _dungeonHolder.transform;
+            Vector2Int roomSize = new((int)_roomList[roomID].Size.x, (int)_roomList[roomID].Size.z);
+            if (roomSize.x % 2 == 0) roomSize.x += 1;
+            if (roomSize.y % 2 == 0) roomSize.y += 1;
+            int usedExits = _roomList[roomID].ExitsUsed;
+            Room newRoom = _roomGenerator.CreateRoom(newParent, roomSize, _tileSize, numberOfExitsNeeded, _roomList[roomID].ID);
+            newRoom.ExitsUsed = usedExits;
 
             GameObject.Destroy(_roomList[roomID].Prefab);
             _roomList[roomID] = newRoom;
@@ -302,7 +314,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             for (int v = 0; v < _roomList.Count; v++)
             {
-                if (_roomList[v].ExitsUsed > _roomList[v].Exits.Count) ReplaceRoom(v, _roomList[v].ExitsUsed);
+                if (_roomList[v].ExitsUsed > _roomList[v].Exits.Count) ReplaceRoom(v, _roomList[v].ExitsUsed + 1);
             }
         }
 
@@ -349,7 +361,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private Vector2Int GetRoomdPosition(Vector3 start)
         {
-            return new Vector2Int((int)Mathf.Ceil((start.x / _tileSize.x)), (int)Mathf.Ceil((start.z / _tileSize.z)));
+            return new Vector2Int(Mathf.RoundToInt((start.x / _tileSize.x)), Mathf.RoundToInt((start.z / _tileSize.z)));
         }
 
         /// <summary>
@@ -358,6 +370,17 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private void AddHallwayTileToGrid(Vector2Int gridPos)
         {
             _grid[gridPos.x, gridPos.y] = (_grid[gridPos.x, gridPos.y] == TileType.Room) ? TileType.HallwayAndRoom : TileType.Hallway;
+
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    else if (_grid[gridPos.x + i, gridPos.y + j] == TileType.Empty) _grid[gridPos.x + i, gridPos.y + j] = TileType.HallwaySpacing;
+                }
+            }
+
+
         }
 
         /// <summary>
@@ -373,7 +396,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 if (!cameFrom.ContainsKey(gridPT)) break;
                 else gridPT = cameFrom[gridPT];
             }
-            AddHallwayTileToGrid(end);
+            //AddHallwayTileToGrid(end);
         }
 
         /// <summary>
@@ -420,6 +443,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             Vector2Int roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
             Vector2Int roomSize = new(Random.Range(_properties.RoomSize.x, _properties.RoomSize.y), Random.Range(_properties.RoomSize.x, _properties.RoomSize.y));
+            if (roomSize.x % 2 == 0) roomSize.x += 1;
+            if (roomSize.y % 2 == 0) roomSize.y += 1;
 
             bool success = GenerateRandomPosition(ref roomPosition, ref roomSize);
 
@@ -470,7 +495,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             foreach (Vector2Int dir in DIRECTIONS)
             {
-                if (tiles[dir.x + 1, dir.y + 1] == TileType.Hallway || tiles[dir.x + 1, dir.y + 1] == TileType.HallwayAndRoom) key |= 1 << i;
+                if (tiles[dir.x + 1, dir.y + 1] == TileType.Hallway || tiles[dir.x + 1, dir.y + 1] == TileType.HallwayAndRoom || tiles[dir.x + 1, dir.y + 1] == TileType.Room) key |= 1 << i;
                 i += 1;
             }
 
@@ -543,7 +568,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     TileType[,] tiles = GetSurroundingTiles(gridPos);
 
                     int key = GetHallwayOrention(tiles);
-
+                    //|| _grid[i, j] == TileType.HallwayAndRoom
                     if (_grid[i, j] == TileType.Hallway) CreateHallwayMesh(gridPos, key, i * _properties.GridSize + j);
                 }
             }
@@ -582,8 +607,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 if (!cameFrom.ContainsKey(gridPT)) break;
 
-                Vector3 worldPT = new Vector3(gridPT.x * _tileSize.x, 0, gridPT.y * _tileSize.z);
-                Vector3 nextWorldPT = new Vector3(cameFrom[gridPT].x * _tileSize.x, 0, cameFrom[gridPT].y * _tileSize.z);
+                Vector3 worldPT = new Vector3(gridPT.x * _tileSize.x * _properties.Scale.x, 0, gridPT.y * _tileSize.z * _properties.Scale.z);
+                Vector3 nextWorldPT = new Vector3(cameFrom[gridPT].x * _tileSize.x * _properties.Scale.x, 0, cameFrom[gridPT].y * _tileSize.z * _properties.Scale.z);
 
                 if (_grid[cameFrom[gridPT].x, cameFrom[gridPT].y] == TileType.Room || _grid[cameFrom[gridPT].x, cameFrom[gridPT].y] == TileType.HallwayAndRoom) UnityEngine.Debug.DrawLine(worldPT, nextWorldPT, Color.red, Mathf.Infinity);
                 else UnityEngine.Debug.DrawLine(worldPT, nextWorldPT, Color.magenta, Mathf.Infinity);
@@ -591,7 +616,29 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 gridPT = cameFrom[gridPT];
             }
         }
-       
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void DrawGrid()
+        {
+            for (int i = 0; i < _properties.GridSize; i++)
+            {
+                for (int j = 0; j < _properties.GridSize; j++)
+                {
+                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(i * _tileSize.x *_properties.Scale.x, 0, j * _tileSize.z * _properties.Scale.z);
+                    cube.transform.localScale = new Vector3(_tileSize.x * _properties.Scale.x, _properties.Scale.z, _tileSize.z * _properties.Scale.z);
+
+                    if (_grid[i, j] == TileType.Room) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.red);
+                    else if (_grid[i, j] == TileType.RoomSpacing) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.yellow);
+                    else if (_grid[i, j] == TileType.Empty) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.black);
+                    else if (_grid[i, j] == TileType.Hallway) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.blue);
+                    else cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.grey);
+                }
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -633,6 +680,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 {
                     DrawPath(_paths[i], _pathEnds[i], _pathStarts[i]);
                 }
+            }
+
+            if (_drawGridTiles)
+            {
+                _drawGridTiles = false;
+                DrawGrid();
             }
         }
 

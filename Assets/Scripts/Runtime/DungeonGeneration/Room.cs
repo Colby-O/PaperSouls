@@ -10,7 +10,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         Room,
         Hallway,
         HallwayAndRoom,
-        RoomSpacing
+        RoomSpacing,
+        HallwaySpacing
     }
 
     [System.Serializable]
@@ -23,6 +24,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public float HALLWAY_AND_ROOM = INF;
         public float ROOM_SPACING = 20;
         public float TURN_PENAILITY = 3;
+        public float HALLWAY_SPACING = 7;
     }
 
     [System.Serializable]
@@ -124,13 +126,14 @@ namespace PaperSouls.Runtime.DungeonGeneration
             this.Size = size;
         }
     }
-
+    
+    [System.Serializable]
     public class Room : DungeonObject
     {
-        public int NumExits { get; set; }
-        public List<Transform> Exits { get; set; }
-        public Stack<Transform> AvailableExits { get; set; }
-        public int ExitsUsed { get; set; }
+        public int NumExits;
+        public List<Transform> Exits;
+        public Stack<Transform> AvailableExits;
+        public int ExitsUsed;
 
         public Room(GameObject gameObject, List<Transform> exits, int roomID) : base(gameObject, roomID)
         {
@@ -152,7 +155,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             this.AvailableExits = new Stack<Transform>(exits);
         }
     }
-
+    
+    [System.Serializable]
     public class Hallway : DungeonObject
     {
         // NOTE: Delete if no additional infomation is need...
