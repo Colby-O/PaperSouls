@@ -8,5 +8,6 @@ namespace PaperSouls.Runtime.UI.Minimap
     {
         public Transform TargetToFollow;
         public bool RotateWithTarget = true;
+        public float CameraHeight = 10.0f;
     }
 }

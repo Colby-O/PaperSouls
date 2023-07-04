@@ -12,7 +12,7 @@ namespace PaperSouls.Runtime.UI.Minimap
         private void Awake()
         {
             _settings = (_settings == null) ? GetComponentInParent<MinimapSettings>() : _settings;
-            _cameraHeight = transform.position.y;
+            _cameraHeight = _settings.CameraHeight;
         }
 
         private void Update()
