@@ -81,21 +81,26 @@ namespace PaperSouls.Core
         /// <summary>   
         /// Finds and plays a SfX sound with a given name if such an Audio file exist.
         /// </summary>
-        public void PlaySFX(string name)
+        public void PlaySFX(string name, bool allowOverlay = true)
         {
             Audio sfx = _sfxSounds.Find(e => name.CompareTo(e.name) == 0);
             if (sfx == null) return;
-            PlaySfX(sfx.audio, overallSound * sfxSound);
+            if (!(!allowOverlay && _sfxSource.isPlaying)) PlaySfX(sfx.audio, overallSound * sfxSound);
         }
 
         /// <summary>   
         /// Finds and plays a SfX sound with a given an id if such an Audio file exist.
         /// </summary>
-        public void PlaySFX(int id)
+        public void PlaySFX(int id, bool allowOverlay = true)
         {
             Audio sfx = _sfxSounds.Find(e => id == e.id);
             if (sfx == null) return;
-            PlaySfX(sfx.audio, overallSound * sfxSound);
+            if (!allowOverlay && _sfxSource.isPlaying) PlaySfX(sfx.audio, overallSound * sfxSound);
+        }
+
+        public void StopSFX()
+        {
+            _sfxSource.Stop();
         }
 
         private void Awake()

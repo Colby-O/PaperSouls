@@ -4,69 +4,57 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    public class RoomGenerator : MonoBehaviour
+    /// <summary>
+    /// Defines room Tile Types
+    /// </summary>
+    public enum RoomTileType
     {
-        public int seed;
-        [Min(0)] public Vector2Int roomSize;
-        [Min(1)] public Vector2Int minSubRoomSize;
-        [Min(0)] public int numEnterences;
-        [Range(0, 1)] public float proabilityForSplit = 0.5f;
-        [Min(1)] public int test = 1;
+        Empty,
+        Wall
+    }
 
-        public List<DungeonAsset> wallObjects;
-        public List<DungeonAsset> enterenceObjects;
-        public List<DungeonAsset> floorObjects;
-        public List<DungeonAsset> pillarObjects;
+    public class RoomGenerator
+    {
+        // Room Data
+        private RoomData _roomData;
+        private int _seed;
+        private Vector2Int _roomSize;
+        private int _numEnterences;
+        private List<Bounds> _subRooms;
 
-        private RoomTileType[,] grid;
-        private Vector2 wallCount;
-        private float wallSize;
-        private Vector2 floorSize;
-        private Vector2 floorCount;
-        private List<GameObject> roomObjects;
-        GameObject parnet;
-        GameObject mesh;
-        GameObject exits;
+        // Room Object Wrappers
+        private GameObject _parnet;
+        private GameObject _mesh;
+        private GameObject _exits;
 
-        /// <summary>
-        /// Defines a generic dungeon asset
-        /// </summary>
-        [System.Serializable]
-        public class DungeonAsset
+        // Interal Variables
+        private RoomTileType[,] _grid;
+        private Vector2 _wallCount;
+        private float _wallSize;
+        private Vector2 _floorSize;
+        private Vector2 _floorCount;
+
+        public RoomGenerator(RoomData roomData, int seed)
         {
-            public GameObject gameObject;
-            [Range(0, 1)] public float proability = 1;
-
-            public DungeonAsset(GameObject gameObject, float proability)
-            {
-                this.gameObject = gameObject;
-                this.proability = proability;
-            }
-        }
-
-        /// <summary>
-        /// Defines room Tile Types
-        /// </summary>
-        public enum RoomTileType
-        {
-            Empty,
-            Wall
+            _seed = seed;
+            _roomData = roomData;
+            Random.InitState(_seed);
         }
 
         /// <summary>
         /// Fetches the generate the locations of the room exits
         /// </summary>
-        List<int> GetExterenceLocations(Vector2 wallCount)
+        List<int> GetExterenceLocations(Vector2 _wallCount)
         {
             List<int> enterenceIndices = new();
 
-            if (numEnterences > (int)(2 * wallCount.x + 2 * wallCount.y)) numEnterences = (int)(2 * wallCount.x + 2 * wallCount.y);
+            if (_numEnterences > (int)(2 * _wallCount.x + 2 * _wallCount.y - 8)) _numEnterences = (int)(2 * _wallCount.x + 2 * _wallCount.y - 8);
 
-            for (int i = 0; i < numEnterences; i++)
+            for (int i = 0; i < _numEnterences; i++)
             {
-                int rand = Random.Range(-2 * (int)wallCount.x, 2 * (int)wallCount.y + 1);
+                int rand = Random.Range(-2 * (int)_wallCount.x, 2 * (int)_wallCount.y + 1);
 
-                while (rand == 0 || enterenceIndices.Contains(rand)) rand = Random.Range(-2 * (int)wallCount.x, 2 * (int)wallCount.y + 1);
+                while (rand == 0 || rand == -1 || rand == -(int)_wallCount.x - 1 || rand == 1 || rand == _wallCount.y + 1 ||rand == -2 * (int)_wallCount.x || rand == -(int)_wallCount.x || rand == 2 * (int)_wallCount.y  || rand == (int)_wallCount.y || enterenceIndices.Contains(rand)) rand = Random.Range(-2 * (int)_wallCount.x, 2 * (int)_wallCount.y + 1);
 
                 enterenceIndices.Add(rand);
             }
@@ -77,16 +65,16 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Pick a random asset from a list
         /// </summary>
-        DungeonAsset GetRandomAsset(List<DungeonAsset> objs)
+        DungeonObject GetRandomAsset(List<DungeonObject> objs)
         {
             bool assetFound = false;
-            DungeonAsset obj = null;
+            DungeonObject obj = null;
             do
             {
                 int rand = Random.Range(0, objs.Count);
                 float prob = Random.value;
 
-                if (prob <= objs[rand].proability)
+                if (prob <= objs[rand].Proability)
                 {
                     assetFound = true;
                     obj = objs[rand];
@@ -102,79 +90,79 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         void CreateWalls()
         {
-            wallCount = new(Mathf.Max(1, Mathf.FloorToInt(roomSize.x / wallSize)), Mathf.Max(1, Mathf.FloorToInt(roomSize.y / wallSize)));
-            Vector2 scale = new((roomSize.x / wallCount.x) / wallSize, (roomSize.y / wallCount.y) / wallSize);
+            _wallCount = new(Mathf.Max(1, Mathf.FloorToInt(_roomSize.x / _wallSize)), Mathf.Max(1, Mathf.FloorToInt(_roomSize.y / _wallSize)));
+            Vector2 scale = new((_roomSize.x / _wallCount.x) / _wallSize, (_roomSize.y / _wallCount.y) / _wallSize);
 
-            List<int> enterenceIndices = GetExterenceLocations(wallCount);
+            List<int> enterenceIndices = GetExterenceLocations(_wallCount);
 
-            for (int i = 0; i < wallCount.x; i++)
+            for (int i = 0; i < _wallCount.x; i++)
             {
-                Vector3 positionRight = transform.position + new Vector3(-roomSize.x / 2f + wallSize * scale.x / 2 + i * scale.x * wallSize, 0, roomSize.y / 2f);
-                Vector3 positionLeft = transform.position + new Vector3(-roomSize.x / 2f + wallSize * scale.x / 2 + i * scale.x * wallSize, 0, -roomSize.y / 2f);
+                Vector3 positionRight = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _wallSize * scale.x / 2f + i * scale.x * _wallSize, 0, _roomSize.y / 2f);
+                Vector3 positionLeft = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _wallSize * scale.x / 2f + i * scale.x * _wallSize, 0, -_roomSize.y / 2f);
 
-                Quaternion rotation = transform.rotation;
+                Quaternion rotation = _parnet.transform.rotation;
                 Vector3 scaleVector = new(scale.x, 1, 1);
 
-                DungeonAsset leftWallAsset = (enterenceIndices.Contains(-i - 1)) ? GetRandomAsset(enterenceObjects) : GetRandomAsset(wallObjects);
-                DungeonAsset rightWallAsset = (enterenceIndices.Contains(-(int)wallCount.x - i - 1)) ? GetRandomAsset(enterenceObjects) : GetRandomAsset(wallObjects);
+                DungeonObject leftWallAsset = (enterenceIndices.Contains(-i - 1)) ? GetRandomAsset(_roomData.enterenceObjects) : GetRandomAsset(_roomData.wallObjects);
+                DungeonObject rightWallAsset = (enterenceIndices.Contains(-(int)_wallCount.x - i - 1)) ? GetRandomAsset(_roomData.enterenceObjects) : GetRandomAsset(_roomData.wallObjects);
 
                 if (enterenceIndices.Contains(-i - 1))
                 {
-                    GameObject exit = new("exit" + (exits.transform.childCount + 1));
+                    GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionRight;
-                    exit.transform.parent = exits.transform;
+                    exit.transform.parent = _exits.transform;
                 }
 
-                if (enterenceIndices.Contains(-(int)wallCount.x - i - 1))
+                if (enterenceIndices.Contains(-(int)_wallCount.x - i - 1))
                 {
-                    GameObject exit = new("exit" + (exits.transform.childCount + 1));
+                    GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionLeft;
-                    exit.transform.parent = exits.transform;
+                    exit.transform.parent = _exits.transform;
                 }
 
-                GameObject wallRight = GameObject.Instantiate(leftWallAsset.gameObject, positionRight, rotation * Quaternion.Euler(0f, 180f, 0f), mesh.transform);
-                GameObject wallLeft = GameObject.Instantiate(rightWallAsset.gameObject, positionLeft, rotation * Quaternion.Euler(0f, 0f, 0f), mesh.transform);
+                GameObject wallRight = GameObject.Instantiate(leftWallAsset.Prefab, positionRight, rotation * Quaternion.Euler(0f, 180f, 0f), _mesh.transform);
+                GameObject wallLeft = GameObject.Instantiate(rightWallAsset.Prefab, positionLeft, rotation * Quaternion.Euler(0f, 0f, 0f), _mesh.transform);
 
                 wallRight.transform.localScale = scaleVector;
                 wallLeft.transform.localScale = scaleVector;
 
-                roomObjects.Add(wallRight);
-                roomObjects.Add(wallLeft);
+                wallRight.transform.parent = _mesh.transform;
+                wallLeft.transform.parent = _mesh.transform;
             }
 
-            for (int i = 0; i < wallCount.y; i++)
+            for (int i = 0; i < _wallCount.y; i++)
             {
-                Vector3 positionDown = transform.position + new Vector3(roomSize.x / 2f, 0, -roomSize.y / 2f + wallSize * scale.y / 2f + i * scale.y * wallSize);
-                Vector3 positionUp = transform.position + new Vector3(-roomSize.x / 2f, 0, -roomSize.y / 2f + wallSize * scale.y / 2f + i * scale.y * wallSize);
+                Vector3 positionDown = _parnet.transform.position + new Vector3(_roomSize.x / 2f, 0, -_roomSize.y / 2f + _wallSize * scale.y / 2f + i * scale.y * _wallSize);
+                Vector3 positionUp = _parnet.transform.position + new Vector3(-_roomSize.x / 2f, 0, -_roomSize.y / 2f + _wallSize * scale.y / 2f + i * scale.y * _wallSize);
 
-                Quaternion rotation = transform.rotation;
+                Quaternion rotation = _parnet.transform.rotation;
                 Vector3 scaleVector = new(scale.y, 1, 1);
 
-                DungeonAsset upWallAsset = (enterenceIndices.Contains(i + 1)) ? GetRandomAsset(enterenceObjects) : GetRandomAsset(wallObjects);
-                DungeonAsset downWallAsset = (enterenceIndices.Contains((int)wallCount.y + i + 1)) ? GetRandomAsset(enterenceObjects) : GetRandomAsset(wallObjects);
+                DungeonObject upWallAsset = (enterenceIndices.Contains(i + 1)) ? GetRandomAsset(_roomData.enterenceObjects) : GetRandomAsset(_roomData.wallObjects);
+                DungeonObject downWallAsset = (enterenceIndices.Contains((int)_wallCount.y + i + 1)) ? GetRandomAsset(_roomData.enterenceObjects) : GetRandomAsset(_roomData.wallObjects);
 
                 if (enterenceIndices.Contains(i + 1))
                 {
-                    GameObject exit = new("exit" + (exits.transform.childCount + 1));
+                    GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionDown;
-                    exit.transform.parent = exits.transform;
+                    exit.transform.parent = _exits.transform;
                 }
 
-                if (enterenceIndices.Contains((int)wallCount.y + i + 1))
+                if (enterenceIndices.Contains((int)_wallCount.y + i + 1))
                 {
-                    GameObject exit = new("exit" + (exits.transform.childCount + 1));
+                    GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionUp;
-                    exit.transform.parent = exits.transform;
+                    exit.transform.parent = _exits.transform;
                 }
 
-                GameObject wallDown = GameObject.Instantiate(upWallAsset.gameObject, positionDown, rotation * Quaternion.Euler(0f, 270f, 0f), mesh.transform);
-                GameObject wallUp = GameObject.Instantiate(downWallAsset.gameObject, positionUp, rotation * Quaternion.Euler(0f, 90f, 0f), mesh.transform);
+                GameObject wallDown = GameObject.Instantiate(upWallAsset.Prefab, positionDown, rotation * Quaternion.Euler(0f, 270f, 0f), _mesh.transform);
+                GameObject wallUp = GameObject.Instantiate(downWallAsset.Prefab, positionUp, rotation * Quaternion.Euler(0f, 90f, 0f), _mesh.transform);
 
                 wallDown.transform.localScale = scaleVector;
                 wallUp.transform.localScale = scaleVector;
 
-                roomObjects.Add(wallDown);
-                roomObjects.Add(wallUp);
+                wallDown.transform.parent = _mesh.transform;
+                wallUp.transform.parent = _mesh.transform;
             }
         }
 
@@ -183,15 +171,15 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         void CreateFloors()
         {
-            floorCount = new(Mathf.Max(1, Mathf.FloorToInt(roomSize.x / floorSize.x)), Mathf.Max(1, Mathf.FloorToInt(roomSize.y / floorSize.y)));
-            Vector2 scale = new((roomSize.x / floorCount.x) / floorSize.x, (roomSize.y / floorCount.y) / floorSize.y);
+            _floorCount = new(Mathf.Max(1, Mathf.FloorToInt(_roomSize.x / _floorSize.x)), Mathf.Max(1, Mathf.FloorToInt(_roomSize.y / _floorSize.y)));
+            Vector2 scale = new((_roomSize.x / _floorCount.x) / _floorSize.x, (_roomSize.y / _floorCount.y) / _floorSize.y);
 
-            for (int i = 0; i < floorCount.x; i++)
+            for (int i = 0; i < _floorCount.x; i++)
             {
-                for (int j = 0; j < floorCount.y; j++)
+                for (int j = 0; j < _floorCount.y; j++)
                 {
-                    Vector3 position = transform.position + new Vector3(-roomSize.x / 2f + floorSize.x * scale.x / 2 + i * scale.x * floorSize.x, 0, -roomSize.y / 2f + floorSize.y * scale.y / 2f + j * scale.y * floorSize.y);
-                    Quaternion rotation = transform.rotation;
+                    Vector3 position = _parnet.transform.position + new Vector3(-_roomSize.x / 2f + _floorSize.x * scale.x / 2 + i * scale.x * _floorSize.x, 0, -_roomSize.y / 2f + _floorSize.y * scale.y / 2f + j * scale.y * _floorSize.y);
+                    Quaternion rotation = _parnet.transform.rotation;
 
                     int rand = Random.Range(0, 4);
                     float rotate = 0;
@@ -205,11 +193,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     if (rand == 0 || rand == 2) scaleVector = new(scale.x, 1, scale.y);
                     else scaleVector = new(scale.y, 1, scale.x);
 
-                    DungeonAsset floorObject = GetRandomAsset(floorObjects);
+                    DungeonObject floorObject = GetRandomAsset(_roomData.floorObjects);
 
-                    GameObject floor = GameObject.Instantiate(floorObject.gameObject, position, rotation * Quaternion.Euler(0f, rotate, 0f), mesh.transform);
+                    GameObject floor = GameObject.Instantiate(floorObject.Prefab, position, rotation * Quaternion.Euler(0f, rotate, 0f), _mesh.transform);
                     floor.transform.localScale = scaleVector;
-                    roomObjects.Add(floor);
+                    floor.transform.parent = _mesh.transform;
                 }
             }
         }
@@ -219,18 +207,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         void CreatePillar()
         {
-            if (pillarObjects.Count <= 0) return;
+            if (_roomData.pillarObjects.Count <= 0) return;
 
-            DungeonAsset pillar = GetRandomAsset(pillarObjects);
-            GameObject piller1 = GameObject.Instantiate(pillar.gameObject, new Vector3(-roomSize.x / 2, 0, -roomSize.y / 2), transform.rotation, mesh.transform);
-            GameObject piller2 = GameObject.Instantiate(pillar.gameObject, new Vector3(-roomSize.x / 2, 0, roomSize.y / 2), transform.rotation, mesh.transform);
-            GameObject piller3 = GameObject.Instantiate(pillar.gameObject, new Vector3(roomSize.x / 2, 0, -roomSize.y / 2), transform.rotation, mesh.transform);
-            GameObject piller4 = GameObject.Instantiate(pillar.gameObject, new Vector3(roomSize.x / 2, 0, roomSize.y / 2), transform.rotation, mesh.transform);
-
-            roomObjects.Add(piller1);
-            roomObjects.Add(piller2);
-            roomObjects.Add(piller3);
-            roomObjects.Add(piller4);
+            DungeonObject pillar = GetRandomAsset(_roomData.pillarObjects);
+            GameObject.Instantiate(pillar.Prefab, _parnet.transform.position + new Vector3(-_roomSize.x / 2, 0, -_roomSize.y / 2), _parnet.transform.rotation, _mesh.transform);
+            GameObject.Instantiate(pillar.Prefab, _parnet.transform.position + new Vector3(-_roomSize.x / 2, 0, _roomSize.y / 2), _parnet.transform.rotation, _mesh.transform);
+            GameObject.Instantiate(pillar.Prefab, _parnet.transform.position + new Vector3(_roomSize.x / 2, 0, -_roomSize.y / 2), _parnet.transform.rotation, _mesh.transform);
+            GameObject.Instantiate(pillar.Prefab, _parnet.transform.position + new Vector3(_roomSize.x / 2, 0, _roomSize.y / 2), _parnet.transform.rotation, _mesh.transform);
         }
 
         /// <summary>
@@ -301,7 +284,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             for (int i = subRooms.Count - 1; i > -1; i--)
             {
-                if (Random.value >= proabilityForSplit) subRooms.RemoveAt(i);
+                if (Random.value >= _roomData.proabilityForSplit) subRooms.RemoveAt(i);
             }
 
             return subRooms;
@@ -316,13 +299,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
             int cursor = -1;
             for (int i = start; i < end; i++)
             {
-                if (grid[i, i + 1] == RoomTileType.Empty && cursor == -1) cursor = i;
-                else if (grid[i, i + 1] == RoomTileType.Wall && cursor != -1)
+                if (_grid[i, i + 1] == RoomTileType.Empty && cursor == -1) cursor = i;
+                else if (_grid[i, i + 1] == RoomTileType.Wall && cursor != -1)
                 {
                     wallSegments.Add(new Vector2Int(cursor, i));
                     cursor = -1;
                 }
-                else if (i == end - 1 && grid[i, i + 1] == RoomTileType.Empty && cursor != -1) wallSegments.Add(new Vector2Int(cursor, end));
+                else if (i == end - 1 && _grid[i, i + 1] == RoomTileType.Empty && cursor != -1) wallSegments.Add(new Vector2Int(cursor, end));
             }
 
             return wallSegments;
@@ -343,55 +326,55 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 Debug.DrawLine(max, min + new Vector3(0, 0, room.size.y), Color.green, 1);
                 Debug.DrawLine(max, min + new Vector3(room.size.x, 0, 0), Color.green, 1);
 
-                wallCount = new(Mathf.Max(1, Mathf.FloorToInt(room.size.x / wallSize)), Mathf.Max(1, Mathf.FloorToInt(room.size.y / wallSize)));
-                Vector2 scale = new((room.size.x / wallCount.x) / wallSize, (room.size.y / wallCount.y) / wallSize);
+                _wallCount = new(Mathf.Max(1, Mathf.FloorToInt(room.size.x / _wallSize)), Mathf.Max(1, Mathf.FloorToInt(room.size.y / _wallSize)));
+                Vector2 scale = new((room.size.x / _wallCount.x) / _wallSize, (room.size.y / _wallCount.y) / _wallSize);
 
-                List<DungeonAsset> subRoomObjects = new(wallObjects);
-                subRoomObjects.AddRange(enterenceObjects);
+                List<DungeonObject> subRoomObjects = new(_roomData.wallObjects);
+                subRoomObjects.AddRange(_roomData.enterenceObjects);
 
-                for (int i = 0; i < wallCount.x; i++)
+                for (int i = 0; i < _wallCount.x; i++)
                 {
-                    Vector3 positionRight = new Vector3(room.center.x, 0, room.center.y) + new Vector3(-room.size.x / 2f + wallSize * scale.x / 2 + i * scale.x * wallSize, 0, room.size.y / 2);
-                    Vector3 positionLeft = new Vector3(room.center.x, 0, room.center.y) + new Vector3(-room.size.x / 2f + wallSize * scale.x / 2 + i * scale.x * wallSize, 0, -room.size.y / 2);
+                    Vector3 positionRight = new Vector3(room.center.x, 0, room.center.y) + new Vector3(-room.size.x / 2f + _wallSize * scale.x / 2 + i * scale.x * _wallSize, _parnet.transform.position.y, room.size.y / 2);
+                    Vector3 positionLeft = new Vector3(room.center.x, 0, room.center.y) + new Vector3(-room.size.x / 2f + _wallSize * scale.x / 2 + i * scale.x * _wallSize, _parnet.transform.position.y, -room.size.y / 2);
 
-                    Quaternion rotation = transform.rotation;
+                    Quaternion rotation = _parnet.transform.rotation;
                     Vector3 scaleVector = new(scale.x, 1, 1);
 
-                    DungeonAsset leftWallAsset = GetRandomAsset(subRoomObjects);
-                    DungeonAsset rightWallAsset = GetRandomAsset(subRoomObjects);
+                    DungeonObject leftWallAsset = GetRandomAsset(subRoomObjects);
+                    DungeonObject rightWallAsset = GetRandomAsset(subRoomObjects);
 
-                    GameObject wallRight = GameObject.Instantiate(leftWallAsset.gameObject, positionRight, rotation * Quaternion.Euler(0f, 180f, 0f), mesh.transform);
-                    GameObject wallLeft = GameObject.Instantiate(rightWallAsset.gameObject, positionLeft, rotation * Quaternion.Euler(0f, 0f, 0f), mesh.transform);
+                    GameObject wallRight = GameObject.Instantiate(leftWallAsset.Prefab, positionRight, rotation * Quaternion.Euler(0f, 180f, 0f), _mesh.transform);
+                    GameObject wallLeft = GameObject.Instantiate(rightWallAsset.Prefab, positionLeft, rotation * Quaternion.Euler(0f, 0f, 0f), _mesh.transform);
 
                     wallRight.transform.localScale = scaleVector;
                     wallLeft.transform.localScale = scaleVector;
 
-                    if (Mathf.Abs(room.size.y / 2 + room.center.y - roomSize.y / 2) >= 1) roomObjects.Add(wallRight);
+                    if (Mathf.Abs(room.size.y / 2 + room.center.y - _roomSize.y / 2) >= 1) wallRight.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallRight);
-                    if (Mathf.Abs(-room.size.y / 2 + room.center.y + roomSize.y / 2) >= 1) roomObjects.Add(wallLeft);
+                    if (Mathf.Abs(-room.size.y / 2 + room.center.y + _roomSize.y / 2) >= 1) wallLeft.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallLeft);
                 }
 
-                for (int i = 0; i < wallCount.y; i++)
+                for (int i = 0; i < _wallCount.y; i++)
                 {
-                    Vector3 positionDown = new Vector3(room.center.x, 0, room.center.y) + new Vector3(room.size.x / 2f, 0, -room.size.y / 2f + wallSize * scale.y / 2f + i * scale.y * wallSize);
-                    Vector3 positionUp = new Vector3(room.center.x, 0, room.center.y) + new Vector3(-room.size.x / 2f, 0, -room.size.y / 2f + wallSize * scale.y / 2f + i * scale.y * wallSize);
+                    Vector3 positionDown = new Vector3(room.center.x, 0, room.center.y) + new Vector3(room.size.x / 2f, _parnet.transform.position.y, -room.size.y / 2f + _wallSize * scale.y / 2f + i * scale.y * _wallSize);
+                    Vector3 positionUp = new Vector3(room.center.x, 0, room.center.y) + new Vector3(-room.size.x / 2f, _parnet.transform.position.y, -room.size.y / 2f + _wallSize * scale.y / 2f + i * scale.y * _wallSize);
 
-                    Quaternion rotation = transform.rotation;
+                    Quaternion rotation = _parnet.transform.rotation;
                     Vector3 scaleVector = new(scale.y, 1, 1);
 
-                    DungeonAsset upWallAsset = GetRandomAsset(subRoomObjects);
-                    DungeonAsset downWallAsset = GetRandomAsset(subRoomObjects);
+                    DungeonObject upWallAsset = GetRandomAsset(subRoomObjects);
+                    DungeonObject downWallAsset = GetRandomAsset(subRoomObjects);
 
-                    GameObject wallDown = GameObject.Instantiate(upWallAsset.gameObject, positionDown, rotation * Quaternion.Euler(0f, 270f, 0f), mesh.transform);
-                    GameObject wallUp = GameObject.Instantiate(downWallAsset.gameObject, positionUp, rotation * Quaternion.Euler(0f, 90f, 0f), mesh.transform);
+                    GameObject wallDown = GameObject.Instantiate(upWallAsset.Prefab, positionDown, rotation * Quaternion.Euler(0f, 270f, 0f), _mesh.transform);
+                    GameObject wallUp = GameObject.Instantiate(downWallAsset.Prefab, positionUp, rotation * Quaternion.Euler(0f, 90f, 0f), _mesh.transform);
 
                     wallDown.transform.localScale = scaleVector;
                     wallUp.transform.localScale = scaleVector;
 
-                    if (Mathf.Abs(room.size.x / 2 + room.center.x - roomSize.x / 2) >= 1) roomObjects.Add(wallDown);
+                    if (Mathf.Abs(room.size.x / 2 + room.center.x - _roomSize.x / 2) >= 1) wallDown.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallDown);
-                    if (Mathf.Abs(-room.size.x / 2 + room.center.x + roomSize.x / 2) >= 1) roomObjects.Add(wallUp);
+                    if (Mathf.Abs(-room.size.x / 2 + room.center.x + _roomSize.x / 2) >= 1) wallUp.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallUp);
                 }
 
@@ -399,65 +382,108 @@ namespace PaperSouls.Runtime.DungeonGeneration
         }
 
         /// <summary>
-        /// Creates a room
+        /// 
         /// </summary>
-        void CreateRoom()
+        private void InitRoom(GameObject parnet, Vector2Int roomSize, int numEnterences)
         {
-            Random.InitState(seed);
-            grid = new RoomTileType[roomSize.x, roomSize.y];
+            _roomSize = roomSize;
+            _numEnterences = numEnterences;
+            _parnet = parnet;
 
-            for (int i = 0; i < roomSize.x; i++)
+            _grid = new RoomTileType[_roomSize.x, _roomSize.y];
+
+            for (int i = 0; i < _roomSize.x; i++)
             {
-                for (int j = 0; j < roomSize.y; j++)
+                for (int j = 0; j < _roomSize.y; j++)
                 {
-                    grid[i, j] = RoomTileType.Empty;
+                    _grid[i, j] = RoomTileType.Empty;
                 }
             }
 
-            roomObjects = new();
-            parnet = new("room");
-            mesh = new("mesh");
-            exits = new("exits");
-            mesh.transform.parent = parnet.transform;
-            exits.transform.parent = parnet.transform;
-            wallSize = Mathf.Max(wallObjects[0].gameObject.GetComponent<MeshRenderer>().bounds.size.x, wallObjects[0].gameObject.GetComponent<MeshRenderer>().bounds.size.z);
-            floorSize = new Vector2(floorObjects[0].gameObject.GetComponent<MeshRenderer>().bounds.size.x, floorObjects[0].gameObject.GetComponent<MeshRenderer>().bounds.size.z);
+            _mesh = new("mesh");
+            _exits = new("exits");
+
+            _mesh.transform.parent = _parnet.transform;
+            _exits.transform.parent = _parnet.transform;
+
+            /*
+            _wallSize = Mathf.Max
+            (
+                _roomData.wallObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.x, 
+                _roomData.wallObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.z
+            );
+
+            _floorSize = new Vector2
+            (
+                _roomData.floorObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.x, 
+                _roomData.floorObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.z
+            );
+            */
+
+            _subRooms = BinarySpacePartitioning(
+                new(
+                    new Vector3(
+                        _parnet.transform.position.x,
+                        _parnet.transform.position.z,
+                        0
+                        ),
+                    new Vector3(
+                        _roomSize.x,
+                        _roomSize.y, 
+                        0
+                        )
+                    ),
+                _roomData.minSubRoomSize.x,
+                _roomData.minSubRoomSize.y
+                );
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private void GenerateRoom()
+        {
             CreateWalls();
             CreateFloors();
-            List<Bounds> subRooms = BinarySpacePartitioning(new(new Vector3(transform.position.x, transform.position.z, 0), new Vector3(roomSize.x, roomSize.y, 0)), minSubRoomSize.x, minSubRoomSize.y);
-            CreateSubRooms(subRooms);
+            CreateSubRooms(_subRooms);
             CreatePillar();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<Transform> GetRoomExits()
+        {
+            List<Transform> exits = new();
+            foreach (Transform exit in _exits.transform) exits.Add(exit);
+            return exits;
         }
 
         /// <summary>
-        /// CDestories a room
+        /// Creates a room
         /// </summary>
-        void DestoryRoom()
+        public Room CreateRoom(GameObject parnet, Vector2Int roomSize, Vector3 tileSize, int numEnterences, int roomID)
         {
-            foreach (GameObject obj in roomObjects)
-            {
-                GameObject.Destroy(obj);
-            }
+            _wallSize = Mathf.Max
+            (
+                tileSize.x,
+                tileSize.z
+            );
 
-            GameObject.Destroy(parnet);
-        }
+            _floorSize = new Vector2
+            (
+                tileSize.x,
+                tileSize.z
+            );
 
-        [ExecuteInEditMode]
-        void OnValidate()
-        {
-            //minSubRoomSizePercentage.x = Mathf.Clamp01(minSubRoomSizePercentage.x);
-            //minSubRoomSizePercentage.y = Mathf.Clamp01(minSubRoomSizePercentage.y);
-        }
+            InitRoom(parnet, roomSize, numEnterences);
 
-        void Start()
-        {
-            CreateRoom();
-        }
+            GenerateRoom();
 
-        void Update()
-        {
-            DestoryRoom();
-            CreateRoom();
+            Room room = new(_parnet, GetRoomExits(), roomID);
+            room.SetSize(new(roomSize.x, 1, roomSize.y));
+
+            return room;
         }
     }
 }

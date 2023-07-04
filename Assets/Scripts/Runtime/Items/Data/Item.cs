@@ -71,5 +71,13 @@ namespace PaperSouls.Runtime.Items
             else if (rarity == ItemRarity.Legendary) return new ItemClasssification(ItemRarity.Legendary, 0.1f);
             else return null;
         }
+
+        public bool Equals(object otherObj)
+        {
+            if (otherObj == null) return false;
+            Item other = otherObj as Item;
+            if (other == null) return false;
+            return id == other.id;
+        }
     }
 }

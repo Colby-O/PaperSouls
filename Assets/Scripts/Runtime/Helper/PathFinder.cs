@@ -55,25 +55,29 @@ namespace PaperSouls.Runtime.Helpers
 
             switch (_grid[next.x, next.y])
             {
-                case TileType.EMPTY:
+                case TileType.Empty:
                     if (_tileWeights.EMPTY == -1) weight = Mathf.Infinity;
                     else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.EMPTY;
                     break;
-                case TileType.ROOM:
+                case TileType.Room:
                     if (_tileWeights.ROOM == -1) weight = Mathf.Infinity;
                     else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.ROOM;
                     break;
-                case TileType.HALLWAY:
+                case TileType.Hallway:
                     if (_tileWeights.HALLWAY == -1) weight = Mathf.Infinity;
                     else weight = _tileWeights.HALLWAY;
                     break;
-                case TileType.HALLWAY_AND_ROOM:
+                case TileType.HallwayAndRoom:
                     if (_tileWeights.HALLWAY_AND_ROOM == -1) weight = Mathf.Infinity;
                     else weight = _tileWeights.HALLWAY_AND_ROOM;
                     break;
-                case TileType.ROOM_SPACING:
+                case TileType.RoomSpacing:
                     if (_tileWeights.TURN_PENAILITY == -1) weight = Mathf.Infinity;
                     else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.ROOM_SPACING;
+                    break;
+                case TileType.HallwaySpacing:
+                    if (_tileWeights.HALLWAY_SPACING == -1) weight = Mathf.Infinity;
+                    else weight = _tileWeights.HALLWAY_SPACING;
                     break;
             }
 

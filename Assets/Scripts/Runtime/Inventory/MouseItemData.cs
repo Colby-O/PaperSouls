@@ -7,6 +7,8 @@ using TMPro;
 using PaperSouls.Core;
 using PaperSouls.Runtime.Items;
 using PaperSouls.Runtime.UI.Inventory;
+using System.Diagnostics;
+using PaperSouls.Runtime.Inventory;
 
 namespace PaperSouls.Runtime.Inventory
 {
@@ -16,14 +18,22 @@ namespace PaperSouls.Runtime.Inventory
         [SerializeField] private TextMeshProUGUI _count;
         public InventorySlot InventorySlot;
         private InventorySlotsUI _fromSlot;
+        private InventoryManger _inv;
 
         /// <summary>
         /// Returns the item in the mouse cursor to ir's orignal slot
         /// </summary>
         public void ReturnItem()
         {
-            _fromSlot?.InventorySlot.AssignItem(InventorySlot);
-            _fromSlot?.UpdateSlot();
+            if (_fromSlot.InventorySlot.ItemData == null)
+            {
+                _fromSlot?.InventorySlot.AssignItem(InventorySlot);
+                _fromSlot?.UpdateSlot();
+            }
+            else
+            {
+                if (!_inv.AddToInventory(InventorySlot.ItemData, InventorySlot.StackSize)) DropItems();
+            }
             ClearSlot();
         }
 
@@ -63,8 +73,9 @@ namespace PaperSouls.Runtime.Inventory
         /// <summary>
         /// Updates the slots data given a UI slot
         /// </summary>
-        public void UpdateSlot(InventorySlotsUI fromSlot)
+        public void UpdateSlot(InventorySlotsUI fromSlot, InventoryManger inv)
         {
+            _inv = inv;
             this._fromSlot = fromSlot;
             UpdateSlot(fromSlot.InventorySlot);
         }
@@ -72,8 +83,9 @@ namespace PaperSouls.Runtime.Inventory
         /// <summary>
         /// Updates the slots data given a slot and a from slot
         /// </summary>
-        public void UpdateSlot(InventorySlot slot, InventorySlotsUI fromSlot)
+        public void UpdateSlot(InventorySlot slot, InventorySlotsUI fromSlot, InventoryManger inv)
         {
+            _inv = inv;
             this._fromSlot = fromSlot;
             UpdateSlot(slot);
         }
