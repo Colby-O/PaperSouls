@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12bdbae091bbe32429222141a5858870, type: 3}
+  m_Name: AssetStoreRoom
+  m_EditorClassIdentifier: 
+  minSubRoomSize: {x: 2147483647, y: 2147483647}
+  proabilityForSplit: 0.5
+  useRandomFloorRotation: 1
+  wallObjects:
+  - ID: 0
+    Proability: 1
+    _prefab: {fileID: 5956329800012508605, guid: 3310f9ed8c4405644a74385a500fa94b, type: 3}
+  - ID: 0
+    Proability: 0.1
+    _prefab: {fileID: 6763929914808610939, guid: f7b106931e48ca54981459b3fb666d12, type: 3}
+  enterenceObjects:
+  - ID: 0
+    Proability: 1
+    _prefab: {fileID: 6935724315202908233, guid: 2a6a56710ca7b6f46b41f5694fec16a0, type: 3}
+  floorObjects:
+  - ID: 0
+    Proability: 1
+    _prefab: {fileID: 7980712249837886056, guid: 4675c8d50cb78734ab472512b02722d0, type: 3}
+  pillarObjects:
+  - ID: 0
+    Proability: 1
+    _prefab: {fileID: 6865484016521977728, guid: 14231e7d6e417674ca7f74980a822d06, type: 3}
