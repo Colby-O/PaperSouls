@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8773a613c012a324ebad6dfc48daa98e, type: 3}
   m_Name: DefaultPlayerSettings
   m_EditorClassIdentifier: 
-  playerSpeedWalking: 0.05
-  playerSpeedRunning: 0.1
+  playerSpeedWalking: 0.1
+  playerSpeedRunning: 0.3
   lookSpeed: 10
   health: 100
   baseXPToLevelUp: 100

@@ -14,7 +14,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         private RoomGenerator _roomGenerator;
         private List<Room> _roomList;
-        Vector3 _tileSize;
+        [SerializeField] private Vector3 _tileSize = Vector3.zero;
 
         private TileType[,] _grid;
         private List<DungeonObject> _dungeonObjects;
@@ -72,7 +72,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             GameObject threeWayHallwayRight = Instantiate(_properties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
 
             GameObject fourwayHallway = Instantiate(_properties.FourWayHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f)); ;
-            _tileSize = (new Hallway(fourwayHallway, 15)).Size;
+            if (_tileSize == Vector3.zero) _tileSize = (new Hallway(fourwayHallway, 15)).Size;
 
             _hallwayVarients.Add(new Hallway(null, 0));
             _hallwayVarients.Add(new Hallway(enterenceHallwayUp, 1));

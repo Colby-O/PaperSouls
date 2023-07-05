@@ -9,6 +9,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     {
         [Min(1)] public Vector2Int minSubRoomSize;
         [Range(0, 1)] public float proabilityForSplit = 0.5f;
+        public bool useRandomFloorRotation = true;
 
         public List<DungeonObject> wallObjects;
         public List<DungeonObject> enterenceObjects;
