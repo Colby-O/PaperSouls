@@ -12,24 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bdbae091bbe32429222141a5858870, type: 3}
   m_Name: DefaultRoom
   m_EditorClassIdentifier: 
-  minSubRoomSize: {x: 10, y: 10}
+  minSubRoomSize: {x: 2147483647, y: 2147483647}
   proabilityForSplit: 0.5
+  useRandomFloorRotation: 0
   wallObjects:
   - ID: 0
-    Proability: 0.9
-    _prefab: {fileID: 5956329800012508605, guid: 3310f9ed8c4405644a74385a500fa94b, type: 3}
+    Proability: 1
+    _prefab: {fileID: 2799772974420858197, guid: 1bb5201018b6fe74db54987a674e9ac1, type: 3}
   - ID: 0
-    Proability: 0.1
-    _prefab: {fileID: 6763929914808610939, guid: f7b106931e48ca54981459b3fb666d12, type: 3}
+    Proability: 1
+    _prefab: {fileID: 1445076651765692362, guid: 5b69c2596ea83c340b60cc713cbe9018, type: 3}
   enterenceObjects:
   - ID: 0
     Proability: 1
-    _prefab: {fileID: 6935724315202908233, guid: 2a6a56710ca7b6f46b41f5694fec16a0, type: 3}
+    _prefab: {fileID: 6091662194462635883, guid: ab2572310ab34ef43997729ed717d93a, type: 3}
   floorObjects:
   - ID: 0
     Proability: 1
-    _prefab: {fileID: 4789275956471527350, guid: e686f61cd3de67f4eaa40713c0dd17ef, type: 3}
+    _prefab: {fileID: 9033259350918921816, guid: f8503d586fcb6784281a5e925744cc5e, type: 3}
+  - ID: 0
+    Proability: 1
+    _prefab: {fileID: 8871181917383220992, guid: 426f4471b5ef8fd4eba2fc4dcd806e0a, type: 3}
   pillarObjects:
   - ID: 0
     Proability: 1
-    _prefab: {fileID: 6865484016521977728, guid: 14231e7d6e417674ca7f74980a822d06, type: 3}
+    _prefab: {fileID: 7488707332175163143, guid: b4424630f87b5084f9b5e007b7a3d70f, type: 3}

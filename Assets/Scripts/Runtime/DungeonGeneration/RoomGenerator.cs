@@ -184,7 +184,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     int rand = Random.Range(0, 4);
                     float rotate = 0;
 
-                    if (rand == 0) rotate = 0;
+                    if (!_roomData.useRandomFloorRotation) rotate = 0;
+                    else if (rand == 0) rotate = 0;
                     else if (rand == 1) rotate = 90;
                     else if (rand == 2) rotate = 180;
                     else rotate = 270;
@@ -194,7 +195,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     else scaleVector = new(scale.y, 1, scale.x);
 
                     DungeonObject floorObject = GetRandomAsset(_roomData.floorObjects);
-
+                    
                     GameObject floor = GameObject.Instantiate(floorObject.Prefab, position, rotation * Quaternion.Euler(0f, rotate, 0f), _mesh.transform);
                     floor.transform.localScale = scaleVector;
                     floor.transform.parent = _mesh.transform;
@@ -409,14 +410,14 @@ namespace PaperSouls.Runtime.DungeonGeneration
             /*
             _wallSize = Mathf.Max
             (
-                _roomData.wallObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.x, 
-                _roomData.wallObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.z
+                _roomData.wallObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.x, 
+                _roomData.wallObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.z
             );
 
             _floorSize = new Vector2
             (
-                _roomData.floorObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.x, 
-                _roomData.floorObjects[0].Prefab.GetComponent<MeshRenderer>().bounds.size.z
+                _roomData.floorObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.x, 
+                _roomData.floorObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.z
             );
             */
 
