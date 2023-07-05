@@ -203,6 +203,8 @@ namespace PaperSouls.Runtime.Helpers
                 new Vector4(1, 1, 1, 1)
                 ).determinant;
 
+            dy *= -1;
+
             float dz = new Matrix4x4(
                 new Vector4(tetrahedran.A.sqrMagnitude, tetrahedran.B.sqrMagnitude, tetrahedran.C.sqrMagnitude, tetrahedran.D.sqrMagnitude),
                 new Vector4(tetrahedran.A.x, tetrahedran.B.x, tetrahedran.C.x, tetrahedran.D.x),
