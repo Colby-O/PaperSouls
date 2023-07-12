@@ -15,6 +15,8 @@ MonoBehaviour:
   minSubRoomSize: {x: 2147483647, y: 2147483647}
   proabilityForSplit: 0.5
   useRandomFloorRotation: 1
+  recipes:
+  - {fileID: 11400000, guid: eec2a2a9597e6724db09a13a8a3db724, type: 2}
   wallObjects:
   - ID: 0
     Proability: 1

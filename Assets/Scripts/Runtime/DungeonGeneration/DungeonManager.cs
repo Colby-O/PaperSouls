@@ -200,7 +200,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 if (!foundVaildRoom)
                 {
                     roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
-                    roomSize = new(Random.Range(_properties.RoomSize.x, _properties.RoomSize.y), Random.Range(_properties.RoomSize.x, _properties.RoomSize.y));
+                    roomSize = new(RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y), RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y));
 
                     if (roomSize.x % 2 == 0) roomSize.x += 1;
                     if (roomSize.y % 2 == 0) roomSize.y += 1;
@@ -245,7 +245,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 Vector2Int roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
 
-                Vector2Int roomSize = new(Random.Range(_properties.RoomSize.x, _properties.RoomSize.y), Random.Range(_properties.RoomSize.x, _properties.RoomSize.y));
+                Vector2Int roomSize = new(RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y), RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y));
                 if (roomSize.x % 2 == 0) roomSize.x += 1;
                 if (roomSize.y % 2 == 0) roomSize.y += 1;
 

@@ -4,15 +4,6 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    /// <summary>
-    /// Defines room Tile Types
-    /// </summary>
-    public enum RoomTileType
-    {
-        Empty,
-        Wall
-    }
-
     public class RoomGenerator
     {
         // Room Data
@@ -28,7 +19,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private GameObject _exits;
 
         // Interal Variables
-        private RoomTileType[,] _grid;
+        private RoomZone[,] _grid;
         private Vector2 _wallCount;
         private float _wallSize;
         private Vector2 _floorSize;
@@ -85,6 +76,17 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return obj;
         }
 
+        void AddEnterenceToGrid(Vector2Int pos, Vector2Int wallTileSize)
+        {
+            for (int i = 0; i < wallTileSize.x; i++)
+            {
+                for (int j = 0; j < wallTileSize.y; j++)
+                {
+                    _grid[pos.x + i, pos.y + j] = RoomZone.Invalid;
+                }
+            }
+        }
+
         /// <summary>
         /// Create dungeon walls
         /// </summary>
@@ -111,6 +113,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionRight;
                     exit.transform.parent = _exits.transform;
+                    AddEnterenceToGrid(new(i * Mathf.RoundToInt(scale.x * _wallSize), _roomSize.y - 1), new((int)(scale.x * _wallSize), 1));
                 }
 
                 if (enterenceIndices.Contains(-(int)_wallCount.x - i - 1))
@@ -118,6 +121,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionLeft;
                     exit.transform.parent = _exits.transform;
+                    AddEnterenceToGrid(new(i * Mathf.RoundToInt(scale.x * _wallSize), 0), new((int)(scale.x * _wallSize), 1));
                 }
 
                 GameObject wallRight = GameObject.Instantiate(leftWallAsset.Prefab, positionRight, rotation * Quaternion.Euler(0f, 180f, 0f), _mesh.transform);
@@ -146,6 +150,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionDown;
                     exit.transform.parent = _exits.transform;
+                    AddEnterenceToGrid(new(_roomSize.x - 1, i * Mathf.RoundToInt(scale.y * _wallSize)), new(1, (int)(scale.y * _wallSize)));
                 }
 
                 if (enterenceIndices.Contains((int)_wallCount.y + i + 1))
@@ -153,6 +158,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     GameObject exit = new("exit" + (_exits.transform.childCount + 1));
                     exit.transform.position = positionUp;
                     exit.transform.parent = _exits.transform;
+                    AddEnterenceToGrid(new(0, i * Mathf.RoundToInt(scale.y * _wallSize)), new(1, (int)(scale.y * _wallSize)));
                 }
 
                 GameObject wallDown = GameObject.Instantiate(upWallAsset.Prefab, positionDown, rotation * Quaternion.Euler(0f, 270f, 0f), _mesh.transform);
@@ -291,6 +297,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return subRooms;
         }
 
+        /*
         /// <summary>
         /// Adds a Wall to the Room Grid
         /// </summary>
@@ -311,6 +318,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             return wallSegments;
         }
+        */
 
         /// <summary>
         /// Generate sub rooms
@@ -391,13 +399,14 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _numEnterences = numEnterences;
             _parnet = parnet;
 
-            _grid = new RoomTileType[_roomSize.x, _roomSize.y];
+            _grid = new RoomZone[_roomSize.x, _roomSize.y];
 
             for (int i = 0; i < _roomSize.x; i++)
             {
                 for (int j = 0; j < _roomSize.y; j++)
                 {
-                    _grid[i, j] = RoomTileType.Empty;
+                    if (i == 0 || i == _roomSize.x - 1 || j == 0 || j == _roomSize.y - 1) _grid[i, j] = RoomZone.Edge;
+                    else _grid[i, j] = RoomZone.Room;
                 }
             }
 
@@ -406,20 +415,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             _mesh.transform.parent = _parnet.transform;
             _exits.transform.parent = _parnet.transform;
-
-            /*
-            _wallSize = Mathf.Max
-            (
-                _roomData.wallObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.x, 
-                _roomData.wallObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.z
-            );
-
-            _floorSize = new Vector2
-            (
-                _roomData.floorObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.x, 
-                _roomData.floorObjects[0].Prefab.GetComponentInChildren<MeshRenderer>().bounds.size.z
-            );
-            */
 
             _subRooms = BinarySpacePartitioning(
                 new(
@@ -465,6 +460,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         public Room CreateRoom(GameObject parnet, Vector2Int roomSize, Vector3 tileSize, int numEnterences, int roomID)
         {
+            Decorator decorator = new(Random.Range(-10000, 10000), _roomData.recipes[Random.Range(0, _roomData.recipes.Count)]);
+
             _wallSize = Mathf.Max
             (
                 tileSize.x,
@@ -483,6 +480,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             Room room = new(_parnet, GetRoomExits(), roomID);
             room.SetSize(new(roomSize.x, 1, roomSize.y));
+            room.SetGrid(_grid);
+
+            decorator.DecorateRoom(ref room);
 
             return room;
         }
