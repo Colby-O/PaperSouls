@@ -27,7 +27,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             foreach (var obj in Objects)
             {
                 obj.CalculateSize();
-                obj.SetSize(new(RoundSize(obj.Size.x), RoundSize(obj.Size.y), RoundSize(obj.Size.z)));
+                if (obj.zone == RoomZone.Edge) obj.SetSize(new(RoundSize(obj.Size.x + obj.Padding), RoundSize(obj.Size.y), RoundSize(obj.Size.z)));
+                else obj.SetSize(new(RoundSize(obj.Size.x + obj.Padding), RoundSize(obj.Size.y), RoundSize(obj.Size.z + obj.Padding)));
             }
         }
     }

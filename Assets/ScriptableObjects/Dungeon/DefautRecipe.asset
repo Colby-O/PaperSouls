@@ -17,15 +17,22 @@ MonoBehaviour:
     Proability: 1
     _prefab: {fileID: 1092845396861356, guid: 063a04615f0d544caa94d9ee3a5c046c, type: 3}
     zone: 1
+    Padding: 0
   - ID: 1
     Proability: 1
     _prefab: {fileID: 1536104252846388, guid: 3a2d8fbde1a664172a4a38e56c8368ce, type: 3}
     zone: 1
+    Padding: 2
   - ID: 2
     Proability: 1
     _prefab: {fileID: 1705019839122462, guid: 3732b1e4c742941ed9d8cb472b7f6b7c, type: 3}
     zone: 0
+    Padding: 0
   - ID: 3
-    Proability: 1
+    Proability: 0.4
     _prefab: {fileID: 1232072501863836, guid: e131e7946d49c41e49eceb880df29eee, type: 3}
     zone: 0
+    Padding: 1
+  PlacementProbability:
+    Room: 0.03
+    Edge: 0.05

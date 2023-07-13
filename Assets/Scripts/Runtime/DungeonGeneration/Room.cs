@@ -148,6 +148,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     public class DecorationObject : DungeonObject
     {
         public RoomZone zone;
+        public int Padding;
     }
 
     [System.Serializable]

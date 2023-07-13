@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc86a41329a7e9545b88e603d2a45f3c, type: 3}
   m_Name: AssetStoreDungeonProperties
   m_EditorClassIdentifier: 
-  Scale: {x: 10, y: 10, z: 10}
+  Scale: {x: 1, y: 1, z: 1}
   Position: {x: 0, y: 0, z: 0}
   Rotation: {x: 0, y: 0, z: 0, w: 1}
   GridSize: 200
   LoopProabilty: 0.2
-  RoomSize: {x: 5, y: 15}
+  RoomSize: {x: 4, y: 8}
   NumberOfRooms: {x: 100, y: 120}
   NumberOfExits: {x: 2, y: 5}
   RoomSpacing: 2
