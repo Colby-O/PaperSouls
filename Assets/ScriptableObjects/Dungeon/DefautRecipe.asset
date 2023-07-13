@@ -21,6 +21,7 @@ MonoBehaviour:
     Padding: 0
     Surrounding: []
     FillProbability: 1
+    SurroundProbability: 1
   - ID: 1
     Proability: 1
     _prefab: {fileID: 395228030810487856, guid: fd3ea3b4c8f35974aa9d1da78c1578c8, type: 3}
@@ -29,22 +30,31 @@ MonoBehaviour:
     Padding: 2
     Surrounding: []
     FillProbability: 0.3
+    SurroundProbability: 1
   - ID: 2
     Proability: 1
-    _prefab: {fileID: 1705019839122462, guid: 3732b1e4c742941ed9d8cb472b7f6b7c, type: 3}
+    _prefab: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
     zone: 0
     Scale: {x: 1, y: 1, z: 1}
-    Padding: 0
-    Surrounding: []
+    Padding: 2
+    Surrounding:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
     FillProbability: 1
+    SurroundProbability: 0.5
   - ID: 3
     Proability: 0.4
-    _prefab: {fileID: 1362815147897667289, guid: 84ca9004d28f59b48a6042c8a397ea91, type: 3}
+    _prefab: {fileID: 2585656391134499034, guid: 84ca9004d28f59b48a6042c8a397ea91, type: 3}
     zone: 0
     Scale: {x: 1, y: 1, z: 1}
-    Padding: 1
-    Surrounding: []
+    Padding: 2
+    Surrounding:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 1882123684952522, guid: 6aad0d1539fce44149b4630ba73b7462, type: 3}
     FillProbability: 0.5
+    SurroundProbability: 0.5
   - ID: 4
     Proability: 1
     _prefab: {fileID: 7174705083062705454, guid: 1d2f53510b58e9046b4408bc3f6a3b8c, type: 3}
@@ -53,15 +63,32 @@ MonoBehaviour:
     Padding: 1
     Surrounding: []
     FillProbability: 1
+    SurroundProbability: 1
   Fillables:
-  - Item: {fileID: 11400000, guid: 1148833b14541a44b807be0c54d75b17, type: 2}
+  - Item: {fileID: 573380351855779729, guid: 05e8b2a384e99c44bb4326991d444fb5, type: 3}
     Probability: 0.5
-  - Item: {fileID: 11400000, guid: b25eb74f728eb364ca3b96f899ce011a, type: 2}
+    Scale: {x: 3, y: 3, z: 3}
+    Offset: 0.2
+  - Item: {fileID: 573380351855779729, guid: 1bb36f1efa6588547952253bb594864b, type: 3}
     Probability: 0.5
-  - Item: {fileID: 11400000, guid: 34b0751ffc612584a99b0bfe0309104c, type: 2}
+    Scale: {x: 3, y: 3, z: 3}
+    Offset: 0.2
+  - Item: {fileID: 60430134869750427, guid: 195f439e6e01c2844b3e337425f9cae2, type: 3}
     Probability: 1
-  - Item: {fileID: 11400000, guid: 9adee76d6afaaf3439327af81faabfe9, type: 2}
+    Scale: {x: 3, y: 3, z: 3}
+    Offset: 0.2
+  - Item: {fileID: 5051164189392831580, guid: 16c6c30cb5aec674e967b65dd9388b85, type: 3}
+    Probability: 0.5
+    Scale: {x: 1.5, y: 1.5, z: 1.5}
+    Offset: 0.25
+  - Item: {fileID: 230301453563810707, guid: 4b0c3e090cb1d5f478cfd107b788995c, type: 3}
+    Probability: 0.5
+    Scale: {x: 3, y: 3, z: 3}
+    Offset: 0.2
+  - Item: {fileID: 1299813586667246, guid: 1491530b488d043f1970cfdacf1ca889, type: 3}
     Probability: 1
+    Scale: {x: 0.8, y: 0.8, z: 0.8}
+    Offset: 0
   PlacementProbability:
-    Room: 0.03
-    Edge: 0.05
+    Room: 0.01
+    Edge: 0.07

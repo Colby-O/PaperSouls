@@ -8,6 +8,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     public class Decorator
     {
         private const string FillablePositionsContainer = "fillables";
+        private const string SurroundingPositionsContainer = "surrounding";
 
         private Recipe _recipe;
         private int _seed;
@@ -118,7 +119,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return null;
         }
 
-        public GameObject GetRandomFillable()
+        public FillableItem GetRandomFillable()
         {
             FillableItem item;
             do
@@ -126,29 +127,52 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 item = _recipe.Fillables[Random.Range(0, _recipe.Fillables.Count)];
             } while (item.Probability < Random.value);
 
-            return item.Item.itemPrefab;
+            return item;
         }
 
-        public void AddFillables(GameObject objectToPlace, float fillProbability)
+        public void AddFillables(GameObject objectToFill, float fillProbability)
         {
-            GameObject fillablePositions = GetChildGameObject(objectToPlace, FillablePositionsContainer);
+            GameObject fillablePositions = GetChildGameObject(objectToFill, FillablePositionsContainer);
             if (fillablePositions == null) return;
 
             foreach (Transform transform in fillablePositions.transform)
             {
                 if (fillProbability >= Random.value)
                 {
-                    GameObject fillablePrefab = GetRandomFillable();
-                    GameObject fillable = GameObject.Instantiate(fillablePrefab, transform.position + new Vector3(0, 0.2f, 0), Quaternion.identity);
-                    fillable.transform.localScale = new(3, 3, 3);
+                    FillableItem fillablePrefab = GetRandomFillable();
+                    GameObject fillable = GameObject.Instantiate(fillablePrefab.Item, transform.position + new Vector3(0, fillablePrefab.Offset, 0), Quaternion.identity);
+                    fillable.transform.localScale = fillablePrefab.Scale;
                     fillable.transform.parent = _parent.transform;
                 }
             }
         }
 
-        public void AddChildernObjects(DecorationObject objectToPlace, Vector2Int pos, Vector2 size)
+        public GameObject GetRandomSurroundingObject(DecorationObject objectToPlace)
         {
+            DungeonObject obj;
+            do
+            {
+                obj = objectToPlace.Surrounding[Random.Range(0, objectToPlace.Surrounding.Count)];
+            } while (obj.Proability < Random.value);
 
+            return obj.Prefab;
+        }
+
+        public void AddSourroundingObjects(GameObject objectToPlace, DecorationObject parnetObjectPrefab, float placementProbability)
+        {
+            GameObject surroundingPositions = GetChildGameObject(objectToPlace, SurroundingPositionsContainer);
+            if (surroundingPositions == null) return;
+
+            foreach (Transform transform in surroundingPositions.transform)
+            {
+                if (placementProbability >= Random.value)
+                {
+                    GameObject objectPrefab = GetRandomSurroundingObject(parnetObjectPrefab);
+                    GameObject surroundingObj = GameObject.Instantiate(objectPrefab, transform.position, transform.rotation);
+                    surroundingObj.transform.localScale = parnetObjectPrefab.Scale;
+                    surroundingObj.transform.parent = _parent.transform;
+                }
+            }
         }
 
         public void PlaceObject(Vector2Int pos, RoomZone zone)
@@ -173,13 +197,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     !IsOverlap(pos, new Vector2(size.x, size.y))
                     )
                 {
-                    AddChildernObjects(objectToPlace, pos, new Vector2(size.x, size.y));
                     AddObjectToGrid(pos, new Vector2(size.x, size.y));
                     GameObject decorationObj = GameObject.Instantiate(objectToPlace.Prefab, position, rotation);
                     decorationObj.transform.parent = _parent.transform;
                     decorationObj.transform.localScale = objectToPlace.Scale;
                     DungeonObject decoration = new(decorationObj, _dectorations.Count);
                     AddFillables(decoration.Prefab, objectToPlace.FillProbability);
+                    AddSourroundingObjects(decoration.Prefab, objectToPlace, objectToPlace.SurroundProbability);
                     _dectorations.Add(decoration);
                 }
             }

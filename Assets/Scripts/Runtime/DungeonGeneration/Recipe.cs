@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PaperSouls.Runtime.Items;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
@@ -15,8 +14,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
     [System.Serializable]
     public class FillableItem
     {
-        public Item Item;
-        public float Probability;
+        public GameObject Item;
+        [Range(0, 1)] public float Probability = 1.0f;
+        public Vector3 Scale = Vector3.one;
+        public float Offset = 0.0f;
     }
 
     [CreateAssetMenu(fileName = "Recipe", menuName = "Dungeon/Dectoration/Recipe", order = 2)]

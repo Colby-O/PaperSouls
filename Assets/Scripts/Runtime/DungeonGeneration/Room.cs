@@ -152,6 +152,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public int Padding;
         public List<DungeonObject> Surrounding;
         [Range(0, 1)] public float FillProbability = 1.0f;
+        [Range(0, 1)] public float SurroundProbability = 1.0f;
     }
 
     [System.Serializable]
