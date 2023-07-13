@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.Items;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
@@ -11,10 +12,18 @@ namespace PaperSouls.Runtime.DungeonGeneration
         [Range(0, 1)] public float Edge = 1.0f;
     }
 
+    [System.Serializable]
+    public class FillableItem
+    {
+        public Item Item;
+        public float Probability;
+    }
+
     [CreateAssetMenu(fileName = "Recipe", menuName = "Dungeon/Dectoration/Recipe", order = 2)]
     public class Recipe : ScriptableObject
     {
         public List<DecorationObject> Objects;
+        public List<FillableItem> Fillables;
         public ZonePlacementProbability PlacementProbability;
 
         private float RoundSize(float val)

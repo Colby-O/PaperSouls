@@ -8127,7 +8127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RegenerateDungeon: 0
-  _seed: 2708
+  _seed: 23
   _roomData: {fileID: 11400000, guid: 828d456c13a5e394389e5cdb47d73d35, type: 2}
   _properties: {fileID: 11400000, guid: efefefc854ec3b64b91b1f127507407c, type: 2}
   _tileSize: {x: 4, y: 1, z: 4}

@@ -148,7 +148,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
     public class DecorationObject : DungeonObject
     {
         public RoomZone zone;
+        public Vector3 Scale = Vector3.one;
         public int Padding;
+        public List<DungeonObject> Surrounding;
+        [Range(0, 1)] public float FillProbability = 1.0f;
     }
 
     [System.Serializable]

@@ -17,22 +17,51 @@ MonoBehaviour:
     Proability: 1
     _prefab: {fileID: 1092845396861356, guid: 063a04615f0d544caa94d9ee3a5c046c, type: 3}
     zone: 1
+    Scale: {x: 1, y: 1, z: 1}
     Padding: 0
+    Surrounding: []
+    FillProbability: 1
   - ID: 1
     Proability: 1
-    _prefab: {fileID: 1536104252846388, guid: 3a2d8fbde1a664172a4a38e56c8368ce, type: 3}
+    _prefab: {fileID: 395228030810487856, guid: fd3ea3b4c8f35974aa9d1da78c1578c8, type: 3}
     zone: 1
+    Scale: {x: 1, y: 1, z: 1}
     Padding: 2
+    Surrounding: []
+    FillProbability: 0.3
   - ID: 2
     Proability: 1
     _prefab: {fileID: 1705019839122462, guid: 3732b1e4c742941ed9d8cb472b7f6b7c, type: 3}
     zone: 0
+    Scale: {x: 1, y: 1, z: 1}
     Padding: 0
+    Surrounding: []
+    FillProbability: 1
   - ID: 3
     Proability: 0.4
-    _prefab: {fileID: 1232072501863836, guid: e131e7946d49c41e49eceb880df29eee, type: 3}
+    _prefab: {fileID: 1362815147897667289, guid: 84ca9004d28f59b48a6042c8a397ea91, type: 3}
     zone: 0
+    Scale: {x: 1, y: 1, z: 1}
     Padding: 1
+    Surrounding: []
+    FillProbability: 0.5
+  - ID: 4
+    Proability: 1
+    _prefab: {fileID: 7174705083062705454, guid: 1d2f53510b58e9046b4408bc3f6a3b8c, type: 3}
+    zone: 1
+    Scale: {x: 1, y: 1, z: 1}
+    Padding: 1
+    Surrounding: []
+    FillProbability: 1
+  Fillables:
+  - Item: {fileID: 11400000, guid: 1148833b14541a44b807be0c54d75b17, type: 2}
+    Probability: 0.5
+  - Item: {fileID: 11400000, guid: b25eb74f728eb364ca3b96f899ce011a, type: 2}
+    Probability: 0.5
+  - Item: {fileID: 11400000, guid: 34b0751ffc612584a99b0bfe0309104c, type: 2}
+    Probability: 1
+  - Item: {fileID: 11400000, guid: 9adee76d6afaaf3439327af81faabfe9, type: 2}
+    Probability: 1
   PlacementProbability:
     Room: 0.03
     Edge: 0.05

@@ -7,6 +7,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
 {
     public class Decorator
     {
+        private const string FillablePositionsContainer = "fillables";
+
         private Recipe _recipe;
         private int _seed;
         private List<DungeonObject> _dectorations;
@@ -52,7 +54,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return false;
         }
 
-        private void AddObjectToGrid(Vector2Int pos, Vector2 size, Quaternion rot)
+        private void AddObjectToGrid(Vector2Int pos, Vector2 size)
         {
             for (int i = -Mathf.FloorToInt(size.x / 2); i < Mathf.CeilToInt(size.x / 2); i++)
             {
@@ -64,7 +66,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
         }
 
-        private bool IsOverlap(Vector2Int pos, Vector2 size, Quaternion rot)
+        private bool IsOverlap(Vector2Int pos, Vector2 size)
         {
             for (int i = -Mathf.FloorToInt(size.x / 2); i < Mathf.CeilToInt(size.x / 2); i++)
             {
@@ -77,7 +79,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return false;
         }
 
-        private bool IsInsideRoom(Vector2Int pos, Vector2 size, Quaternion rot)
+        private bool IsInsideRoom(Vector2Int pos, Vector2 size)
         {
             for (int i = -Mathf.FloorToInt(size.x / 2); i < Mathf.CeilToInt(size.x / 2); i++)
             {
@@ -108,6 +110,47 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
         }
 
+        // Move to helper class
+        static public GameObject GetChildGameObject(GameObject fromGameObject, string withName)
+        {
+            Transform[] ts = fromGameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform t in ts) if (t.gameObject.name == withName) return t.gameObject;
+            return null;
+        }
+
+        public GameObject GetRandomFillable()
+        {
+            FillableItem item;
+            do
+            {
+                item = _recipe.Fillables[Random.Range(0, _recipe.Fillables.Count)];
+            } while (item.Probability < Random.value);
+
+            return item.Item.itemPrefab;
+        }
+
+        public void AddFillables(GameObject objectToPlace, float fillProbability)
+        {
+            GameObject fillablePositions = GetChildGameObject(objectToPlace, FillablePositionsContainer);
+            if (fillablePositions == null) return;
+
+            foreach (Transform transform in fillablePositions.transform)
+            {
+                if (fillProbability >= Random.value)
+                {
+                    GameObject fillablePrefab = GetRandomFillable();
+                    GameObject fillable = GameObject.Instantiate(fillablePrefab, transform.position + new Vector3(0, 0.2f, 0), Quaternion.identity);
+                    fillable.transform.localScale = new(3, 3, 3);
+                    fillable.transform.parent = _parent.transform;
+                }
+            }
+        }
+
+        public void AddChildernObjects(DecorationObject objectToPlace, Vector2Int pos, Vector2 size)
+        {
+
+        }
+
         public void PlaceObject(Vector2Int pos, RoomZone zone)
         {
             if (PickRandomDecorationAsset(zone, out DecorationObject objectToPlace))
@@ -116,8 +159,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 Quaternion rotation = GetRotation(pos);
 
                 Vector2 size;
-                if (rotation.eulerAngles.y == 90 || rotation.eulerAngles.y == 270) size = new(objectToPlace.Size.z, objectToPlace.Size.x);
-                else size = new(objectToPlace.Size.x, objectToPlace.Size.z);
+                if (rotation.eulerAngles.y == 90 || rotation.eulerAngles.y == 270) size = new Vector2(objectToPlace.Size.z, objectToPlace.Size.x);
+                else size = new Vector2(objectToPlace.Size.x, objectToPlace.Size.z);
 
                 Vector3 position = _roomPosition + new Vector3(-_roomSize.x / 2f + pos.x + (((int)size.x) % 2 == 1 ? 0.5f : 0), 0, -_roomSize.z / 2f + pos.y + (((int)size.y) % 2 == 1 ? 0.5f : 0));
                 if (zone != RoomZone.Edge) { }
@@ -126,15 +169,17 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 else if (rotation.eulerAngles.y == 0) position.z += 0.3f;
                 else position.z -= 0.3f;
 
-                if (IsInsideRoom(pos, new(size.x, size.y), rotation) && 
-                    !IsOverlap(pos, new(size.x, size.y), rotation)
+                if (IsInsideRoom(pos, new Vector2(size.x, size.y)) && 
+                    !IsOverlap(pos, new Vector2(size.x, size.y))
                     )
                 {
-                    AddObjectToGrid(pos, new(size.x, size.y), rotation);
+                    AddChildernObjects(objectToPlace, pos, new Vector2(size.x, size.y));
+                    AddObjectToGrid(pos, new Vector2(size.x, size.y));
                     GameObject decorationObj = GameObject.Instantiate(objectToPlace.Prefab, position, rotation);
                     decorationObj.transform.parent = _parent.transform;
-                    decorationObj.transform.localScale = new(1, 1, 1);
+                    decorationObj.transform.localScale = objectToPlace.Scale;
                     DungeonObject decoration = new(decorationObj, _dectorations.Count);
+                    AddFillables(decoration.Prefab, objectToPlace.FillProbability);
                     _dectorations.Add(decoration);
                 }
             }
