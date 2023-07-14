@@ -229,7 +229,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private void SplitRoomVertically(Bounds room, Queue<Bounds> roomsQueue, int minWidth)
         {
             //int xSplit = Mathf.Max(minWidth, room.size.x - minWidth);
-            float xSplit = Random.Range(1, room.size.x);
+            float xSplit = Random.Range(minWidth, room.size.x - minWidth);
 
             float centerOffsetRoom1 = room.center.x - (room.size.x - xSplit) / 2f;
             float centerOffsetRoom2 = room.center.x + xSplit / 2f;
@@ -247,7 +247,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private void SplitRoomHorizontally(Bounds room, Queue<Bounds> roomsQueue, int minHeight)
         {
             //int ySplit = Mathf.Max(minHeight, room.size.y - minHeight);
-            float ySplit = Random.Range(1, room.size.y);
+            float ySplit = Random.Range(minHeight, room.size.y - minHeight);
 
             float centerOffsetRoom1 = room.center.y - (room.size.y - ySplit) / 2f;
             float centerOffsetRoom2 = room.center.y + ySplit / 2f;
@@ -271,6 +271,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             while (roomsQueue.Count > 0)
             {
+                if (Random.value > _roomData.proabilityForSplit) break;
+
                 Bounds room = roomsQueue.Dequeue();
 
                 if (room.size.x < minWidth || room.size.y < minHeight) continue;
@@ -287,59 +289,90 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     else if (room.size.y >= 2 * minHeight) SplitRoomHorizontally(room, roomsQueue, minHeight);
                     else if (room.size.x >= minWidth && room.size.y >= minHeight) subRooms.Add(room);
                 }
+
+                subRooms.Add(room);
             }
 
-            for (int i = subRooms.Count - 1; i > -1; i--)
-            {
-                if (Random.value >= _roomData.proabilityForSplit) subRooms.RemoveAt(i);
-            }
+            //for (int i = subRooms.Count - 1; i > -1; i--)
+            //{
+            //    if (Random.value >= _roomData.proabilityForSplit) subRooms.RemoveAt(i);
+            //}
 
             return subRooms;
         }
 
-        /*
+        
         /// <summary>
         /// Adds a Wall to the Room Grid
         /// </summary>
-        List<Vector2Int> AddWallToGrid(int start, int end)
+        void AddWallToGridX(int start, int end, int y)
         {
-            List<Vector2Int> wallSegments = new();
-            int cursor = -1;
-            for (int i = start; i < end; i++)
+            //List<Vector2Int> wallSegments = new();
+            //int cursor = -1;
+            //Debug.Log(start);
+            //Debug.Log(end);
+            //Debug.Log(y);
+            for (int i = start; i <= end; i++)
             {
-                if (_grid[i, i + 1] == RoomTileType.Empty && cursor == -1) cursor = i;
-                else if (_grid[i, i + 1] == RoomTileType.Wall && cursor != -1)
-                {
-                    wallSegments.Add(new Vector2Int(cursor, i));
-                    cursor = -1;
-                }
-                else if (i == end - 1 && _grid[i, i + 1] == RoomTileType.Empty && cursor != -1) wallSegments.Add(new Vector2Int(cursor, end));
+                _grid[i, y] = RoomZone.Invalid;
+                //if (_grid[i, i + 1] == RoomTileType.Empty && cursor == -1) cursor = i;
+                //else if (_grid[i, i + 1] == RoomTileType.Wall && cursor != -1)
+                //{
+                //    wallSegments.Add(new Vector2Int(cursor, i));
+                //    cursor = -1;
+                //}
+               // else if (i == end - 1 && _grid[i, i + 1] == RoomTileType.Empty && cursor != -1) wallSegments.Add(new Vector2Int(cursor, end));
             }
-
-            return wallSegments;
         }
-        */
+
+        /// <summary>
+        /// Adds a Wall to the Room Grid
+        /// </summary>
+        void AddWallToGridY(int start, int end, int x)
+        {
+            //List<Vector2Int> wallSegments = new();
+            //int cursor = -1;
+            for (int i = start; i <= end; i++)
+            {
+                _grid[x, i] = RoomZone.Invalid;
+                //Debug.Log(x + ":" + i);
+                //if (_grid[i, i + 1] == RoomTileType.Empty && cursor == -1) cursor = i;
+                //else if (_grid[i, i + 1] == RoomTileType.Wall && cursor != -1)
+                //{
+                //    wallSegments.Add(new Vector2Int(cursor, i));
+                //    cursor = -1;
+                //}
+                // else if (i == end - 1 && _grid[i, i + 1] == RoomTileType.Empty && cursor != -1) wallSegments.Add(new Vector2Int(cursor, end));
+            }
+        }
 
         /// <summary>
         /// Generate sub rooms
         /// </summary>
         void CreateSubRooms(List<Bounds> subRooms)
         {
+            //if (subRooms.Count <= 1) return;
             foreach (Bounds room in subRooms)
             {
+                if (room.size.y == _roomSize.y && room.size.x == _roomSize.x) continue;
                 Vector3 min = new(room.min.x, 0, room.min.y);
                 Vector3 max = new(room.max.x, 0, room.max.y);
 
-                Debug.DrawLine(max - new Vector3(0, 0, room.size.y), min, Color.green, 1);
-                Debug.DrawLine(max - new Vector3(room.size.x, 0, 0), min, Color.green, 1);
-                Debug.DrawLine(max, min + new Vector3(0, 0, room.size.y), Color.green, 1);
-                Debug.DrawLine(max, min + new Vector3(room.size.x, 0, 0), Color.green, 1);
+                //Debug.DrawLine(max - new Vector3(0, 0, room.size.y), min, Color.green, 1);
+                //Debug.DrawLine(max - new Vector3(room.size.x, 0, 0), min, Color.green, 1);
+                //Debug.DrawLine(max, min + new Vector3(0, 0, room.size.y), Color.green, 1);
+                //Debug.DrawLine(max, min + new Vector3(room.size.x, 0, 0), Color.green, 1);
 
                 _wallCount = new(Mathf.Max(1, Mathf.FloorToInt(room.size.x / _wallSize)), Mathf.Max(1, Mathf.FloorToInt(room.size.y / _wallSize)));
                 Vector2 scale = new((room.size.x / _wallCount.x) / _wallSize, (room.size.y / _wallCount.y) / _wallSize);
 
-                List<DungeonObject> subRoomObjects = new(_roomData.wallObjects);
-                subRoomObjects.AddRange(_roomData.enterenceObjects);
+                List<DungeonObject> subRoomObjects = new(_roomData.SubRoomWallObjects);
+                subRoomObjects.AddRange(_roomData.SubRoomEnterenceObjects);
+
+                if (Mathf.FloorToInt(room.size.y) != Mathf.FloorToInt(_roomSize.y) && Mathf.Abs(room.size.y / 2 + room.center.y - _roomSize.y / 2) >= 1) AddWallToGridX(Mathf.FloorToInt(_wallSize * scale.x / 2), Mathf.CeilToInt(_wallSize * scale.x / 2 + (_wallCount.x - 1) * scale.x * _wallSize), Mathf.FloorToInt(room.size.y));
+                if (Mathf.FloorToInt(room.size.y) != 0 && Mathf.Abs(-room.size.y / 2 + room.center.y + _roomSize.y / 2) >= 1) AddWallToGridX(Mathf.FloorToInt(_wallSize * scale.x / 2), Mathf.CeilToInt(_wallSize * scale.x / 2 + (_wallCount.x - 1) * scale.x * _wallSize), 0);
+                if (Mathf.FloorToInt(room.size.x) != Mathf.FloorToInt(_roomSize.x) && Mathf.Abs(room.size.x / 2 + room.center.x - _roomSize.x / 2) >= 1) AddWallToGridY(Mathf.FloorToInt(_wallSize * scale.y / 2f), Mathf.CeilToInt(_wallSize * scale.y / 2f + (_wallCount.y - 1) * scale.y * _wallSize), Mathf.FloorToInt(room.size.x));
+                if (Mathf.FloorToInt(room.size.x) != 0 && Mathf.Abs(-room.size.x / 2 + room.center.x + _roomSize.x / 2) >= 1) AddWallToGridY(Mathf.FloorToInt(_wallSize * scale.y / 2f), Mathf.CeilToInt(_wallSize * scale.y / 2f + (_wallCount.y - 1) * scale.y * _wallSize), 0);
 
                 for (int i = 0; i < _wallCount.x; i++)
                 {
@@ -358,9 +391,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     wallRight.transform.localScale = scaleVector;
                     wallLeft.transform.localScale = scaleVector;
 
-                    if (Mathf.Abs(room.size.y / 2 + room.center.y - _roomSize.y / 2) >= 1) wallRight.transform.parent = _mesh.transform;
+                    if (Mathf.FloorToInt(room.size.y) != Mathf.FloorToInt(_roomSize.y) && Mathf.Abs(room.size.y / 2 + room.center.y - _roomSize.y / 2) >= 1) wallRight.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallRight);
-                    if (Mathf.Abs(-room.size.y / 2 + room.center.y + _roomSize.y / 2) >= 1) wallLeft.transform.parent = _mesh.transform;
+                    if (Mathf.FloorToInt(room.size.y) != 0 && Mathf.Abs(-room.size.y / 2 + room.center.y + _roomSize.y / 2) >= 1) wallLeft.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallLeft);
                 }
 
@@ -381,9 +414,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     wallDown.transform.localScale = scaleVector;
                     wallUp.transform.localScale = scaleVector;
 
-                    if (Mathf.Abs(room.size.x / 2 + room.center.x - _roomSize.x / 2) >= 1) wallDown.transform.parent = _mesh.transform;
+                if (Mathf.FloorToInt(room.size.x) != Mathf.FloorToInt(_roomSize.x) && Mathf.Abs(room.size.x / 2 + room.center.x - _roomSize.x / 2) >= 1) wallDown.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallDown);
-                    if (Mathf.Abs(-room.size.x / 2 + room.center.x + _roomSize.x / 2) >= 1) wallUp.transform.parent = _mesh.transform;
+                    if (Mathf.FloorToInt(room.size.x) != 0 && Mathf.Abs(-room.size.x / 2 + room.center.x + _roomSize.x / 2) >= 1) wallUp.transform.parent = _mesh.transform;
                     else GameObject.Destroy(wallUp);
                 }
 
@@ -483,6 +516,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             room.SetGrid(_grid);
 
             decorator.DecorateRoom(ref room);
+
+            //room.DrawZones();
 
             return room;
         }

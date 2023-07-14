@@ -17,5 +17,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public List<DungeonObject> enterenceObjects;
         public List<DungeonObject> floorObjects;
         public List<DungeonObject> pillarObjects;
+
+        public List<DungeonObject> SubRoomWallObjects;
+        public List<DungeonObject> SubRoomEnterenceObjects;
     }
 }

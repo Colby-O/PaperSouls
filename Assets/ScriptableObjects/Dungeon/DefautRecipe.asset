@@ -90,5 +90,5 @@ MonoBehaviour:
     Scale: {x: 0.8, y: 0.8, z: 0.8}
     Offset: 0
   PlacementProbability:
-    Room: 0.01
+    Room: 0.026
     Edge: 0.07

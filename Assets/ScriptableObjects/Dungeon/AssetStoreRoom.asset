@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bdbae091bbe32429222141a5858870, type: 3}
   m_Name: AssetStoreRoom
   m_EditorClassIdentifier: 
-  minSubRoomSize: {x: 2147483647, y: 2147483647}
+  minSubRoomSize: {x: 4, y: 4}
   proabilityForSplit: 0.5
   useRandomFloorRotation: 1
   recipes:
@@ -36,3 +36,11 @@ MonoBehaviour:
   - ID: 0
     Proability: 1
     _prefab: {fileID: 6865484016521977728, guid: 14231e7d6e417674ca7f74980a822d06, type: 3}
+  SubRoomWallObjects:
+  - ID: 1
+    Proability: 0.6
+    _prefab: {fileID: 1074635709969130, guid: 4e836adc931604facb69083321123733, type: 3}
+  SubRoomEnterenceObjects:
+  - ID: 1
+    Proability: 1
+    _prefab: {fileID: 1233450460934722, guid: 5ff6beab0f3d041d191e1710bcd8f25f, type: 3}
