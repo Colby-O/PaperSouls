@@ -34,6 +34,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 Destroy(_parnet);
                 _parnet = new("Room");
+                _parnet.transform.position = Position;
                 _room = _roomGenerator.CreateRoom(_parnet, RoomSize, new(4, 1, 4), NumExits, 0);
                 Regenerate = false;
             }

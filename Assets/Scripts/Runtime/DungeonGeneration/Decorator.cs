@@ -73,7 +73,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 for (int j = -Mathf.FloorToInt(size.y / 2); j < Mathf.CeilToInt(size.y / 2); j++)
                 {
-                    if (_grid[pos.x + i, pos.y + j] == RoomZone.Invalid) return true;
+                    if (_grid[pos.x + i, pos.y + j] == RoomZone.Invalid || _grid[pos.x + i, pos.y + j] == RoomZone.SubRoomWall) return true;
                 }
             }
 

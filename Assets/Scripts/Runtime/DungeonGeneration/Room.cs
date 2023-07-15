@@ -11,6 +11,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     {
         Room,
         Edge,
+        SubRoomWall,
         Invalid
     }
 
@@ -197,6 +198,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     cube.transform.position = Prefab.transform.position + new Vector3(-Size.x / 2f + 0.5f + i, 0, -Size.z / 2f + 0.5f + j);
                     if (Grid[i, j] == RoomZone.Room) cube.GetComponent<Renderer>().material.color = Color.blue;
                     else if (Grid[i, j] == RoomZone.Edge) cube.GetComponent<Renderer>().material.color = Color.red;
+                    else if (Grid[i, j] == RoomZone.SubRoomWall) cube.GetComponent<Renderer>().material.color = Color.magenta;
                     else if (Grid[i, j] == RoomZone.Invalid) cube.GetComponent<Renderer>().material.color = Color.black;
                     cube.transform.parent = Prefab.transform;
                 }
