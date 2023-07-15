@@ -9,7 +9,7 @@ using PaperSouls.Runtime.Player;
 namespace PaperSouls.Runtime.Enemy
 {
     [RequireComponent(typeof(SphereCollider))]
-    public abstract class Enemy : MonoBehaviour, IDamageable
+    internal abstract class Enemy : MonoBehaviour, IDamageable
     {
         public EnemyData Data;
 

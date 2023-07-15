@@ -6,7 +6,7 @@ namespace PaperSouls.Runtime.Items
 {
 
     [System.Serializable]
-    public class Drop
+    internal class Drop
     {
         public Item item;
         [Range(0.01f, 1f)] public float probability = 0.01f;
@@ -19,7 +19,7 @@ namespace PaperSouls.Runtime.Items
     }
 
     [CreateAssetMenu(fileName = "LootTable", menuName = "Loot/Table")]
-    public class LootTable : ScriptableObject
+    internal class LootTable : ScriptableObject
     {
         [SerializeField] private List<Drop> table;
 

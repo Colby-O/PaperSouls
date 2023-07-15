@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Interfaces;
 
 namespace PaperSouls.Runtime.Weapons
 {
-    public class Projectile : MonoBehaviour
+    internal class Projectile : MonoBehaviour
     {
         [HideInInspector] public Ray ProjectilePath;
         public float Damage = 10;

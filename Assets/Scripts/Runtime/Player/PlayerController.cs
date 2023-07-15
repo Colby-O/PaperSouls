@@ -6,12 +6,13 @@ using PaperSouls.Core;
 using PaperSouls.Runtime.Sprite;
 using PaperSouls.Runtime.Inventory;
 using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.MonoSystems.Audio;
 
 namespace PaperSouls.Runtime.Player
 {
 
     [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
-    public class PlayerController : Billboard
+    internal sealed class PlayerController : Billboard
     {
         [SerializeField] private float _turnSpeed = 10.0f;
         [SerializeField] private float _lookSpeed = 10.0f;
@@ -150,7 +151,7 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         private void Jump()
         {
-            if (_characterController.isGrounded && GameManger.AccpetPlayerInput)
+            if (_characterController.isGrounded && PaperSoulsGameManager.AccpetPlayerInput)
             {
                 _jumpForce = Vector3.up * _jumpHeight;
                 _gravityForceOnPlayer = 0;
@@ -247,7 +248,7 @@ namespace PaperSouls.Runtime.Player
         {
             _dashing = true;
             _dashTrail.SetActive(true);
-            AudioManger.Instance.PlaySFX("Dash");
+            GameManager.Emit<PlayAudioMessage>(new("Dash", MonoSystems.Audio.AudioType.SfX));
             _dashForce = Camera.main.transform.TransformDirection(Vector3.forward) * _dashStrength;
             
         }
@@ -315,9 +316,9 @@ namespace PaperSouls.Runtime.Player
             _dashAction = _playerInput.actions["Dash"];
             _quickUseAction = _playerInput.actions["QuickUse"];
 
-            _moveAction.performed += e => _rawMovementInput = (GameManger.AccpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
-            _lookAction.performed += e => _rawMousePosition = (GameManger.AccpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
-            _zoomAction.performed += e => _mouseScrollY = (GameManger.AccpetPlayerInput) ? e.ReadValue<float>() : 0.0f;
+            _moveAction.performed += e => _rawMovementInput = (PaperSoulsGameManager.AccpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
+            _lookAction.performed += e => _rawMousePosition = (PaperSoulsGameManager.AccpetPlayerInput) ? e.ReadValue<Vector2>() : Vector2.zero;
+            _zoomAction.performed += e => _mouseScrollY = (PaperSoulsGameManager.AccpetPlayerInput) ? e.ReadValue<float>() : 0.0f;
             _jumpAction.performed += e => Jump();
             _sprintAction.performed += e => _isSprinting = !_isSprinting;
             _sprintAction.canceled += e => _isSprinting = !_isSprinting;

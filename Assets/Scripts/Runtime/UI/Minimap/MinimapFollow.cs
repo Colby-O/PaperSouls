@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI.Minimap
 {
-    public class MinimapFollow : MonoBehaviour
+    internal sealed class MinimapFollow : MonoBehaviour
     {
         [SerializeField] private MinimapSettings _settings;
         [SerializeField] private float _cameraHeight;
@@ -17,7 +17,7 @@ namespace PaperSouls.Runtime.UI.Minimap
 
         private void Update()
         {
-            Vector3 targetPosition = _settings.TargetToFollow.transform.position;
+            Vector3 targetPosition = PaperSoulsGameManager.Player.transform.position;
             transform.position = new(targetPosition.x, targetPosition.y + _cameraHeight, targetPosition.z);
             if (_settings.RotateWithTarget)
             {

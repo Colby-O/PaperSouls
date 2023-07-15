@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [CreateAssetMenu(fileName = "DungeonProperties", menuName = "Dungeon/Properties")]
-    public class DungeonProperties : ScriptableObject
+    internal class DungeonProperties : ScriptableObject
     {
         [Header("Dungeon Properties")]
         public Vector3 Scale = Vector3.one;

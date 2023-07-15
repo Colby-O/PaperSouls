@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.Enemy
 {
     [CreateAssetMenu(fileName = "RangedEnemyData", menuName = "Enemies/Ranged Enemy", order = 2)]
-    public class RangedEnemyData : EnemyData
+    internal class RangedEnemyData : EnemyData
     {
         [Header("Projectile Stats")]
         public GameObject projectilePrefab;

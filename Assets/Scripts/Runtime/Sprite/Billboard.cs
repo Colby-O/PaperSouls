@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Sprite
 {
-    public class Billboard : MonoBehaviour
+    internal class Billboard : MonoBehaviour
     {
         private readonly float _turnSpeed = 10.0f;
         public Transform RotateTarget { get; set; }

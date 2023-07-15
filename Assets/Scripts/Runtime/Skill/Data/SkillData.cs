@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.Skill
 {
     [System.Serializable,  CreateAssetMenu(fileName = "SkillData", menuName = "Skills/Skill", order = 1)]
-    public class SkillData : ScriptableObject
+    internal class SkillData : ScriptableObject
     {
         [Header("Identification and Description")]
         public int ID = -1;

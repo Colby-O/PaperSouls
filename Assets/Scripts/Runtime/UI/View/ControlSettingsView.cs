@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PaperSouls.Core;
+using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
@@ -10,7 +11,7 @@ namespace PaperSouls.Runtime.UI.View
 
         public override void Init()
         {
-            _backButton.onClick.AddListener(ViewManger.ShowLast);
+            _backButton.onClick.AddListener(GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast);
         }
     }
 }

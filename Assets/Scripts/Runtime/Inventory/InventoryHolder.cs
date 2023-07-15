@@ -7,7 +7,7 @@ using PaperSouls.Runtime.Items;
 namespace PaperSouls.Runtime.Inventory
 {
     [System.Serializable]
-    public class InventoryHolder : MonoBehaviour
+    internal class InventoryHolder : MonoBehaviour
     {
         [SerializeField] protected Vector2Int _inventorySize;
         [SerializeField] protected List<SlotType> _slotTypes;

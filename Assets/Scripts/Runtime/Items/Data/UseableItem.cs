@@ -7,7 +7,7 @@ using PaperSouls.Runtime.Player;
 namespace PaperSouls.Runtime.Items
 {
     [CreateAssetMenu(fileName = "UseableItem", menuName = "Items/Usable Item", order = 2)]
-    public class UseableItem : Item, IUseables
+    internal class UseableItem : Item, IUseables
     {
         [Header("Effects")]
         public List<UseableItemEffect> effects;

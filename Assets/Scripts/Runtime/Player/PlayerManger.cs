@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using PaperSouls.Core;
 using PaperSouls.Runtime.Interfaces;
+using PaperSouls.Runtime.MonoSystems.GameState;
 
 namespace PaperSouls.Runtime.Player
 {
 
-    public class PlayerManger : MonoBehaviour, IDamageable
+    internal sealed class PlayerManger : MonoBehaviour, IDamageable
     {
         public PlayerSettings PlayerSettings;
         public PlayerHUDManger PlayerHUD;
@@ -73,8 +74,7 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         public void Destroy()
         {
-            GameManger.UpdateGameState(GameState.PlayerDead);
-            GameObject.Destroy(gameObject);
+            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Dead));
         }
 
         private void Start()

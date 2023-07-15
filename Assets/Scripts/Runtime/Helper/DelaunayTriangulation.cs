@@ -7,7 +7,7 @@ namespace PaperSouls.Runtime.Helpers
     /// <summary>
     /// Define a 2D edge
     /// </summary>
-    public struct Edge2D
+    internal struct Edge2D
     {
         public Vector2 A, B;
         public int IndexA, IndexB;
@@ -36,7 +36,7 @@ namespace PaperSouls.Runtime.Helpers
     /// <summary>
     /// Define a 2D triangle
     /// </summary>
-    public struct Triangle2D
+    internal struct Triangle2D
     {
         public Vector2 A, B, C;
         public int IndexA, IndexB, IndexC;
@@ -65,7 +65,7 @@ namespace PaperSouls.Runtime.Helpers
         }
     }
 
-    public class DelaunayTriangulation
+    internal sealed class DelaunayTriangulation
     {
 
         private readonly List<Vector2> _vertices;

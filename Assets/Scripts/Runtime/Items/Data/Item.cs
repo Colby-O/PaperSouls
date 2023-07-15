@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Items
 {
-    public enum SlotType
+    internal enum SlotType
     {
         None,
         Any,
@@ -17,21 +17,21 @@ namespace PaperSouls.Runtime.Items
         MeleeWeapon
     }
 
-    public enum ItemRarity
+    internal enum ItemRarity
     {
         Common,
         Rare,
         Legendary
     }
 
-    public enum PickupType
+    internal enum PickupType
     {
         Inventory,
         Ammo
     }
 
     [System.Serializable]
-    public class ItemClasssification
+    internal class ItemClasssification
     {
         public ItemRarity rarity;
         [Range(0.01f, 1f)] public float probability = 0.01f;
@@ -44,7 +44,7 @@ namespace PaperSouls.Runtime.Items
     }
 
     [CreateAssetMenu(fileName = "Item", menuName = "Items/Item", order = 1)]
-    public class Item : ScriptableObject
+    internal class Item : ScriptableObject
     {
         [Header("Header Infomation")]
         public int id = -1;

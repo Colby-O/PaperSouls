@@ -10,6 +10,6 @@ namespace PaperSouls.Runtime.Items
         /// <summary>
         /// Define an effect a Useable Item Has
         /// </summary>
-        public abstract bool ExcuteEffect(UseableItem item, PlayerManger player);
+        internal abstract bool ExcuteEffect(UseableItem item, PlayerManger player);
     }
 }

@@ -9,7 +9,7 @@ using PaperSouls.Runtime.Inventory;
 namespace PaperSouls.Runtime.Player
 {
 
-    public class PlayerHUDManger : MonoBehaviour
+    internal sealed class PlayerHUDManger : MonoBehaviour
     {
         [SerializeField] private UISliderController _healthBar;
         [SerializeField] private UISliderController _xpBar;

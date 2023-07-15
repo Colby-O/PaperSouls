@@ -6,7 +6,7 @@ using PaperSouls.Runtime.Player;
 namespace PaperSouls.Runtime.Items
 {
     [CreateAssetMenu(fileName = "Item", menuName = "Items/Equipable Item", order = 3)]
-    public class EquipableItem : Item
+    internal class EquipableItem : Item
     {
         // TODO: Make Just Equipable Item have slot type??
 
@@ -16,12 +16,12 @@ namespace PaperSouls.Runtime.Items
         public int armorBonous;
         public int agilityBonous;
 
-        public void Equip(PlayerManger player)
+        internal void Equip(PlayerManger player)
         {
 
         }
 
-        public void Unequip(PlayerManger player)
+        internal void Unequip(PlayerManger player)
         {
 
         }

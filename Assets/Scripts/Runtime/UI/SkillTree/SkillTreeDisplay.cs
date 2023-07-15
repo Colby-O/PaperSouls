@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Skill;
 
 namespace PaperSouls.Runtime.UI.SkillTreeUI
 {
-    public class SkillTreeDisplay : MonoBehaviour
+    internal sealed class SkillTreeDisplay : MonoBehaviour
     {
         [SerializeField] private SkillTreeData _skillTreeData;
         [SerializeField] private GameObject _skillElement;

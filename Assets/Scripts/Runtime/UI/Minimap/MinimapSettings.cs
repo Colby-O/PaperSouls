@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI.Minimap
 {
-    public class MinimapSettings : MonoBehaviour
+    internal class MinimapSettings : MonoBehaviour
     {
         public Transform TargetToFollow;
         public bool RotateWithTarget = true;

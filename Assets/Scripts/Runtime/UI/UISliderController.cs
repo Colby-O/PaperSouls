@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace PaperSouls.Runtime.UI
 {
-    public class UISliderController : MonoBehaviour
+    internal class UISliderController : MonoBehaviour
     {
         [SerializeField] private Slider _slider;
 
