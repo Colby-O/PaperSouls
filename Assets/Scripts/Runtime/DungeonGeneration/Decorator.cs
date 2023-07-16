@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    public class Decorator
+    internal sealed class Decorator
     {
         private const string FillablePositionsContainer = "fillables";
         private const string SurroundingPositionsContainer = "surrounding";

@@ -7,7 +7,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     /// <summary>
     /// Only for testing!!!!
     /// </summary>
-    public class RoomManager : MonoBehaviour
+    internal sealed class RoomManager : MonoBehaviour
     {
         public bool Regenerate = false;
         public int Seed = 0;
