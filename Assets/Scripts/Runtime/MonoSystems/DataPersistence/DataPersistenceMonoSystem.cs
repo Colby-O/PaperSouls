@@ -47,7 +47,6 @@ namespace PaperSouls.Runtime.MonoSystems.DataPersistence
         {
             if (_gameData == null) Debug.LogError("GameData is null. Please call NewGame() before SaveGame().");
             
-
             foreach (var obj in _dataPersistencesObjects) obj.SaveData(ref _gameData);
 
             _jsonHandler.Save(_gameData, _currentProfileID);

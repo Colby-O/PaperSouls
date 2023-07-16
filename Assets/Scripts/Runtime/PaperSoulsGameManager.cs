@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using PaperSouls.Core;
 using PaperSouls.Runtime.MonoSystems.Audio;
 using PaperSouls.Runtime.MonoSystems.GameState;
@@ -8,7 +9,6 @@ using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.MonoSystems.DataPersistence;
 using PaperSouls.Runtime.MonoSystems;
 using PaperSouls.Runtime.Items;
-using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime
 {
@@ -29,10 +29,8 @@ namespace PaperSouls.Runtime
         [SerializeField] private ItemDatabase _itemDatabase;
 
         [Header("Global Variables")]
-        [SerializeField] private GameStates IntialState = GameStates.MainMenu;
+        [SerializeField] private GameStates _intialState = GameStates.MainMenu;
         private static GameObject _player = null;
-        public static Vector3 StartPosition = Vector3.zero;
-
         public static bool AccpetPlayerInput { get; set; }
         public static GameObject Player { 
             get 
@@ -44,13 +42,23 @@ namespace PaperSouls.Runtime
                 _player = value; 
             } 
         }
+        private bool _firstTimeRunning = false;
+
 
         /// <summary>
         /// Function to be ran once a game is reset i.e. the player dies.
         /// </summary>
-        public static void ResetGame()
+        public static IEnumerator ResetGame()
         {
-            Player.transform.position = StartPosition;
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            if (_player == null) _player = GameObject.Find("Player");
+            Emit<ResetViewMessage>(new());
             Emit<ChangeGameStateMessage>(new(GameStates.Playing));
         }
 
@@ -73,10 +81,6 @@ namespace PaperSouls.Runtime
 
         protected override void OnInitalized()
         {
-            if (_player == null) _player = GameObject.Find("Player");
-
-            StartPosition = _player.transform.position;
-
             // Ataches all MonoSystems to the GameManager
             AttachMonoSystems();
 
@@ -90,8 +94,21 @@ namespace PaperSouls.Runtime
 
         private void Start()
         {
-            AccpetPlayerInput = false;
-            Emit<ChangeGameStateMessage>(new(IntialState));
+            if (_player == null) _player = GameObject.Find("Player");
+        }
+
+        private void Update()
+        {
+            // This is scuffed
+            // The issue is that GameManager Start is ran before the MonoSystem's
+            // Since the View Hides all Views on the start Menu is deactiavted.
+            // TODO: Find a better solution to this problem. Might need to refactor the 
+            // code base to be more carefull about Awake/Start order. 
+            if (!_firstTimeRunning)
+            {
+                _firstTimeRunning = true;
+                Emit<ChangeGameStateMessage>(new(_intialState));
+            }
         }
     }
 }

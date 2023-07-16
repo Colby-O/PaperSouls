@@ -299,9 +299,6 @@ namespace PaperSouls.Runtime.Player
             _playerManger = GetComponent<PlayerManger>();
             _animator = GetComponentInChildren<Animator>();
 
-            _playerUI.SetActive(false);
-            _inventoryUI.SetActive(false);
-
             _isWalking = false;
             _isSprinting = false;
 

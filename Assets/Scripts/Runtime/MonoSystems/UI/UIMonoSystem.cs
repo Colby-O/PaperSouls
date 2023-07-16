@@ -92,6 +92,12 @@ namespace PaperSouls.Runtime.MonoSystems.UI
      
         }
 
+        public void ShowAllViews()
+        {
+            foreach (View view in _views) view.Show();
+        }
+
+
         private void ChangeView(ChangeViewMessage msg)
         {
             Show(msg.NextView, msg.Remember);
@@ -100,7 +106,7 @@ namespace PaperSouls.Runtime.MonoSystems.UI
         private void AddListeners()
         {
             GameManager.AddListener<ChangeViewMessage>(ChangeView);
-            GameManager.AddListener<ResetViewMessage>(new(delegate (ResetViewMessage msg) { Init(); HideAllViews(); }));
+            GameManager.AddListener<ResetViewMessage>(new(delegate (ResetViewMessage msg) { Init(); }));
         }
 
         private void Init()
@@ -118,6 +124,10 @@ namespace PaperSouls.Runtime.MonoSystems.UI
         private void Awake()
         {
             AddListeners();
+        }
+
+        private void Start()
+        {
             Init();
         }
     }
