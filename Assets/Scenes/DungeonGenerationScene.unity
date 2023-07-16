@@ -7687,9 +7687,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RegenerateDungeon: 0
-  _seed: 2708
-  _roomData: {fileID: 11400000, guid: 7ecb72dde0e5def43a3b35b2ad9880b5, type: 2}
-  _properties: {fileID: 11400000, guid: 6538164da259d134181a10eaffd47dc7, type: 2}
+  _seed: 1
+  _roomData: {fileID: 11400000, guid: 828d456c13a5e394389e5cdb47d73d35, type: 2}
+  _properties: {fileID: 11400000, guid: efefefc854ec3b64b91b1f127507407c, type: 2}
   _tileSize: {x: 4, y: 1, z: 4}
   _drawDelaunayTriangulation: 0
   _drawMST: 0

@@ -4,6 +4,17 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
+    /// <summary>
+    /// Defines different areas within a room
+    /// </summary>
+    internal enum RoomZone
+    {
+        Room,
+        Edge,
+        SubRoomWall,
+        Invalid
+    }
+
     internal enum TileType : int
     {
         Empty,
@@ -43,10 +54,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
             protected set { _prefab = value; } 
         }
 
+        public DungeonObject() { }
+
         public DungeonObject(GameObject gameObject, float proability, int id)
         {
             ID = id;
-            Size = GetSizeOfRoom(gameObject);
+            Size = GetSizeOfObject(gameObject);
             Prefab = gameObject;
             Proability = proability;
         }
@@ -66,7 +79,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Gets the size of a room in world space 
         /// </summary>
-        private Vector3 GetSizeOfRoom(GameObject room)
+        private Vector3 GetSizeOfObject(GameObject room)
         {
             if (room == null) return Vector3.zero;
 
@@ -125,15 +138,33 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             this.Size = size;
         }
+
+        public void CalculateSize()
+        {
+            this.Size = GetSizeOfObject(Prefab);
+        }
     }
-    
+
+    [System.Serializable]
+    internal class DecorationObject : DungeonObject
+    {
+        public RoomZone zone;
+        public Vector3 Scale = Vector3.one;
+        public int Padding;
+        public List<DungeonObject> Surrounding;
+        [Range(0, 1)] public float FillProbability = 1.0f;
+        [Range(0, 1)] public float SurroundProbability = 1.0f;
+    }
+
     [System.Serializable]
     internal class Room : DungeonObject
     {
+        public List<DungeonObject> Decorations;
         public int NumExits;
         public List<Transform> Exits;
         public Stack<Transform> AvailableExits;
         public int ExitsUsed;
+        public RoomZone[,] Grid { get; private set; }
 
         public Room(GameObject gameObject, List<Transform> exits, int roomID) : base(gameObject, roomID)
         {
@@ -145,6 +176,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         public Room(int roomID) : this(null, new List<Transform>(), roomID) { }
 
+        public void SetGrid(RoomZone[,] grid) => Grid = grid.Clone() as RoomZone[,];
+
         /// <summary>
         /// Sets the rooms exits
         /// </summary>
@@ -153,6 +186,23 @@ namespace PaperSouls.Runtime.DungeonGeneration
             this.Exits = new List<Transform>(exits);
             this.NumExits = exits.Count;
             this.AvailableExits = new Stack<Transform>(exits);
+        }
+
+        public void DrawZones()
+        {
+            for (int i = 0; i < Size.x; i++)
+            {
+                for (int j = 0; j < Size.z; j++)
+                {
+                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = Prefab.transform.position + new Vector3(-Size.x / 2f + 0.5f + i, 0, -Size.z / 2f + 0.5f + j);
+                    if (Grid[i, j] == RoomZone.Room) cube.GetComponent<Renderer>().material.color = Color.blue;
+                    else if (Grid[i, j] == RoomZone.Edge) cube.GetComponent<Renderer>().material.color = Color.red;
+                    else if (Grid[i, j] == RoomZone.SubRoomWall) cube.GetComponent<Renderer>().material.color = Color.magenta;
+                    else if (Grid[i, j] == RoomZone.Invalid) cube.GetComponent<Renderer>().material.color = Color.black;
+                    cube.transform.parent = Prefab.transform;
+                }
+            }
         }
     }
     

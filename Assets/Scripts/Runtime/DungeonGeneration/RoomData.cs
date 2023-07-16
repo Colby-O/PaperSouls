@@ -11,9 +11,14 @@ namespace PaperSouls.Runtime.DungeonGeneration
         [Range(0, 1)] public float proabilityForSplit = 0.5f;
         public bool useRandomFloorRotation = true;
 
+        public List<Recipe> recipes;
+
         public List<DungeonObject> wallObjects;
         public List<DungeonObject> enterenceObjects;
         public List<DungeonObject> floorObjects;
         public List<DungeonObject> pillarObjects;
+
+        public List<DungeonObject> SubRoomWallObjects;
+        public List<DungeonObject> SubRoomEnterenceObjects;
     }
 }

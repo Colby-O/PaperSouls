@@ -331,7 +331,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1749051882}
-  - component: {fileID: 1749051881}
+  - component: {fileID: 1749051883}
   m_Layer: 0
   m_Name: RoomGenerator
   m_TagString: Untagged
@@ -339,36 +339,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1749051881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1749051880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36b9b2afbff51a04cb8da6378a75f161, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  seed: 0
-  roomSize: {x: 25, y: 25}
-  minSubRoomSize: {x: 5, y: 5}
-  numEnterences: 3
-  proabilityForSplit: 0.5
-  test: 1
-  wallObjects:
-  - gameObject: {fileID: 6082452860321768858, guid: bf60bb00be30ac144977be94e591154f, type: 3}
-    proability: 1
-  enterenceObjects:
-  - gameObject: {fileID: 4687867350712549143, guid: 3168cb538b1f3c84c9bba208a6d71b4c, type: 3}
-    proability: 0.1
-  floorObjects:
-  - gameObject: {fileID: 8326033240074666527, guid: 6ffbd8e3d9a4c0840a756caea745a61c, type: 3}
-    proability: 1
-  pillarObjects:
-  - gameObject: {fileID: 6082452860321768858, guid: bbe01863153c0284e9b32779edb84ac5, type: 3}
-    proability: 1
 --- !u!4 &1749051882
 Transform:
   m_ObjectHideFlags: 0
@@ -384,3 +354,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1749051883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749051880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d9ead3560c48c5478512fcc9501ca23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Regenerate: 0
+  Seed: 0
+  RoomSize: {x: 12, y: 20}
+  Position: {x: 0, y: 0, z: 0}
+  NumExits: 2
+  Data: {fileID: 11400000, guid: 828d456c13a5e394389e5cdb47d73d35, type: 2}

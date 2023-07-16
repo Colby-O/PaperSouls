@@ -124,5 +124,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869087d924ffd7d4fb503cfda690aa37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pickUpRadius: 0.1
+  _pickUpRadius: 0.3
   _itemData: {fileID: 11400000, guid: 3f0d5b844d90a1e46a18e2852d97a76d, type: 2}

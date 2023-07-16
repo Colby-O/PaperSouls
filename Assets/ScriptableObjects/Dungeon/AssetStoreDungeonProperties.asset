@@ -17,8 +17,8 @@ MonoBehaviour:
   Rotation: {x: 0, y: 0, z: 0, w: 1}
   GridSize: 200
   LoopProabilty: 0.2
-  RoomSize: {x: 5, y: 15}
-  NumberOfRooms: {x: 10, y: 15}
+  RoomSize: {x: 4, y: 8}
+  NumberOfRooms: {x: 100, y: 120}
   NumberOfExits: {x: 2, y: 5}
   RoomSpacing: 2
   StrightHallway: {fileID: 8016355262488674176, guid: 8d7bc1e69f7477240b7c2a25d07f13c0, type: 3}
