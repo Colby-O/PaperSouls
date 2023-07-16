@@ -17,7 +17,7 @@ namespace PaperSouls.Runtime.UI.Minimap
 
         private void Update()
         {
-            Vector3 targetPosition = PaperSoulsGameManager.Player.transform.position;
+            Vector3 targetPosition = _settings.TargetToFollow.transform.position;
             transform.position = new(targetPosition.x, targetPosition.y + _cameraHeight, targetPosition.z);
             if (_settings.RotateWithTarget)
             {

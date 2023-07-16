@@ -72,14 +72,34 @@ namespace PaperSouls.Runtime.UI
             else CloseCurrent();
         }
 
-        private void OnEnable()
+        private void ToggleInventory(InputAction.CallbackContext e) => ToggleInventory();
+       
+
+        private void CloseCurrent(InputAction.CallbackContext e) => CloseCurrent();
+        
+
+        private void AddListeners()
         {
             InventoryHolder.OnDynamicInventoryDisplayRequest += DisplayInventory;
+            _menuAction.performed += ToggleInventory;
+            _closeAction.performed += CloseCurrent;
+        }
+
+        private void RemoveListeners()
+        {
+            InventoryHolder.OnDynamicInventoryDisplayRequest -= DisplayInventory;
+            _menuAction.performed -= ToggleInventory;
+            _closeAction.performed -= CloseCurrent;
+        }
+
+        private void OnEnable()
+        {
+            AddListeners();
         }
 
         private void OnDisable()
         {
-            InventoryHolder.OnDynamicInventoryDisplayRequest -= DisplayInventory;
+            RemoveListeners();
         }
 
         private void Awake()
@@ -90,9 +110,6 @@ namespace PaperSouls.Runtime.UI
 
             _menuAction = _uiInput.actions["Inventory"];
             _closeAction = _uiInput.actions["Close"];
-
-            _menuAction.performed += e => ToggleInventory();
-            _closeAction.performed += e => CloseCurrent();
         }
     }
 }

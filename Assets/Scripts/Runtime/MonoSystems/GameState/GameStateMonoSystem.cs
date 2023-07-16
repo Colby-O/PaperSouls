@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using PaperSouls.Core;
 using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.UI.View;
@@ -15,6 +14,7 @@ namespace PaperSouls.Runtime.MonoSystems.GameState
         public GameStates GetCurrentState() => CurrentState;
         public void ChangeToMainMenuState()
         {
+            PaperSoulsGameManager.AccpetPlayerInput = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<MainMenuView>();
             CurrentState = GameStates.MainMenu;
         }
@@ -35,8 +35,7 @@ namespace PaperSouls.Runtime.MonoSystems.GameState
         public void ChangeToDeadState()
         {
             CurrentState = GameStates.Dead;
-            PaperSoulsGameManager.ResetGame();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            StartCoroutine(PaperSoulsGameManager.ResetGame());
         }
 
         private void ChangeGameState(ChangeGameStateMessage msg)

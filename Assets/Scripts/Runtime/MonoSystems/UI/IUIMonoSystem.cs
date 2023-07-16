@@ -38,5 +38,10 @@ namespace PaperSouls.Runtime.MonoSystems.UI
         /// Hides all Views.
         /// </summary>
         public void HideAllViews();
+
+        /// <summary>
+        /// Shows all Views.
+        /// </summary>
+        public void ShowAllViews();
     }
 }
