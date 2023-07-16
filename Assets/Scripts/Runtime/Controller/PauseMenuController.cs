@@ -88,8 +88,6 @@ namespace PaperSouls.Runtime.UI
 
             _uiInput = GetComponent<PlayerInput>();
 
-            if (_inventoryDisplay == null) _inventoryDisplay = FindObjectsOfType<MonoBehaviour>().OfType<DynamicInventoryDisplay>().ToList()[0];
-
             _menuAction = _uiInput.actions["Inventory"];
             _closeAction = _uiInput.actions["Close"];
 

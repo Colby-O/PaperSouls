@@ -48,6 +48,8 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         public void Damage(float dmg)
         {
+            if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead) return;
+
             AddHealth(-dmg);
 
             if (_currentHealth <= 0) Destroy();
@@ -70,11 +72,21 @@ namespace PaperSouls.Runtime.Player
         }
 
         /// <summary>
+        /// Resets the player's health to max value.
+        /// </summary>
+        public void ResetHealth()
+        {
+            _currentHealth = PlayerSettings.health;
+            PlayerHUD.UpdatePlayerHealth(_currentHealth);
+        }
+
+        /// <summary>
         /// Desotry the player object
         /// </summary>
         public void Destroy()
         {
             GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Dead));
+            ResetHealth();
         }
 
         private void Start()

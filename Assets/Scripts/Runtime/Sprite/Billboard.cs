@@ -27,7 +27,7 @@ namespace PaperSouls.Runtime.Sprite
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(newRotation), _turnSpeed * Time.deltaTime);
         }
 
-        public virtual void Awake()
+        public virtual void Start()
         {
             RotateTarget = Camera.main.transform;
         }

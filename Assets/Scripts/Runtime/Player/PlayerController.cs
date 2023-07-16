@@ -7,6 +7,7 @@ using PaperSouls.Runtime.Sprite;
 using PaperSouls.Runtime.Inventory;
 using PaperSouls.Runtime.Items;
 using PaperSouls.Runtime.MonoSystems.Audio;
+using PaperSouls.Runtime.MonoSystems.GameState;
 
 namespace PaperSouls.Runtime.Player
 {
@@ -287,9 +288,9 @@ namespace PaperSouls.Runtime.Player
             inventoryHolder.InventoryManger.OnInventoryChange?.Invoke(slot);
         }
 
-        public override void Awake()
+        public override void Start()
         {
-            base.Awake();
+            base.Start();
 
             _dashTrail.SetActive(false);
 
@@ -299,7 +300,7 @@ namespace PaperSouls.Runtime.Player
             _animator = GetComponentInChildren<Animator>();
 
             _playerUI.SetActive(true);
-            _inventoryUI.SetActive(true);
+            _inventoryUI.SetActive(false);
 
             _isWalking = false;
             _isSprinting = false;
@@ -331,14 +332,15 @@ namespace PaperSouls.Runtime.Player
             Cursor.visible = false;
         }
 
-        private void Start()
-        {
-            _playerUI.SetActive(true);
-            _inventoryUI.SetActive(false);
-        }
+        //private void Start()
+        //{
+         //   _playerUI.SetActive(true);
+        ///    _inventoryUI.SetActive(false);
+        //}
 
         void Update()
         {
+            if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead) return;
             ProcessPlayer();
             ProcessCamera();
             HandleAnimations();

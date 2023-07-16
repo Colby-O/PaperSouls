@@ -7,6 +7,7 @@ using PaperSouls.Runtime.MonoSystems.GameState;
 using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.MonoSystems;
 using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime
 {
@@ -25,9 +26,27 @@ namespace PaperSouls.Runtime
         [Header("Databases")]
         [SerializeField] private ItemDatabase _itemDatabase;
 
-        // Should be some where else but didn't want to think about this right now
+        [Header("Global Variables")]
+        private static GameObject _player = null;
+        public static Vector3 StartPosition = Vector3.zero;
+
         public static bool AccpetPlayerInput { get; set; }
-        public static GameObject Player { get; private set; }
+        public static GameObject Player { 
+            get 
+            { 
+                return _player; 
+            } 
+            private set 
+            { 
+                _player = value; 
+            } 
+        }
+
+        public static void ResetGame()
+        {
+            Player.transform.position = PaperSoulsGameManager.StartPosition;
+            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+        }
 
         /// <summary>
         /// Attaches all MonoSystems to the GameManager
@@ -47,6 +66,10 @@ namespace PaperSouls.Runtime
 
         protected override void OnInitalized()
         {
+            if (_player == null) _player = GameObject.Find("Player");
+
+            StartPosition = _player.transform.position;
+
             // Ataches all MonoSystems to the GameManager
             AttachMonoSystems();
 
@@ -60,15 +83,7 @@ namespace PaperSouls.Runtime
 
         private void Start()
         {
-            // Again shouldn't be here...
-            AccpetPlayerInput = true;
-            _gameStateMonoSystem.ChangeToPlayingState();
-        }
- 
-        private void Update()
-        {
-            // This also shouldn't be here
-            if (Player == null) Player = GameObject.Find("Player");
+            AccpetPlayerInput = false;
         }
     }
 }

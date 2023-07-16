@@ -12,22 +12,22 @@ namespace PaperSouls.Core
 
     internal sealed class MessageListener<TMessage> : MessageListener where TMessage : IMessage
     {
-        private readonly List<Action<TMessage>> listeners = new();
-        public int ListenerCount => listeners.Count;
+        private readonly List<Action<TMessage>> _listeners = new();
+        public int ListenerCount => _listeners.Count;
 
         public void AddListener(Action<TMessage> listener)
         {
-            listeners.Add(listener);
+            _listeners.Add(listener);
         }
 
         public void RemoveListener(Action<TMessage> listener)
         {
-            listeners.Remove(listener);
+            _listeners.Remove(listener);
         }
 
         public void Emit(TMessage msg)
         {
-            foreach (var listener in listeners)
+            foreach (var listener in _listeners)
             {
                 try
                 {

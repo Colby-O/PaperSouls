@@ -5,12 +5,13 @@ using System.Linq;
 using UnityEngine;
 using PaperSouls.Core;
 using PaperSouls.Runtime.UI.View;
+using PaperSouls.Runtime.MonoSystems.GameState;
 
 namespace PaperSouls.Runtime.MonoSystems.UI
 {
     internal sealed class UIMonoSystem : MonoBehaviour, IUIMonoSystem
     {
-        [SerializeField] private View _startingView;
+        [SerializeField] private View _startingView = null;
         [SerializeField] private View[] _views;
 
         private View _currentView;
@@ -99,7 +100,7 @@ namespace PaperSouls.Runtime.MonoSystems.UI
         private void AddListeners()
         {
             GameManager.AddListener<ChangeViewMessage>(ChangeView);
-            GameManager.AddListener<ResetViewMessage>(new(delegate (ResetViewMessage msg) { Init(); }));
+            GameManager.AddListener<ResetViewMessage>(new(delegate (ResetViewMessage msg) { Init(); HideAllViews(); }));
         }
 
         private void Init()
@@ -108,7 +109,7 @@ namespace PaperSouls.Runtime.MonoSystems.UI
             foreach (View view in _views)
             {
                 view.Init();
-                //view.Hide();
+                view.Hide();
             }
 
             if (_startingView != null) Show(_startingView, true);
@@ -119,10 +120,14 @@ namespace PaperSouls.Runtime.MonoSystems.UI
             AddListeners();
             Init();
         }
-
         private void Start()
         {
+            // This shouldn't need to be here.
+            // Figure out why PlayerHUD is not closes when
+            // call is placed in Main GameManager
             HideAllViews();
+            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.MainMenu));
         }
+
     }
 }

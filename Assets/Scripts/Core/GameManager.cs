@@ -8,7 +8,7 @@ namespace PaperSouls.Core
     internal abstract class GameManager : MonoBehaviour
     {
         private const string PrefabPath = "GameManager";
-        private static GameManager _instance;
+        protected static GameManager _instance;
 
         private readonly MessageManager _messageManager = new();
         private readonly MonoSystemManager _monoSystemManager = new();
@@ -45,12 +45,7 @@ namespace PaperSouls.Core
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Initialize()
         {
-            if (_instance)
-            {
-                _instance.OnInitalized();
-                return;
-            }
-         
+            if (_instance) return;
 
             GameManager gameManagerPreafab = Resources.Load<GameManager>(PrefabPath);
             GameManager gameManager = Instantiate(gameManagerPreafab);

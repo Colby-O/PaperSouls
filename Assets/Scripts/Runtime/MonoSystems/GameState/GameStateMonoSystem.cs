@@ -12,6 +12,7 @@ namespace PaperSouls.Runtime.MonoSystems.GameState
     {
         public GameStates CurrentState;
 
+        public GameStates GetCurrentState() => CurrentState;
         public void ChangeToMainMenuState()
         {
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<MainMenuView>();
@@ -34,14 +35,12 @@ namespace PaperSouls.Runtime.MonoSystems.GameState
         public void ChangeToDeadState()
         {
             CurrentState = GameStates.Dead;
+            PaperSoulsGameManager.ResetGame();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            ChangeToPlayingState();
         }
 
         private void ChangeGameState(ChangeGameStateMessage msg)
         {
-            if (msg.NextGameState == CurrentState) return;
-
             switch (msg.NextGameState)
             {
                 case GameStates.MainMenu:

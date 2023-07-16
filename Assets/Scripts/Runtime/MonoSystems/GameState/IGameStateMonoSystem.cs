@@ -14,5 +14,7 @@ namespace PaperSouls.Runtime.MonoSystems.GameState
         public void ChangeToPlayingState();
 
         public void ChangeToDeadState();
+
+        public GameStates GetCurrentState();
     }
 }

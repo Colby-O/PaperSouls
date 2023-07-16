@@ -47,7 +47,6 @@ namespace PaperSouls.Runtime.UI.View
         public override void Show()
         {
             base.Show();
-            //GameManager.Emit<ChangeGameStateMessage>(new(GameStates.MainMenu));
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }
