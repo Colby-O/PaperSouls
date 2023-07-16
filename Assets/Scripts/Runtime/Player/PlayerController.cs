@@ -299,7 +299,7 @@ namespace PaperSouls.Runtime.Player
             _playerManger = GetComponent<PlayerManger>();
             _animator = GetComponentInChildren<Animator>();
 
-            _playerUI.SetActive(true);
+            _playerUI.SetActive(false);
             _inventoryUI.SetActive(false);
 
             _isWalking = false;
@@ -327,20 +327,12 @@ namespace PaperSouls.Runtime.Player
             _dashAction.performed += e => Dash();
 
             _playerInput.actions.Enable();
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
-
-        //private void Start()
-        //{
-         //   _playerUI.SetActive(true);
-        ///    _inventoryUI.SetActive(false);
-        //}
 
         void Update()
         {
-            if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead) return;
+            if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead || 
+                GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.MainMenu) return;
             ProcessPlayer();
             ProcessCamera();
             HandleAnimations();

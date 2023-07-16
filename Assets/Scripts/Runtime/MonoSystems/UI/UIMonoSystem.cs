@@ -120,14 +120,5 @@ namespace PaperSouls.Runtime.MonoSystems.UI
             AddListeners();
             Init();
         }
-        private void Start()
-        {
-            // This shouldn't need to be here.
-            // Figure out why PlayerHUD is not closes when
-            // call is placed in Main GameManager
-            HideAllViews();
-            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.MainMenu));
-        }
-
     }
 }

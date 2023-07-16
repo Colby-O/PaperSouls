@@ -27,6 +27,7 @@ namespace PaperSouls.Runtime
         [SerializeField] private ItemDatabase _itemDatabase;
 
         [Header("Global Variables")]
+        [SerializeField] private GameStates IntialState = GameStates.MainMenu;
         private static GameObject _player = null;
         public static Vector3 StartPosition = Vector3.zero;
 
@@ -84,6 +85,7 @@ namespace PaperSouls.Runtime
         private void Start()
         {
             AccpetPlayerInput = false;
+            GameManager.Emit<ChangeGameStateMessage>(new(IntialState));
         }
     }
 }
