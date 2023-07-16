@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using PaperSouls.Core;
+using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
@@ -13,12 +14,12 @@ namespace PaperSouls.Runtime.UI.View
 
         private void OpenNext()
         {
-            ViewManger.Show<MenuInventoryView>(false);
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<MenuInventoryView>(false);
         }
 
         private void OpenPrevious()
         {
-            ViewManger.Show<MenuInventoryView>(false);
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<MenuInventoryView>(false);
         }
 
         public override void Init()

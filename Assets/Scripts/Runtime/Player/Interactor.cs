@@ -8,7 +8,7 @@ namespace PaperSouls.Runtime.Player
 {
 
     [RequireComponent(typeof(PlayerInput))]
-    public class Interactor : MonoBehaviour
+    internal class Interactor : MonoBehaviour
     {
         [SerializeField] private Transform _interactionPoint;
         [SerializeField] private LayerMask _interactionLayer;

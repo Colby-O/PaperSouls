@@ -8,7 +8,7 @@ namespace PaperSouls.Runtime.Player
     /// Defines the Player Settings
     /// </summary>
     [CreateAssetMenu(fileName = "PlayerSettings", menuName = "Player/Settings", order = 1)]
-    public class PlayerSettings : ScriptableObject
+    internal class PlayerSettings : ScriptableObject
     {
         public float playerSpeedWalking = 0.3f;
         public float playerSpeedRunning = 0.6f;

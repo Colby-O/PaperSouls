@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Interfaces;
 
 namespace PaperSouls.Runtime.Enemy
 {
-    public class GreenSlim : MeleeEnemy
+    internal class GreenSlim : MeleeEnemy
     {
         protected override void ActiveMovement()
         {

@@ -1,33 +1,21 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PaperSouls.Core;
 using PaperSouls.Runtime.Inventory;
 using PaperSouls.Runtime.UI.Inventory;
 using PaperSouls.Runtime.UI.View;
+using PaperSouls.Runtime.MonoSystems.GameState;
+using PaperSouls.Runtime.MonoSystems.UI;
 
-namespace PaperSouls.Core 
+namespace PaperSouls.Runtime.UI 
 { 
-    [RequireComponent(typeof(ViewManger), typeof(PlayerInput))]
-    public class UIManger : MonoBehaviour
+    [RequireComponent(typeof(PlayerInput))]
+    public class PauseMenuController : MonoBehaviour
     {
-        private static UIManger _instance;
-        private static readonly object Padlock = new();
-        public static UIManger Instance
-        {
-            get
-            {
-                lock (Padlock)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new();
-                    }
-
-                    return _instance;
-                }
-            }
-        }
-
         [SerializeField] private DynamicInventoryDisplay _inventoryDisplay;
+
+        private IUIMonoSystem _uiMonoSystem;
 
         private PlayerInput _uiInput;
 
@@ -47,12 +35,12 @@ namespace PaperSouls.Core
         /// <summary>
         /// Displays an external inventory such as chests
         /// </summary>
-        public static bool OpenExternalInventory()
+        public bool OpenExternalInventory()
         {
-            if (ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            if (_uiMonoSystem.GetCurrentViewIs<PlayerHUDView>())
             {
-                ViewManger.Show<ExternalInventoryView>();
-                GameManger.UpdateGameState(GameState.InMenu);
+                _uiMonoSystem.Show<ExternalInventoryView>();
+                GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Paused));
                 return true;
             }
 
@@ -62,24 +50,24 @@ namespace PaperSouls.Core
         /// <summary>
         /// Close out of the current menu
         /// </summary>
-        static void CloseCurrent()
+        public void CloseCurrent()
         {
-            if (!ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            if (!_uiMonoSystem.GetCurrentViewIs<PlayerHUDView>())
             {
-                ViewManger.ShowLast();
-                if (ViewManger.GetCurrentViewIs<PlayerHUDView>()) GameManger.UpdateGameState(GameState.Playing);
+                _uiMonoSystem.ShowLast();
+                if (_uiMonoSystem.GetCurrentViewIs<PlayerHUDView>()) GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
             }
         }
 
         /// <summary>
         /// Toogle the inventory (Opens/Closes)
         /// </summary>
-        static void ToggleInventory()
+        public void ToggleInventory()
         {
-            if (ViewManger.GetCurrentViewIs<PlayerHUDView>())
+            if (_uiMonoSystem.GetCurrentViewIs<PlayerHUDView>())
             {
-                GameManger.UpdateGameState(GameState.InMenu);
-                ViewManger.Show<MenuInventoryView>();
+                GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Paused));
+                _uiMonoSystem.Show<MenuInventoryView>();
             }
             else CloseCurrent();
         }
@@ -96,11 +84,8 @@ namespace PaperSouls.Core
 
         private void Awake()
         {
-            _instance = this;
-        }
+            _uiMonoSystem = GameManager.GetMonoSystem<IUIMonoSystem>();
 
-        private void Start()
-        {
             _uiInput = GetComponent<PlayerInput>();
 
             _menuAction = _uiInput.actions["Inventory"];
@@ -108,7 +93,6 @@ namespace PaperSouls.Core
 
             _menuAction.performed += e => ToggleInventory();
             _closeAction.performed += e => CloseCurrent();
-
         }
     }
 }

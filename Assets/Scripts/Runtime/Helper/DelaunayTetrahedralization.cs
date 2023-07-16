@@ -7,7 +7,7 @@ namespace PaperSouls.Runtime.Helpers
     /// <summary>
     /// Define a 3D edge
     /// </summary>
-    public struct Edge3D
+    internal struct Edge3D
     {
         public Vector3 A, B;
         public int IndexA, IndexB;
@@ -36,7 +36,7 @@ namespace PaperSouls.Runtime.Helpers
     /// <summary>
     /// Define a 3D triangle
     /// </summary>
-    public struct Triangle3D
+    internal struct Triangle3D
     {
         public Vector3 A, B, C;
         public int IndexA, IndexB, IndexC;
@@ -74,7 +74,7 @@ namespace PaperSouls.Runtime.Helpers
     /// <summary>
     /// Define a tetrahedran
     /// </summary>
-    public struct Tetrahedran
+    internal struct Tetrahedran
     {
         public Vector3 A, B, C, D;
         public int IndexA, IndexB, IndexC, IndexD;
@@ -113,7 +113,7 @@ namespace PaperSouls.Runtime.Helpers
     /// using the Watson's algorithm.
     /// Reference: https://dl.acm.org/doi/pdf/10.1145/10515.10542
     /// </summary>
-    public class DelaunayTetrahedralization
+    internal sealed class DelaunayTetrahedralization
     {
 
         private readonly List<Vector3> _vertices;

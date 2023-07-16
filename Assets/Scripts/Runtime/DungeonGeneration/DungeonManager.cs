@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Helpers;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    public class DungeonManager : MonoBehaviour
+    internal sealed class DungeonManager : MonoBehaviour
     {
         public bool RegenerateDungeon = false;
         [SerializeField] private int _seed;

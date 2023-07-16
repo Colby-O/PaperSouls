@@ -6,7 +6,7 @@ using PaperSouls.Runtime.Items;
 
 namespace PaperSouls.Runtime.UI.Inventory
 {
-    public abstract class InventoryDisplay : MonoBehaviour
+    internal abstract class InventoryDisplay : MonoBehaviour
     {
         [SerializeField] protected MouseItemData _mouseItemData;
         protected InventoryManger _inventoryManger;

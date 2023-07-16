@@ -3,7 +3,7 @@ using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime.Interfaces
 {
-    public interface IInteractable
+    internal interface IInteractable
     {
         /// <summary>
         /// Callback to run once an interaction is complete.

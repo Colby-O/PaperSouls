@@ -8,7 +8,7 @@ using PaperSouls.Runtime.Items;
 namespace PaperSouls.Runtime.Inventory
 {
     [System.Serializable]
-    public class InventoryManger
+    internal class InventoryManger
     {
         public List<InventorySlot> InventorySlots;
         public int NumOfInventorySlots => InventorySlots.Count;

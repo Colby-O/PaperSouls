@@ -4,11 +4,12 @@ using UnityEngine;
 using PaperSouls.Core;
 using PaperSouls.Runtime.Inventory;
 using PaperSouls.Runtime.Player;
+using PaperSouls.Runtime.MonoSystems.Audio;
 
 namespace PaperSouls.Runtime.Items
 {
     [RequireComponent(typeof(SphereCollider))]
-    public class ItemPickup : MonoBehaviour
+    internal class ItemPickup : MonoBehaviour
     {
         [SerializeField] private float _pickUpRadius = 0.1f;
         [SerializeField] private Item _itemData;
@@ -33,7 +34,7 @@ namespace PaperSouls.Runtime.Items
 
                     if (inventory.InventoryManger.AddToInventory(_itemData, 1))
                     {
-                        if (AudioManger.Instance != null) AudioManger.Instance.PlaySFX("Item Pickup");
+                        GameManager.Emit<PlayAudioMessage>(new("Item Pickup", MonoSystems.Audio.AudioType.SfX));
                         GameObject.Destroy(this.gameObject);
                     }
                     break;
@@ -43,7 +44,7 @@ namespace PaperSouls.Runtime.Items
                     if (!player) return;
 
                     player.PlayerHUD.IncrementAmmoCount();
-                    if (AudioManger.Instance != null) AudioManger.Instance.PlaySFX("Item Pickup");
+                    GameManager.Emit<PlayAudioMessage>(new("Item Pickup", MonoSystems.Audio.AudioType.SfX));
                     GameObject.Destroy(this.gameObject);
                     break;
                 default:

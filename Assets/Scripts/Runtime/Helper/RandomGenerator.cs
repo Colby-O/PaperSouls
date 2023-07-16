@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Helpers
 {
-    public static class RandomGenerator
+    internal static class RandomGenerator
     {
         /// <summary>
         /// Returns a random number between [min, max] biased towards values closer to min. 

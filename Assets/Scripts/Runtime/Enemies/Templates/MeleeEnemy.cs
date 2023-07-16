@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Enemy
 {
-    public abstract class MeleeEnemy : Enemy
+    internal abstract class MeleeEnemy : Enemy
     {
         protected MeleeEnemyData _meleeEnemyData;
 

@@ -7,13 +7,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
     /// <summary>
     /// Defines room Tile Types
     /// </summary>
-    public enum RoomTileType
+    internal enum RoomTileType
     {
         Empty,
         Wall
     }
 
-    public class RoomGenerator
+    internal sealed class RoomGenerator
     {
         // Room Data
         private RoomData _roomData;

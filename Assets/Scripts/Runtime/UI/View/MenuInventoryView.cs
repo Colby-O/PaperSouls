@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PaperSouls.Core;
+using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
@@ -11,12 +12,12 @@ namespace PaperSouls.Runtime.UI.View
 
         private void OpenNext()
         {
-            ViewManger.Show<SkillTreeView>(false);
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<SkillTreeView>(false);
         }
 
         private void OpenPrevious()
         {
-            ViewManger.Show<SkillTreeView>(false);
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<SkillTreeView>(false);
         }
 
         public override void Init()

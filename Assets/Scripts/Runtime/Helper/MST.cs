@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Helpers
 {
-    public class MST
+    internal sealed class MST
     {
         private readonly int _numberOfVertices;
         private readonly float[,] _adjacencyMatrix;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Sprite
 {
-    public class Billboard : MonoBehaviour
+    internal class Billboard : MonoBehaviour
     {
         private readonly float _turnSpeed = 10.0f;
         public Transform RotateTarget { get; set; }
@@ -27,7 +27,7 @@ namespace PaperSouls.Runtime.Sprite
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(newRotation), _turnSpeed * Time.deltaTime);
         }
 
-        public virtual void Awake()
+        public virtual void Start()
         {
             RotateTarget = Camera.main.transform;
         }

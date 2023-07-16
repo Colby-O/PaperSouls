@@ -4,7 +4,7 @@ using PaperSouls.Runtime.Inventory;
 
 namespace PaperSouls.Runtime.UI.Inventory
 {
-    public class DynamicInventoryDisplay : InventoryDisplay
+    internal class DynamicInventoryDisplay : InventoryDisplay
     {
         [SerializeField] private InventorySlotsUI _slotPrefab;
 

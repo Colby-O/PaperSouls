@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    public enum TileType : int
+    internal enum TileType : int
     {
         Empty,
         Room,
@@ -15,7 +15,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    public class TileWeights
+    internal sealed class TileWeights
     {
         const int INF = 1000000;
         public float EMPTY = 10;
@@ -28,7 +28,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    public class DungeonObject
+    internal class DungeonObject
     {
         public int ID;
         public float Proability = 1.0f;
@@ -128,7 +128,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
     
     [System.Serializable]
-    public class Room : DungeonObject
+    internal class Room : DungeonObject
     {
         public int NumExits;
         public List<Transform> Exits;
@@ -157,7 +157,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
     
     [System.Serializable]
-    public class Hallway : DungeonObject
+    internal class Hallway : DungeonObject
     {
         // NOTE: Delete if no additional infomation is need...
         public Hallway(GameObject gameObject, int id) : base(gameObject, id) { }

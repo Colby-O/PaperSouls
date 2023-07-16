@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.Skill
 {
-    public class SkillTreeData : ScriptableObject
+    internal class SkillTreeData : ScriptableObject
     {
         public string SkillTreeName;
         public List<SkillData> Skills;
