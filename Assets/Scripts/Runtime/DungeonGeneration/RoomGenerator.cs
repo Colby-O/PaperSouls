@@ -522,8 +522,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             CreateWalls();
             CreateFloors();
-            AddSubroomsToGrid();
-            CreateSubRooms();
+            //AddSubroomsToGrid();
+            //CreateSubRooms();
             CreatePillar();
         }
         
@@ -566,7 +566,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             decorator.DecorateRoom(ref room);
 
-            room.DrawZones();
+            //room.DrawZones();
 
             return room;
         }
