@@ -9,6 +9,9 @@ namespace PaperSouls.Core
     {
         private readonly Dictionary<Type, IMonoSystem> _monoSystems = new();
 
+        /// <summary>
+        /// Adds a MonoSystem to the master list.
+        /// </summary>
         public void AddMonoSystem<TMonoSystem, TBindTo>(TMonoSystem monoSystem) where TMonoSystem : TBindTo, IMonoSystem
         {
             if (monoSystem == null) throw new Exception($"{nameof(monoSystem)} cannot be null!!!");
@@ -16,6 +19,9 @@ namespace PaperSouls.Core
             _monoSystems[monoSystemType] = monoSystem;
         }
 
+        /// <summary>
+        /// Removes a MonoSystem from the master list.
+        /// </summary>
         public TMonoSystem GetMonoSystem<TMonoSystem>()
         {
             Type monoSystemType = typeof(TMonoSystem);

@@ -351,6 +351,54 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &2569345450042708515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9167537204470188689}
+  - component: {fileID: 4737960766550171657}
+  m_Layer: 0
+  m_Name: DataPersistenceMonoSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9167537204470188689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569345450042708515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4370519242661298923}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4737960766550171657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569345450042708515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 764b2d8f3da1c0d43b6f6b32bbf1dd28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _filename: Test
+  _createNewGameIfNull: 1
+  _useEncryption: 0
+  _currentProfileID: Development
 --- !u!1 &3140354485236452733
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,8 +745,9 @@ MonoBehaviour:
   _sceneMonoSystem: {fileID: 0}
   _uiMonoSystem: {fileID: 3140354485236452735}
   _gameStateMonoSystem: {fileID: 2082032166578051918}
+  _dataPersistenceMonoSystem: {fileID: 4737960766550171657}
   _itemDatabase: {fileID: 11400000, guid: abc1eb9b623590d41b644d8ee4c37207, type: 2}
-  _player: {fileID: 4782756507994228437}
+  IntialState: 0
 --- !u!1 &4370519242661298922
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,6 +779,7 @@ Transform:
   - {fileID: 4370519242800718685}
   - {fileID: 3140354485236452734}
   - {fileID: 2082032166578051919}
+  - {fileID: 9167537204470188689}
   m_Father: {fileID: 4370519242588460584}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

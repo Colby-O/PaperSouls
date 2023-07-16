@@ -5,6 +5,7 @@ using PaperSouls.Core;
 using PaperSouls.Runtime.MonoSystems.Audio;
 using PaperSouls.Runtime.MonoSystems.GameState;
 using PaperSouls.Runtime.MonoSystems.UI;
+using PaperSouls.Runtime.MonoSystems.DataPersistence;
 using PaperSouls.Runtime.MonoSystems;
 using PaperSouls.Runtime.Items;
 using PaperSouls.Runtime.Player;
@@ -22,6 +23,7 @@ namespace PaperSouls.Runtime
         [SerializeField] private SceneMonoSystem _sceneMonoSystem;
         [SerializeField] public UIMonoSystem _uiMonoSystem;
         [SerializeField] private GameStateMonoSystem _gameStateMonoSystem;
+        [SerializeField] private DataPersistenceMonoSystem _dataPersistenceMonoSystem;
 
         [Header("Databases")]
         [SerializeField] private ItemDatabase _itemDatabase;
@@ -43,10 +45,13 @@ namespace PaperSouls.Runtime
             } 
         }
 
+        /// <summary>
+        /// Function to be ran once a game is reset i.e. the player dies.
+        /// </summary>
         public static void ResetGame()
         {
-            Player.transform.position = PaperSoulsGameManager.StartPosition;
-            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+            Player.transform.position = StartPosition;
+            Emit<ChangeGameStateMessage>(new(GameStates.Playing));
         }
 
         /// <summary>
@@ -58,6 +63,7 @@ namespace PaperSouls.Runtime
             //AddMonoSystem<SceneMonoSystem, ISceneMonoSystem>(_sceneMonoSystem);
             AddMonoSystem<UIMonoSystem, IUIMonoSystem>(_uiMonoSystem);
             AddMonoSystem<GameStateMonoSystem, IGameStateMonoSystem>(_gameStateMonoSystem);
+            AddMonoSystem<DataPersistenceMonoSystem, IDataPersistenceMonoSystem>(_dataPersistenceMonoSystem);
         }
 
         protected override string GetApplicationName()
@@ -85,7 +91,7 @@ namespace PaperSouls.Runtime
         private void Start()
         {
             AccpetPlayerInput = false;
-            GameManager.Emit<ChangeGameStateMessage>(new(IntialState));
+            Emit<ChangeGameStateMessage>(new(IntialState));
         }
     }
 }
