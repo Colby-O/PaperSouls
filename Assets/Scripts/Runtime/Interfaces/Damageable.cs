@@ -1,6 +1,6 @@
 namespace PaperSouls.Runtime.Interfaces
 {
-    public interface IDamageable
+    internal interface IDamageable
     {
         /// <summary>
         /// Damges an object

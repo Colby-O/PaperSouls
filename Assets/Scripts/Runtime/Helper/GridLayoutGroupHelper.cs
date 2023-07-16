@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace PaperSouls.Runtime.Helpers
 {
-    public static class GridLayoutGroupHelper
+    internal static class GridLayoutGroupHelper
     {
         /// <summary>
         /// Get the size of a flexible GridLayoutGroup

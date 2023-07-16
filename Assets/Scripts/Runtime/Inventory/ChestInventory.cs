@@ -8,7 +8,7 @@ using PaperSouls.Runtime.Player;
 namespace PaperSouls.Runtime.Inventory
 {
     [RequireComponent(typeof(Animator))]
-    public class ChestInventory : InventoryHolder, IInteractable
+    internal class ChestInventory : InventoryHolder, IInteractable
     {
         public UnityAction<IInteractable> OnInteractionComplete { get; set; }
 

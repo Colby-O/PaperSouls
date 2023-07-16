@@ -5,11 +5,12 @@ using UnityEngine.VFX;
 using PaperSouls.Core;
 using PaperSouls.Runtime.Interfaces;
 using PaperSouls.Runtime.Weapons;
+using PaperSouls.Runtime.MonoSystems.Audio;
 
 namespace PaperSouls.Runtime.Player
 {
     [RequireComponent(typeof(PlayerInput), typeof(PlayerManger))]
-    public class WeaponController : MonoBehaviour
+    internal sealed class WeaponController : MonoBehaviour
     {
         [SerializeField] private float _meleeAttackDamage = 10;
         [SerializeField] private float _attackCooldown = 2;
@@ -52,14 +53,14 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         public void MeleeAttack()
         {
-            if (GameManger.AccpetPlayerInput && _canAttack && _player.PlayerHUD.EquipmentInventory.InventoryManger.InventorySlots[5].ItemData != null)
+            if (PaperSoulsGameManager.AccpetPlayerInput && _canAttack && _player.PlayerHUD.EquipmentInventory.InventoryManger.InventorySlots[5].ItemData != null)
             {
                 _canAttack = false;
                 _player.PlayerHUD.MeleeWeapponHolster.gameObject.SetActive(false);
                 StartCoroutine(ProcessSwordDraw(_attackCooldown));
 
                 if (_swordEffect != null) _swordEffect.Play();
-                if (AudioManger.Instance != null) AudioManger.Instance.PlaySFX("Sword Slash");
+                GameManager.Emit<PlayAudioMessage>(new("Sword Slash", MonoSystems.Audio.AudioType.SfX));
 
                 if (_interactingWith != null && _minAttackDistance >= _hitDistance)
                 {
@@ -78,7 +79,7 @@ namespace PaperSouls.Runtime.Player
         {
             if (_player.PlayerHUD.GetAmmoCount() <= 0) return;
 
-            if (GameManger.AccpetPlayerInput && _canAttack && _player.PlayerHUD.EquipmentInventory.InventoryManger.InventorySlots[4].ItemData != null)
+            if (PaperSoulsGameManager.AccpetPlayerInput && _canAttack && _player.PlayerHUD.EquipmentInventory.InventoryManger.InventorySlots[4].ItemData != null)
             {
                 _player.PlayerHUD.DecrementAmmoCount();
                 GameObject bulletObj = GameObject.Instantiate(_bulletPrefab, _head.transform.position, Quaternion.identity);

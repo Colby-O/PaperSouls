@@ -4,7 +4,16 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    public class RoomGenerator
+    /// <summary>
+    /// Defines room Tile Types
+    /// </summary>
+    internal enum RoomTileType
+    {
+        Empty,
+        Wall
+    }
+
+    internal sealed class RoomGenerator
     {
         // Room Data
         private RoomData _roomData;

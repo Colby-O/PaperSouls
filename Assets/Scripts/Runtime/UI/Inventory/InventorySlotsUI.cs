@@ -7,7 +7,7 @@ using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime.UI.Inventory
 {
-    public class InventorySlotsUI : MonoBehaviour
+    internal class InventorySlotsUI : MonoBehaviour
     {
         [SerializeField] private Image _itemSprite;
         [SerializeField] private TextMeshProUGUI _itemCount;

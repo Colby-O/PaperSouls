@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using PaperSouls.Core;
+using PaperSouls.Runtime.MonoSystems.GameState;
+using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
@@ -16,8 +18,7 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void StartGame()
         {
-            GameManger.UpdateGameState(GameState.Playing);
-            SceneManager.LoadScene("TestScene");
+            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void OpenSettings()
         {
-            ViewManger.Show<SettingsView>();
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<SettingsView>();
         }
 
         public override void Init()
@@ -46,7 +47,6 @@ namespace PaperSouls.Runtime.UI.View
         public override void Show()
         {
             base.Show();
-            GameManger.UpdateGameState(GameState.InMainMenu);
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }

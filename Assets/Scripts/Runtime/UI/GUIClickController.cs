@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace PaperSouls.Runtime.UI
 {
-    public class GUIClickController : MonoBehaviour, IPointerClickHandler
+    internal class GUIClickController : MonoBehaviour, IPointerClickHandler
     {
         public UnityEvent OnLeft;
         public UnityEvent OnRight;

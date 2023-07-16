@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PaperSouls.Core;
+using PaperSouls.Runtime.MonoSystems.Audio;
+using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
@@ -12,13 +14,15 @@ namespace PaperSouls.Runtime.UI.View
         [SerializeField] private Slider _sfxSound;
         [SerializeField] private Button _backButton;
 
+        private IAudioMonoSystem _audioMonoSystem;
+
         /// <summary>
         /// Runs when the overall volume slider changes and Updates the value in the 
         /// Audio Manger. 
         /// </summary>
         private void ChangeOverallVolume()
         {
-            AudioManger.Instance.overallSound = _overallSound.value;
+            _audioMonoSystem.SetOverallVolume(_overallSound.value);
         }
 
         /// <summary>
@@ -27,7 +31,7 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void ChangeMusicVolume()
         {
-            AudioManger.Instance.musicSound = _musicSound.value;
+            _audioMonoSystem.SetMusicVolume(_musicSound.value);
         }
 
         /// <summary>
@@ -36,7 +40,7 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void ChangeSfxVolume()
         {
-            AudioManger.Instance.sfxSound = _sfxSound.value;
+            _audioMonoSystem.SetSfXVolume(_sfxSound.value);
         }
 
         public override void Init()
@@ -44,7 +48,8 @@ namespace PaperSouls.Runtime.UI.View
             _overallSound.onValueChanged.AddListener(delegate { ChangeOverallVolume(); });
             _musicSound.onValueChanged.AddListener(delegate { ChangeMusicVolume(); });
             _sfxSound.onValueChanged.AddListener(delegate { ChangeSfxVolume(); });
-            _backButton.onClick.AddListener(ViewManger.ShowLast);
+            _backButton.onClick.AddListener(GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast);
+            _audioMonoSystem = GameManager.GetMonoSystem<IAudioMonoSystem>();
         }
     }
 }

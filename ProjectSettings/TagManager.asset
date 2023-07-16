@@ -8,6 +8,11 @@ TagManager:
   - Exit
   - Item
   - Ammo
+  - PlayerHUD
+  - 'InventoryUI '
+  - EquipmentInventory
+  - MeleeWeapponHolster
+  - DynamicInventoryDisplay
   layers:
   - Default
   - TransparentFX

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI.Minimap
 {
-    public class MinimapFollow : MonoBehaviour
+    internal sealed class MinimapFollow : MonoBehaviour
     {
         [SerializeField] private MinimapSettings _settings;
         [SerializeField] private float _cameraHeight;

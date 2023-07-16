@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PaperSouls.Core;
+using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View { 
     public class SettingsView : View
@@ -16,7 +17,7 @@ namespace PaperSouls.Runtime.UI.View {
         /// </summary>
         private void OpenSoundSettings()
         {
-            ViewManger.Show<SoundSettingsView>();
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<SoundSettingsView>();
         }
 
         /// <summary>
@@ -24,14 +25,14 @@ namespace PaperSouls.Runtime.UI.View {
         /// </summary>
         private void OpenControlSettings()
         {
-            ViewManger.Show<ControlSettingsView>();
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<ControlSettingsView>();
         }
 
         public override void Init()
         {
             _controlSettingsButton.onClick.AddListener(OpenControlSettings);
             _soundSettingsButton.onClick.AddListener(OpenSoundSettings);
-            _backButton.onClick.AddListener(ViewManger.ShowLast);
+            _backButton.onClick.AddListener(GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast);
         }
     }
 }

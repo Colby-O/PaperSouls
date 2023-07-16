@@ -6,7 +6,7 @@ namespace PaperSouls.Runtime.Player {
     /// <summary>
     /// Player Data
     /// </summary>
-    public class PlayerData : ScriptableObject
+    internal class PlayerData : ScriptableObject
     {
 
         [Range(0, 99)] public int baseHealth;

@@ -2,7 +2,7 @@ using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime.Interfaces
 {
-    public interface IUseables
+    internal interface IUseables
     {
         /// <summary>
         /// Use an object

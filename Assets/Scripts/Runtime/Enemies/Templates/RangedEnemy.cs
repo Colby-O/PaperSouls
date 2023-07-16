@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Weapons;
 
 namespace PaperSouls.Runtime.Enemy
 {
-    public abstract class RangedEnemy : Enemy
+    internal abstract class RangedEnemy : Enemy
     {
         protected RangedEnemyData _rangedEnemyData;
 

@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Interfaces;
 
 namespace PaperSouls.Runtime.Enemy
 {
-    public class FlyingDemon : RangedEnemy
+    internal class FlyingDemon : RangedEnemy
     {
         protected override void ActiveMovement()
         {

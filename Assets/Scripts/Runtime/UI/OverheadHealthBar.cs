@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI
 {
-    public class OverheadHealthBar : MonoBehaviour
+    internal class OverheadHealthBar : MonoBehaviour
     {
         private Vector3 _localScale;
         private GameObject _healthBarPrefab;

@@ -5,7 +5,7 @@ using PaperSouls.Runtime.Items;
 
 namespace PaperSouls.Runtime.Enemy
 {
-    public abstract class EnemyData : ScriptableObject
+    internal abstract class EnemyData : ScriptableObject
     {
         [Header("Health Stats")]
         public float health;

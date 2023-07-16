@@ -12,7 +12,7 @@ using PaperSouls.Runtime.Inventory;
 
 namespace PaperSouls.Runtime.Inventory
 {
-    public class MouseItemData : MonoBehaviour
+    internal class MouseItemData : MonoBehaviour
     {
         [SerializeField] private Image _sprite;
         [SerializeField] private TextMeshProUGUI _count;
@@ -97,7 +97,7 @@ namespace PaperSouls.Runtime.Inventory
         {
             for (int i = 0; i < InventorySlot.StackSize; i++)
             {
-                Vector3 playerFrontLocaton = GameManger.Instance.Player.transform.position + 2 * GameManger.Instance.Player.transform.forward;
+                Vector3 playerFrontLocaton = PaperSoulsGameManager.Player.transform.position + 2 * PaperSoulsGameManager.Player.transform.forward;
                 Vector3 dropLocaton = new Vector3(playerFrontLocaton.x + 0.1f * i, 0, playerFrontLocaton.z + 0.1f * i);
                 GameObject.Instantiate(InventorySlot.ItemData.itemPrefab, new Vector3(dropLocaton.x, 0, dropLocaton.z), Quaternion.identity);
             }

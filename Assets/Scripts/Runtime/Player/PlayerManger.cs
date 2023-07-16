@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using PaperSouls.Core;
 using PaperSouls.Runtime.Interfaces;
+using PaperSouls.Runtime.MonoSystems.GameState;
 
 namespace PaperSouls.Runtime.Player
 {
 
-    public class PlayerManger : MonoBehaviour, IDamageable
+    internal sealed class PlayerManger : MonoBehaviour, IDamageable
     {
         public PlayerSettings PlayerSettings;
         public PlayerHUDManger PlayerHUD;
@@ -47,6 +48,8 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         public void Damage(float dmg)
         {
+            if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead) return;
+
             AddHealth(-dmg);
 
             if (_currentHealth <= 0) Destroy();
@@ -69,12 +72,21 @@ namespace PaperSouls.Runtime.Player
         }
 
         /// <summary>
+        /// Resets the player's health to max value.
+        /// </summary>
+        public void ResetHealth()
+        {
+            _currentHealth = PlayerSettings.health;
+            PlayerHUD.UpdatePlayerHealth(_currentHealth);
+        }
+
+        /// <summary>
         /// Desotry the player object
         /// </summary>
         public void Destroy()
         {
-            GameManger.UpdateGameState(GameState.PlayerDead);
-            GameObject.Destroy(gameObject);
+            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Dead));
+            ResetHealth();
         }
 
         private void Start()

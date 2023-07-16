@@ -6,7 +6,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.Items
 {
     [CreateAssetMenu(fileName = "ItemDatabase", menuName = "Database/Item Database")]
-    public class ItemDatabase : ScriptableObject
+    internal class ItemDatabase : ScriptableObject
     {
         [SerializeField] private List<Item> _itemDatabase;
 

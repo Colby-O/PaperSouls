@@ -8,7 +8,7 @@ namespace PaperSouls.Runtime.Inventory
 {
 
     [System.Serializable]
-    public class InventorySlot
+    internal class InventorySlot
     {
         public Item ItemData;
         public int StackSize;

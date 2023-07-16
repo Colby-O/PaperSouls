@@ -5,7 +5,7 @@ using PaperSouls.Runtime.DungeonGeneration;
 
 namespace PaperSouls.Runtime.Helpers
 {
-    public class PathFinder
+    internal sealed class PathFinder
     {
         private TileType[,] _grid;
         private readonly TileWeights _tileWeights;

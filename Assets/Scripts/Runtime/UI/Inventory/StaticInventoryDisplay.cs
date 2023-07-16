@@ -8,7 +8,7 @@ using PaperSouls.Runtime.Helpers;
 namespace PaperSouls.Runtime.UI.Inventory
 {
 
-    public class StaticInventoryDisplay : InventoryDisplay
+    internal class StaticInventoryDisplay : InventoryDisplay
     {
         [SerializeField] private InventoryHolder _inventoryHolder;
         [SerializeField] private InventorySlotsUI[] _slots;
