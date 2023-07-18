@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33496dacd4c4b644bb38bce2fd9d9d1a, type: 3}
+  m_Name: SylkieDungeonData
+  m_EditorClassIdentifier: 
+  DungeonProperties:
+    Scale: {x: 1, y: 1, z: 1}
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    GridSize: 300
+    LoopProabilty: 0.2
+    RoomSize: {x: 5, y: 15}
+    NumberOfRooms: {x: 110, y: 130}
+    NumberOfExits: {x: 2, y: 5}
+    RoomSpacing: 2
+    StrightHallway: {fileID: 2866442972580791285, guid: f932588dc39b70b4cad10c5118821851, type: 3}
+    CurvedHallway: {fileID: 5380056808455816761, guid: 9ca71128b12767f43b708b0458dcb248, type: 3}
+    ThreeWayHallway: {fileID: 4788081909378322590, guid: 502ef0b37f09cd64fa2fe49749f9399c, type: 3}
+    FourWayHallway: {fileID: 5917582191578987350, guid: 99533965fb7f55e48b2a771cce1fff8b, type: 3}
+    EnterenceHallway: {fileID: 9033259350918921816, guid: f8503d586fcb6784281a5e925744cc5e, type: 3}
+    Weights:
+      EMPTY: 10
+      ROOM: 1000000
+      HALLWAY: 5
+      HALLWAY_AND_ROOM: 1000000
+      ROOM_SPACING: 20
+      TURN_PENAILITY: 1
+      HALLWAY_SPACING: 6
+    AllowGridExtensions: 1
+    GridExtensionAmount: 50
+    MaxNumberOfRoomPlacementTries: 100
+  RoomData:
+    minSubRoomSize: 100000000
+    maxSubRoomSize: 100000000
+    proabilityForSplit: 0.5
+    useRandomFloorRotation: 0
+    recipes:
+    - Objects: []
+      Fillables: []
+      PlacementProbability:
+        Room: 1
+        Edge: 1
+    wallObjects:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 2799772974420858197, guid: 1bb5201018b6fe74db54987a674e9ac1, type: 3}
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 1445076651765692362, guid: 5b69c2596ea83c340b60cc713cbe9018, type: 3}
+    enterenceObjects:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 6091662194462635883, guid: ab2572310ab34ef43997729ed717d93a, type: 3}
+    floorObjects:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 9033259350918921816, guid: f8503d586fcb6784281a5e925744cc5e, type: 3}
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 8871181917383220992, guid: 426f4471b5ef8fd4eba2fc4dcd806e0a, type: 3}
+    pillarObjects:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 7488707332175163143, guid: b4424630f87b5084f9b5e007b7a3d70f, type: 3}
+    SubRoomWallObjects: []
+    SubRoomEnterenceObjects: []

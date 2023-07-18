@@ -4,10 +4,23 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    [CreateAssetMenu(fileName = "RoomData", menuName = "Dungeon/Room")]
-    internal class RoomData : ScriptableObject
+    [System.Serializable]
+    public class RoomData
     {
-        [Min(1)] public Vector2Int minSubRoomSize;
+        [Min(1)] public int minSubRoomSize;
+        [Min(1)] public int maxSubRoomSize;
+        public Vector2Int MinSubRoomSize { 
+            get 
+            { 
+                return new Vector2Int(minSubRoomSize, maxSubRoomSize); 
+            }
+            set 
+            { 
+                minSubRoomSize = value.x; 
+                maxSubRoomSize = value.y; 
+            } 
+        }
+
         [Range(0, 1)] public float proabilityForSplit = 0.5f;
         public bool useRandomFloorRotation = true;
 

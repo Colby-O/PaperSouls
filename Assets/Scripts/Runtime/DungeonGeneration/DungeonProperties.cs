@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
-    [CreateAssetMenu(fileName = "DungeonProperties", menuName = "Dungeon/Properties")]
-    internal class DungeonProperties : ScriptableObject
+    [System.Serializable]
+    public class DungeonProperties
     {
         [Header("Dungeon Properties")]
         public Vector3 Scale = Vector3.one;
@@ -29,10 +29,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         [Header("Generation Properties")]
         public TileWeights Weights;
-        public bool UseShortestPath = true;
-        public bool UseRandomRoomSizes = false;
         public bool AllowGridExtensions = true;
-        public int GridExtension;
+        public int GridExtensionAmount;
         public int MaxNumberOfRoomPlacementTries;
     }
 }

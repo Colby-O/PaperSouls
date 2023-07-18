@@ -15,13 +15,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public Vector3 Position = Vector3.zero;
         public int NumExits;
         RoomGenerator _roomGenerator;
-        public RoomData Data;
+        public DungeonData Data;
         GameObject _parnet;
         Room _room;
 
         void Start()
         {
-            _roomGenerator = new(Data, Seed);
+            _roomGenerator = new(Data.RoomData, Seed);
             _parnet = new("Room");
             _parnet.transform.position = Position;
             _room = _roomGenerator.CreateRoom(_parnet, RoomSize, new(4, 1, 4), NumExits, 0);

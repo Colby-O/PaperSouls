@@ -9,8 +9,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
     {
         public bool RegenerateDungeon = false;
         [SerializeField] private int _seed;
-        [SerializeField] private RoomData _roomData;
-        [SerializeField] private DungeonProperties _properties;
+        [SerializeField] private DungeonData _dungeonData;
+
 
         private RoomGenerator _roomGenerator;
         private List<Room> _roomList;
@@ -52,26 +52,26 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             _hallwayVarients = new();
 
-            GameObject verticalHallway = Instantiate(_properties.StrightHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
-            GameObject horzitionalHallway = Instantiate(_properties.StrightHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
+            GameObject verticalHallway = Instantiate(_dungeonData.DungeonProperties.StrightHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
+            GameObject horzitionalHallway = Instantiate(_dungeonData.DungeonProperties.StrightHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
 
-            GameObject enterenceHallwayLeft = Instantiate(_properties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 270f, 0f));
-            GameObject enterenceHallwayRight = Instantiate(_properties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
-            GameObject enterenceHallwayUp = Instantiate(_properties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-            GameObject enterenceHallwayDown = Instantiate(_properties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
+            GameObject enterenceHallwayLeft = Instantiate(_dungeonData.DungeonProperties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 270f, 0f));
+            GameObject enterenceHallwayRight = Instantiate(_dungeonData.DungeonProperties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
+            GameObject enterenceHallwayUp = Instantiate(_dungeonData.DungeonProperties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
+            GameObject enterenceHallwayDown = Instantiate(_dungeonData.DungeonProperties.EnterenceHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
 
 
-            GameObject curvedHallwayDownRight = Instantiate(_properties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
-            GameObject curvedHallwayDownLeft = Instantiate(_properties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
-            GameObject curvedHallwayUpRight = Instantiate(_properties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 270f, 0f));
-            GameObject curvedHallwayUpLeft = Instantiate(_properties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
+            GameObject curvedHallwayDownRight = Instantiate(_dungeonData.DungeonProperties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
+            GameObject curvedHallwayDownLeft = Instantiate(_dungeonData.DungeonProperties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
+            GameObject curvedHallwayUpRight = Instantiate(_dungeonData.DungeonProperties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 270f, 0f));
+            GameObject curvedHallwayUpLeft = Instantiate(_dungeonData.DungeonProperties.CurvedHallway, Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
 
-            GameObject threeWayHallwayUp = Instantiate(_properties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
-            GameObject threeWayHallwayDown = Instantiate(_properties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-            GameObject threeWayHallwayLeft = Instantiate(_properties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 270f, 0f));
-            GameObject threeWayHallwayRight = Instantiate(_properties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
+            GameObject threeWayHallwayUp = Instantiate(_dungeonData.DungeonProperties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f));
+            GameObject threeWayHallwayDown = Instantiate(_dungeonData.DungeonProperties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
+            GameObject threeWayHallwayLeft = Instantiate(_dungeonData.DungeonProperties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 270f, 0f));
+            GameObject threeWayHallwayRight = Instantiate(_dungeonData.DungeonProperties.ThreeWayHallway, Vector3.zero, Quaternion.Euler(0f, 90f, 0f));
 
-            GameObject fourwayHallway = Instantiate(_properties.FourWayHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f)); ;
+            GameObject fourwayHallway = Instantiate(_dungeonData.DungeonProperties.FourWayHallway, Vector3.zero, Quaternion.Euler(0f, 0f, 0f)); ;
             if (_tileSize == Vector3.zero) _tileSize = (new Hallway(fourwayHallway, 15)).Size;
 
             _hallwayVarients.Add(new Hallway(null, 0));
@@ -104,7 +104,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private void Initailzation()
         {
             Random.InitState(_seed);
-            _roomGenerator = new(_roomData, _seed);
+            _roomGenerator = new(_dungeonData.RoomData, _seed);
             _roomList = new();
             _dungeonObjects = new();
             _paths = new();
@@ -112,11 +112,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _pathEnds = new();
             if (_dungeonHolder == null) _dungeonHolder = new GameObject("DungeonHolder");
 
-            _grid = new TileType[_properties.GridSize, _properties.GridSize];
+            _grid = new TileType[_dungeonData.DungeonProperties.GridSize, _dungeonData.DungeonProperties.GridSize];
 
-            for (int j = 0; j < _properties.GridSize; j++)
+            for (int j = 0; j < _dungeonData.DungeonProperties.GridSize; j++)
             {
-                for (int k = 0; k < _properties.GridSize; k++)
+                for (int k = 0; k < _dungeonData.DungeonProperties.GridSize; k++)
                 {
                     _grid[j, k] = TileType.Empty;
                 }
@@ -137,7 +137,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 for (int k = -(roomSize.y + minRoomSpacing) / 2; k < (roomSize.y + minRoomSpacing) / 2; k++)
                 {
-                    if (roomPosition.x + j >= _properties.GridSize || roomPosition.x + j < 0 || roomPosition.y + k >= _properties.GridSize || roomPosition.y + k < 0)
+                    if (roomPosition.x + j >= _dungeonData.DungeonProperties.GridSize || roomPosition.x + j < 0 || roomPosition.y + k >= _dungeonData.DungeonProperties.GridSize || roomPosition.y + k < 0)
                     {
                         vaildRoom = false;
                         break;
@@ -165,11 +165,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
         void ExtendGridSize()
         {
             TileType[,] oldGrid = _grid.Clone() as TileType[,];
-            int oldGridSize = _properties.GridSize;
-            _properties.GridSize += _properties.GridExtension;
-            _grid = new TileType[_properties.GridSize, _properties.GridSize];
+            int oldGridSize = _dungeonData.DungeonProperties.GridSize;
+            _dungeonData.DungeonProperties.GridSize += _dungeonData.DungeonProperties.GridExtensionAmount;
+            _grid = new TileType[_dungeonData.DungeonProperties.GridSize, _dungeonData.DungeonProperties.GridSize];
 
-            for (int i = 0; i < _properties.GridSize; i++)
+            for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
             {
                 for (int j = 0; j < oldGridSize; j++)
                 {
@@ -195,20 +195,20 @@ namespace PaperSouls.Runtime.DungeonGeneration
             bool foundVaildRoom;
             do
             {
-                foundVaildRoom = UpdateRoomGrid(roomSize, roomPosition, _properties.RoomSpacing);
+                foundVaildRoom = UpdateRoomGrid(roomSize, roomPosition, _dungeonData.DungeonProperties.RoomSpacing);
 
                 if (!foundVaildRoom)
                 {
-                    roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
-                    roomSize = new(RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y), RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y));
+                    roomPosition = new(Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10), Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10));
+                    roomSize = new(RandomGenerator.GetRandomSkewed(_dungeonData.DungeonProperties.RoomSize.x, _dungeonData.DungeonProperties.RoomSize.y), RandomGenerator.GetRandomSkewed(_dungeonData.DungeonProperties.RoomSize.x, _dungeonData.DungeonProperties.RoomSize.y));
 
                     if (roomSize.x % 2 == 0) roomSize.x += 1;
                     if (roomSize.y % 2 == 0) roomSize.y += 1;
 
                     numberOfPlacementTries += 1;
-                    if (_properties.MaxNumberOfRoomPlacementTries < numberOfPlacementTries)
+                    if (_dungeonData.DungeonProperties.MaxNumberOfRoomPlacementTries < numberOfPlacementTries)
                     {
-                        if (!_properties.AllowGridExtensions) break;
+                        if (!_dungeonData.DungeonProperties.AllowGridExtensions) break;
                         ExtendGridSize();
                         numberOfPlacementTries = 0;
                     }
@@ -239,19 +239,19 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         void GenerateDungeonRooms()
         {
-            int numberOfRooms = Random.Range(_properties.NumberOfRooms.x, _properties.NumberOfRooms.y + 1);
+            int numberOfRooms = Random.Range(_dungeonData.DungeonProperties.NumberOfRooms.x, _dungeonData.DungeonProperties.NumberOfRooms.y + 1);
 
             for (int i = 0; i < numberOfRooms; i++)
             {
-                Vector2Int roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
+                Vector2Int roomPosition = new(Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10), Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10));
 
-                Vector2Int roomSize = new(RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y), RandomGenerator.GetRandomSkewed(_properties.RoomSize.x, _properties.RoomSize.y));
+                Vector2Int roomSize = new(RandomGenerator.GetRandomSkewed(_dungeonData.DungeonProperties.RoomSize.x, _dungeonData.DungeonProperties.RoomSize.y), RandomGenerator.GetRandomSkewed(_dungeonData.DungeonProperties.RoomSize.x, _dungeonData.DungeonProperties.RoomSize.y));
                 if (roomSize.x % 2 == 0) roomSize.x += 1;
                 if (roomSize.y % 2 == 0) roomSize.y += 1;
 
                 bool foundVaildRoom = GenerateRandomPosition(ref roomPosition, ref roomSize);
 
-                if (foundVaildRoom) CreateNewRoom(roomPosition, roomSize, _properties.NumberOfExits, i);
+                if (foundVaildRoom) CreateNewRoom(roomPosition, roomSize, _dungeonData.DungeonProperties.NumberOfExits, i);
             }
         }
 
@@ -345,7 +345,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 for (int v = 0; v < numberOfVertices; v++)
                 {
                     float rand = Random.Range(0.0f, 1.0f);
-                    if (rand <= _properties.LoopProabilty && adjacencyMatrix[i, v] != 0 && !(_edgeList[i].Contains(v) || _edgeList[v].Contains(i)) && _roomList[v].ExitsUsed < _roomList[v].Exits.Count && _roomList[i].ExitsUsed < _roomList[i].Exits.Count)
+                    if (rand <= _dungeonData.DungeonProperties.LoopProabilty && adjacencyMatrix[i, v] != 0 && !(_edgeList[i].Contains(v) || _edgeList[v].Contains(i)) && _roomList[v].ExitsUsed < _roomList[v].Exits.Count && _roomList[i].ExitsUsed < _roomList[i].Exits.Count)
                     {
                         _edgeList[i].Add(v);
                         _roomList[i].ExitsUsed += 1;
@@ -410,7 +410,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             Vector2Int start = GetRoomdPosition(startExit.position);
             Vector2Int end = GetRoomdPosition(endExit.position);
 
-            PathFinder pathFinder = new(_grid, _properties.Weights);
+            PathFinder pathFinder = new(_grid, _dungeonData.DungeonProperties.Weights);
             Dictionary<Vector2Int, Vector2Int> path = pathFinder.FindOptimalPath(start, end);
 
             _pathStarts.Add(start);
@@ -441,8 +441,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private bool AddTerminalRoom(int roomID)
         {
-            Vector2Int roomPosition = new(Random.Range(10, _properties.GridSize - 10), Random.Range(10, _properties.GridSize - 10));
-            Vector2Int roomSize = new(Random.Range(_properties.RoomSize.x, _properties.RoomSize.y), Random.Range(_properties.RoomSize.x, _properties.RoomSize.y));
+            Vector2Int roomPosition = new(Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10), Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10));
+            Vector2Int roomSize = new(Random.Range(_dungeonData.DungeonProperties.RoomSize.x, _dungeonData.DungeonProperties.RoomSize.y), Random.Range(_dungeonData.DungeonProperties.RoomSize.x, _dungeonData.DungeonProperties.RoomSize.y));
             if (roomSize.x % 2 == 0) roomSize.x += 1;
             if (roomSize.y % 2 == 0) roomSize.y += 1;
 
@@ -472,9 +472,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 int numberOfTries = 0;
                 while (room.AvailableExits.Count != 0)
                 {
-                    if (numberOfTries > _properties.MaxNumberOfRoomPlacementTries)
+                    if (numberOfTries > _dungeonData.DungeonProperties.MaxNumberOfRoomPlacementTries)
                     {
-                        if (!_properties.AllowGridExtensions) break;
+                        if (!_dungeonData.DungeonProperties.AllowGridExtensions) break;
                         numberOfTries = 0;
                         ExtendGridSize();
                     }
@@ -513,7 +513,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    if (pos.x + i < _properties.GridSize && pos.y + j < _properties.GridSize && pos.x + i >= 0 && pos.y + j >= 0) tiles[i + 1, j + 1] = _grid[pos.x + i, pos.y + j];
+                    if (pos.x + i < _dungeonData.DungeonProperties.GridSize && pos.y + j < _dungeonData.DungeonProperties.GridSize && pos.x + i >= 0 && pos.y + j >= 0) tiles[i + 1, j + 1] = _grid[pos.x + i, pos.y + j];
                     else tiles[i + 1, j + 1] = TileType.Empty;
                 }
             }
@@ -558,9 +558,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         void RenderHallway()
         {
-            for (int i = 0; i < _properties.GridSize; i++)
+            for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
             {
-                for (int j = 0; j < _properties.GridSize; j++)
+                for (int j = 0; j < _dungeonData.DungeonProperties.GridSize; j++)
                 {
                     //if (grid[i, j] == TileType.ROOM) continue;
 
@@ -569,7 +569,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
                     int key = GetHallwayOrention(tiles);
                     //|| _grid[i, j] == TileType.HallwayAndRoom
-                    if (_grid[i, j] == TileType.Hallway) CreateHallwayMesh(gridPos, key, i * _properties.GridSize + j);
+                    if (_grid[i, j] == TileType.Hallway) CreateHallwayMesh(gridPos, key, i * _dungeonData.DungeonProperties.GridSize + j);
                 }
             }
         }
@@ -583,9 +583,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _numberOfMainRooms = _roomList.Count;
             CapOffOpenExits();
             RenderHallway();
-            _dungeonHolder.transform.localScale = _properties.Scale;
-            _dungeonHolder.transform.position = _properties.Position;
-            _dungeonHolder.transform.rotation = _properties.Rotation;
+            _dungeonHolder.transform.localScale = _dungeonData.DungeonProperties.Scale;
+            _dungeonHolder.transform.position = _dungeonData.DungeonProperties.Position;
+            _dungeonHolder.transform.rotation = _dungeonData.DungeonProperties.Rotation;
         }
 
         /// <summary>
@@ -607,8 +607,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 if (!cameFrom.ContainsKey(gridPT)) break;
 
-                Vector3 worldPT = new Vector3(gridPT.x * _tileSize.x * _properties.Scale.x, 0, gridPT.y * _tileSize.z * _properties.Scale.z);
-                Vector3 nextWorldPT = new Vector3(cameFrom[gridPT].x * _tileSize.x * _properties.Scale.x, 0, cameFrom[gridPT].y * _tileSize.z * _properties.Scale.z);
+                Vector3 worldPT = new Vector3(gridPT.x * _tileSize.x * _dungeonData.DungeonProperties.Scale.x, 0, gridPT.y * _tileSize.z * _dungeonData.DungeonProperties.Scale.z);
+                Vector3 nextWorldPT = new Vector3(cameFrom[gridPT].x * _tileSize.x * _dungeonData.DungeonProperties.Scale.x, 0, cameFrom[gridPT].y * _tileSize.z * _dungeonData.DungeonProperties.Scale.z);
 
                 if (_grid[cameFrom[gridPT].x, cameFrom[gridPT].y] == TileType.Room || _grid[cameFrom[gridPT].x, cameFrom[gridPT].y] == TileType.HallwayAndRoom) UnityEngine.Debug.DrawLine(worldPT, nextWorldPT, Color.red, Mathf.Infinity);
                 else UnityEngine.Debug.DrawLine(worldPT, nextWorldPT, Color.magenta, Mathf.Infinity);
@@ -622,13 +622,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private void DrawGrid()
         {
-            for (int i = 0; i < _properties.GridSize; i++)
+            for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
             {
-                for (int j = 0; j < _properties.GridSize; j++)
+                for (int j = 0; j < _dungeonData.DungeonProperties.GridSize; j++)
                 {
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    cube.transform.position = new Vector3(i * _tileSize.x *_properties.Scale.x, 0, j * _tileSize.z * _properties.Scale.z);
-                    cube.transform.localScale = new Vector3(_tileSize.x * _properties.Scale.x, _properties.Scale.z, _tileSize.z * _properties.Scale.z);
+                    cube.transform.position = new Vector3(i * _tileSize.x *_dungeonData.DungeonProperties.Scale.x, 0, j * _tileSize.z * _dungeonData.DungeonProperties.Scale.z);
+                    cube.transform.localScale = new Vector3(_tileSize.x * _dungeonData.DungeonProperties.Scale.x, _dungeonData.DungeonProperties.Scale.z, _tileSize.z * _dungeonData.DungeonProperties.Scale.z);
 
                     if (_grid[i, j] == TileType.Room) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.red);
                     else if (_grid[i, j] == TileType.RoomSpacing) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.yellow);
@@ -692,6 +692,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private void Awake()
         {
             GenerateDungeon();
+        }
+
+        private void Start()
+        {
+            Vector3 startPos = _roomList[Random.Range(0, _roomList.Count)].Prefab.transform.position;
+            PaperSoulsGameManager.Player.transform.position = new Vector3(startPos.x, startPos.y + 0.5f, startPos.z);
+            Camera.main.transform.position = new Vector3(startPos.x, startPos.y + 0.8f, startPos.z - 3f);
         }
 
         private void Update()
