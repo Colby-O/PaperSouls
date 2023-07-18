@@ -1,0 +1,342 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33496dacd4c4b644bb38bce2fd9d9d1a, type: 3}
+  m_Name: KayKitDungeonData
+  m_EditorClassIdentifier: 
+  DungeonProperties:
+    Scale: {x: 1, y: 1, z: 1}
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    GridSize: 250
+    LoopProabilty: 0.2
+    RoomSize: {x: 4, y: 8}
+    NumberOfRooms: {x: 100, y: 120}
+    NumberOfExits: {x: 2, y: 5}
+    RoomSpacing: 2
+    StrightHallway: {fileID: 8068585483525543141, guid: 44765bd21a67fb94e983255d1955ce21, type: 3}
+    CurvedHallway: {fileID: 2518497721306097859, guid: 1139cbc340650484ba6afb942f490072, type: 3}
+    ThreeWayHallway: {fileID: 3424373962839084454, guid: 468b5939b767b0d4c8bcc29cedd91a1d, type: 3}
+    FourWayHallway: {fileID: 4882296413225704600, guid: 35a956977509ab643999864a09ee8239, type: 3}
+    EnterenceHallway: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
+    Weights:
+      EMPTY: 10
+      ROOM: 1000000
+      HALLWAY: 5
+      HALLWAY_AND_ROOM: 1000000
+      ROOM_SPACING: 20
+      TURN_PENAILITY: 1
+      HALLWAY_SPACING: 6
+    AllowGridExtensions: 1
+    GridExtensionAmount: 50
+    MaxNumberOfRoomPlacementTries: 100
+  RoomData:
+    minSubRoomSize: 4
+    maxSubRoomSize: 4
+    proabilityForSplit: 0.788
+    useRandomFloorRotation: 1
+    recipes:
+    - Objects:
+      - ID: 0
+        Proability: 0.8
+        _prefab: {fileID: 4970886257611018473, guid: 3bebbfa220b6a2243aebab3a97d1d109, type: 3}
+        zone: 0
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding:
+        - ID: 1
+          Proability: 1
+          _prefab: {fileID: 2104887800399083952, guid: 028802aa6b4c3744db40f49f6e763527, type: 3}
+        FillProbability: 0.2
+        SurroundProbability: 0.5
+      - ID: 1
+        Proability: 1
+        _prefab: {fileID: 1280623292940598577, guid: c66a4d9f460b7734fa96cb49f8b9f992, type: 3}
+        zone: 0
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding:
+        - ID: 1
+          Proability: 1
+          _prefab: {fileID: 1280623292940598577, guid: c66a4d9f460b7734fa96cb49f8b9f992, type: 3}
+        FillProbability: 0.4
+        SurroundProbability: 0.5
+      - ID: 2
+        Proability: 0.5
+        _prefab: {fileID: 2597236283302229396, guid: ee6d807a9c21bff43a8d2ac55c94d4e3, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 2
+        Surrounding: []
+        FillProbability: 0.4
+        SurroundProbability: 0
+      - ID: 4
+        Proability: 1
+        _prefab: {fileID: 7174705083062705454, guid: 1d2f53510b58e9046b4408bc3f6a3b8c, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 1
+        _prefab: {fileID: 4249149021724511420, guid: 86388c8b42d612044a7c415d799d73f1, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.5
+        _prefab: {fileID: 6321499140258743971, guid: 268a580953270984fac26bb25385bea4, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.5
+        _prefab: {fileID: 451898930220829536, guid: 109337de7f179a14cb79f05f5f66caca, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.5
+        _prefab: {fileID: 372241562811964682, guid: d7c448fd2a11c324e9db28bbc2f30c6a, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.5
+        _prefab: {fileID: 2655816929903228372, guid: 7d90c4f6636718e44931d420578c8239, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.5
+        _prefab: {fileID: 5315170413562879994, guid: 26bad364d48f8fc4c998141665f64fd1, type: 3}
+        zone: 0
+        Scale: {x: 0.5, y: 0.5, z: 0.5}
+        edgeOffset: 0
+        Padding: 0
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.6
+        _prefab: {fileID: 4306383231888832403, guid: 5e2f36ef1997408478e8a87cd44bef51, type: 3}
+        zone: 0
+        Scale: {x: 0.5, y: 0.5, z: 0.5}
+        edgeOffset: 0
+        Padding: 0
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 0.8
+        _prefab: {fileID: 6213025667433538153, guid: cabfab1ddc2eed346b35d9ead806fe22, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      Fillables:
+      - Item: {fileID: 573380351855779729, guid: 05e8b2a384e99c44bb4326991d444fb5, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.3
+      - Item: {fileID: 573380351855779729, guid: 1bb36f1efa6588547952253bb594864b, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.3
+      - Item: {fileID: 60430134869750427, guid: 195f439e6e01c2844b3e337425f9cae2, type: 3}
+        Probability: 1
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.2
+      - Item: {fileID: 5051164189392831580, guid: 16c6c30cb5aec674e967b65dd9388b85, type: 3}
+        Probability: 0.5
+        Scale: {x: 1.5, y: 1.5, z: 1.5}
+        Offset: 0.25
+      - Item: {fileID: 230301453563810707, guid: 4b0c3e090cb1d5f478cfd107b788995c, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.3
+      - Item: {fileID: 3074893473975973668, guid: 46de3ead73e60f14c877473aa3cbae02, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0
+      - Item: {fileID: 7494977885351949440, guid: 31c7fdcff3b7f8f43bdafc0aa09f9bd9, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0
+      - Item: {fileID: 4117781897167758802, guid: 2803f0a3a4484214594111c94651e987, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0.01
+      PlacementProbability:
+        Room: 0.026
+        Edge: 0.07
+    - Objects:
+      - ID: 0
+        Proability: 1
+        _prefab: {fileID: 4970886257611018473, guid: 3bebbfa220b6a2243aebab3a97d1d109, type: 3}
+        zone: 0
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding:
+        - ID: 1
+          Proability: 1
+          _prefab: {fileID: 2104887800399083952, guid: 028802aa6b4c3744db40f49f6e763527, type: 3}
+        FillProbability: 0.2
+        SurroundProbability: 0.5
+      - ID: 1
+        Proability: 1
+        _prefab: {fileID: 1280623292940598577, guid: c66a4d9f460b7734fa96cb49f8b9f992, type: 3}
+        zone: 0
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding:
+        - ID: 1
+          Proability: 1
+          _prefab: {fileID: 1280623292940598577, guid: c66a4d9f460b7734fa96cb49f8b9f992, type: 3}
+        FillProbability: 0.4
+        SurroundProbability: 0.5
+      - ID: 2
+        Proability: 1
+        _prefab: {fileID: 2597236283302229396, guid: ee6d807a9c21bff43a8d2ac55c94d4e3, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 2
+        Surrounding: []
+        FillProbability: 0.4
+        SurroundProbability: 0
+      - ID: 4
+        Proability: 1
+        _prefab: {fileID: 7174705083062705454, guid: 1d2f53510b58e9046b4408bc3f6a3b8c, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 1
+        _prefab: {fileID: 4249149021724511420, guid: 86388c8b42d612044a7c415d799d73f1, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 4
+        Proability: 1
+        _prefab: {fileID: 6321499140258743971, guid: 268a580953270984fac26bb25385bea4, type: 3}
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 1
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      Fillables:
+      - Item: {fileID: 573380351855779729, guid: 05e8b2a384e99c44bb4326991d444fb5, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.3
+      - Item: {fileID: 573380351855779729, guid: 1bb36f1efa6588547952253bb594864b, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.3
+      - Item: {fileID: 60430134869750427, guid: 195f439e6e01c2844b3e337425f9cae2, type: 3}
+        Probability: 1
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.2
+      - Item: {fileID: 5051164189392831580, guid: 16c6c30cb5aec674e967b65dd9388b85, type: 3}
+        Probability: 0.5
+        Scale: {x: 1.5, y: 1.5, z: 1.5}
+        Offset: 0.25
+      - Item: {fileID: 230301453563810707, guid: 4b0c3e090cb1d5f478cfd107b788995c, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.3
+      - Item: {fileID: 3074893473975973668, guid: 46de3ead73e60f14c877473aa3cbae02, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0
+      - Item: {fileID: 7494977885351949440, guid: 31c7fdcff3b7f8f43bdafc0aa09f9bd9, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0
+      - Item: {fileID: 4117781897167758802, guid: 2803f0a3a4484214594111c94651e987, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0.01
+      PlacementProbability:
+        Room: 0.026
+        Edge: 0.07
+    wallObjects:
+    - ID: 0
+      Proability: 0.8
+      _prefab: {fileID: 1771786041075331442, guid: ba9f765e0efffd2499069b177705ba1f, type: 3}
+    - ID: 1
+      Proability: 0.8
+      _prefab: {fileID: 5873540771382486578, guid: ced307ac2c5daf948ae20b5b2bb357b7, type: 3}
+    - ID: 2
+      Proability: 0.2
+      _prefab: {fileID: 547957207701717595, guid: d8f0160a153fff44080a2dced7c6ee41, type: 3}
+    - ID: 3
+      Proability: 0.2
+      _prefab: {fileID: 2268570327647801092, guid: 5e1ff6551e47b1f41939af47136cf2a1, type: 3}
+    enterenceObjects:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 2857444661267083842, guid: 23005635930eb4d4fabd884350154582, type: 3}
+    floorObjects:
+    - ID: 0
+      Proability: 0.8
+      _prefab: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
+    - ID: 1
+      Proability: 0.1
+      _prefab: {fileID: 5213445652822528510, guid: 800d530b404391044b623b436b055a5f, type: 3}
+    pillarObjects:
+    - ID: 0
+      Proability: 1
+      _prefab: {fileID: 2457838449191676406, guid: 782d59ccb21efe449acc0d48274db7ae, type: 3}
+    SubRoomWallObjects: []
+    SubRoomEnterenceObjects: []

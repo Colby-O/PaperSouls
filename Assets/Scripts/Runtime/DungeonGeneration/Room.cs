@@ -7,7 +7,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     /// <summary>
     /// Defines different areas within a room
     /// </summary>
-    internal enum RoomZone
+    public enum RoomZone
     {
         Room,
         Edge,
@@ -26,7 +26,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    internal sealed class TileWeights
+    public sealed class TileWeights
     {
         const int INF = 1000000;
         public float EMPTY = 10;
@@ -39,7 +39,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    internal class DungeonObject
+    public class DungeonObject
     {
         public int ID;
         public float Proability = 1.0f;
@@ -146,10 +146,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    internal class DecorationObject : DungeonObject
+    public class DecorationObject : DungeonObject
     {
         public RoomZone zone;
         public Vector3 Scale = Vector3.one;
+        public float edgeOffset = 0.0f;
         public int Padding;
         public List<DungeonObject> Surrounding;
         [Range(0, 1)] public float FillProbability = 1.0f;
@@ -157,7 +158,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    internal class Room : DungeonObject
+    public class Room : DungeonObject
     {
         public List<DungeonObject> Decorations;
         public int NumExits;
@@ -207,7 +208,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
     
     [System.Serializable]
-    internal class Hallway : DungeonObject
+    public class Hallway : DungeonObject
     {
         // NOTE: Delete if no additional infomation is need...
         public Hallway(GameObject gameObject, int id) : base(gameObject, id) { }

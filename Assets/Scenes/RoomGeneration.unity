@@ -371,4 +371,4 @@ MonoBehaviour:
   RoomSize: {x: 12, y: 20}
   Position: {x: 0, y: 0, z: 0}
   NumExits: 2
-  Data: {fileID: 11400000, guid: 828d456c13a5e394389e5cdb47d73d35, type: 2}
+  Data: {fileID: 11400000, guid: 7fcb0699792b639419aa31cd45162f1b, type: 2}

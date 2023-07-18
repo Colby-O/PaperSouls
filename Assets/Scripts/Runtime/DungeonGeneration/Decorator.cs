@@ -188,10 +188,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
                 Vector3 position = _roomPosition + new Vector3(-_roomSize.x / 2f + pos.x + (((int)size.x) % 2 == 1 ? 0.5f : 0), 0, -_roomSize.z / 2f + pos.y + (((int)size.y) % 2 == 1 ? 0.5f : 0));
                 if (zone != RoomZone.Edge) { }
-                else if (rotation.eulerAngles.y == 90) position.x += 0.3f;
-                else if (rotation.eulerAngles.y == 270) position.x -= 0.3f;
-                else if (rotation.eulerAngles.y == 0) position.z += 0.3f;
-                else position.z -= 0.3f;
+                else if (rotation.eulerAngles.y == 90) position.x += objectToPlace.edgeOffset;
+                else if (rotation.eulerAngles.y == 270) position.x -= objectToPlace.edgeOffset;
+                else if (rotation.eulerAngles.y == 0) position.z += objectToPlace.edgeOffset;
+                else position.z -= objectToPlace.edgeOffset;
 
                 if (IsInsideRoom(pos, new Vector2(size.x, size.y)) && 
                     !IsOverlap(pos, new Vector2(size.x, size.y))

@@ -37,6 +37,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private List<Vector2> _subroomStart;
         private List<Vector2> _subroomEnd;
 
+        public int test;
         public RoomGenerator(RoomData roomData, int seed)
         {
             _seed = seed;
@@ -337,19 +338,18 @@ namespace PaperSouls.Runtime.DungeonGeneration
             // Add Main Wall Tiles To Grid
             for (int i = start; i <= end; i++)
             {
-                if (y > 0 && _grid[i, y - 1] != RoomZone.Room) 
+                if (y > 0 && _grid[i, y - 1] != RoomZone.Room)
                 {
                     _subroomEnd.Add(new(i, y));
                     _subroomStart.Add(new(i + 1, y));
-                    continue; 
                 }
-                if (y < _roomSize.y - 1 && _grid[i, y + 1] != RoomZone.Room)
+                else if (y < _roomSize.y - 1 && _grid[i, y + 1] != RoomZone.Room)
                 {
                     _subroomEnd.Add(new(i, y));
                     _subroomStart.Add(new(i + 1, y));
-                    continue;
                 }
-                if (_grid[i, y] != RoomZone.Edge && _grid[i, y] != RoomZone.Invalid) _grid[i, y] = RoomZone.SubRoomWall;
+                else if (_grid[i, y] == RoomZone.Room) _grid[i, y] = RoomZone.SubRoomWall;
+             
             }
 
             _subroomEnd.Add(new(end, y));
@@ -376,15 +376,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 {
                     _subroomEnd.Add(new(x, i));
                     _subroomStart.Add(new(x, i + 1));
-                    continue;
                 }
-                if (x < _roomSize.x - 1 && _grid[x + 1, i] != RoomZone.Room)
+                else if (x < _roomSize.x - 1 && _grid[x + 1, i] != RoomZone.Room)
                 {
                     _subroomEnd.Add(new(x, i));
                     _subroomStart.Add(new(x, i + 1));
-                    continue;
                 }
-                if (_grid[x, i] != RoomZone.Edge && _grid[x, i] != RoomZone.Invalid) _grid[x, i] = RoomZone.SubRoomWall; 
+                else if (_grid[x, i] == RoomZone.Room) _grid[x, i] = RoomZone.SubRoomWall; 
             }
 
             _subroomEnd.Add(new(x, end));
@@ -422,6 +420,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 Vector2 size = _subroomEnd[j] - _subroomStart[j];
 
                 if (size.x <= 1  && size.y <= 1) continue;
+
+                Debug.Log("Start: " + _subroomStart[j] + " " + test++);
+                Debug.Log("End: " + _subroomEnd[j] + " " + test++);
 
                 _wallCount = new(Mathf.Max(1, Mathf.FloorToInt((size.x + 1) / _wallSize)), Mathf.Max(1, Mathf.FloorToInt((size.y + 1) / _wallSize)));
                 Vector2 scale = new(((size.x + 1) / _wallCount.x) / _wallSize, ((size.y + 1) / _wallCount.y) / _wallSize);
@@ -510,8 +511,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
                         0
                         )
                     ),
-                _roomData.minSubRoomSize.x,
-                _roomData.minSubRoomSize.y
+                _roomData.MinSubRoomSize.x,
+                _roomData.MinSubRoomSize.y
                 );
         }
         

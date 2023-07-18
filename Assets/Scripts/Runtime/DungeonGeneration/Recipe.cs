@@ -5,14 +5,14 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [System.Serializable]
-    internal sealed class ZonePlacementProbability
+    public sealed class ZonePlacementProbability
     {
         [Range(0, 1)] public float Room = 1.0f;
         [Range(0, 1)] public float Edge = 1.0f;
     }
 
     [System.Serializable]
-    internal class FillableItem
+    public class FillableItem
     {
         public GameObject Item;
         [Range(0, 1)] public float Probability = 1.0f;
@@ -20,8 +20,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public float Offset = 0.0f;
     }
 
-    [CreateAssetMenu(fileName = "Recipe", menuName = "Dungeon/Dectoration/Recipe", order = 2)]
-    internal class Recipe : ScriptableObject
+    [System.Serializable]
+    public class Recipe
     {
         public List<DecorationObject> Objects;
         public List<FillableItem> Fillables;
@@ -32,7 +32,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return (val < 1) ? Mathf.Ceil(val) : Mathf.Round(val);
         }
 
-        private void OnEnable()
+        public void Init()
         {
             foreach (var obj in Objects)
             {
