@@ -80,8 +80,11 @@ namespace PaperSouls.Runtime.Player
 
             Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
+            forward = forward.normalized;
 
             Vector3 right = Camera.main.transform.TransformDirection(Vector3.right);
+            right.y = 0;
+            right = right.normalized;
 
             _targetDirection = _horizontalMovement * right + _verticalMovement * forward;
 
@@ -119,19 +122,18 @@ namespace PaperSouls.Runtime.Player
         }
 
         /// <summary>
-        /// Processes the players movement
+        /// Applys the players movement
         /// </summary>
-        private void ProcessPlayerMovement()
+        private void ApplyPlayerMovement()
         {
             Vector3 playerMovement = _targetDirection * ((_isSprinting) ? _playerManger.PlayerSettings.playerSpeedRunning : _playerManger.PlayerSettings.playerSpeedWalking);
-
             _characterController.Move(playerMovement);
         }
 
         /// <summary>
         /// Apply a gravity force to the player
         /// </summary>
-        private void ApplyGravity()
+        private void ProcessGravity()
         {
             if (_characterController.isGrounded && _gravityForceOnPlayer < 0.0f) _gravityForceOnPlayer = -1.0f;
             else _gravityForceOnPlayer += _gravity * _gravityMultiplier * Time.deltaTime;
@@ -230,10 +232,9 @@ namespace PaperSouls.Runtime.Player
         private void ProcessPlayer()
         {
             GetPlayerTargetDirection();
-            ApplyGravity();
+            ProcessGravity();
             ProcessJump();
             ProcessDash();
-            ProcessPlayerMovement();
         }
 
         /// <summary>
@@ -333,6 +334,11 @@ namespace PaperSouls.Runtime.Player
             ProcessPlayer();
             ProcessCamera();
             HandleAnimations();
+        }
+
+        void FixedUpdate()
+        {
+            ApplyPlayerMovement();
         }
     }
 }
