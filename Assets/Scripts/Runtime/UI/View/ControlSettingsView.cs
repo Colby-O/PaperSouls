@@ -5,7 +5,7 @@ using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public class ControlSettingsView : View
+    internal sealed class ControlSettingsView : View
     {
         [SerializeField] private Button _backButton;
 

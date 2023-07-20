@@ -6,7 +6,7 @@ using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public class SoundSettingsView : View
+    internal sealed class SoundSettingsView : View
     {
 
         [SerializeField] private Slider _overallSound;

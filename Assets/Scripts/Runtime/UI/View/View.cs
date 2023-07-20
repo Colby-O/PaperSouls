@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public abstract class View : MonoBehaviour
+    internal abstract class View : MonoBehaviour
     {
         /// <summary>
         /// Initialzes a view. 

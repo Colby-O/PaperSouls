@@ -11,7 +11,7 @@ using PaperSouls.Runtime.MonoSystems.UI;
 namespace PaperSouls.Runtime.UI 
 { 
     [RequireComponent(typeof(PlayerInput))]
-    public class PauseMenuController : MonoBehaviour
+    public class UIController : MonoBehaviour
     {
         [SerializeField] private DynamicInventoryDisplay _inventoryDisplay;
 
@@ -56,6 +56,11 @@ namespace PaperSouls.Runtime.UI
             {
                 _uiMonoSystem.ShowLast();
                 if (_uiMonoSystem.GetCurrentViewIs<PlayerHUDView>()) GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+            }
+            else 
+            {
+                GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Paused));
+                _uiMonoSystem.Show<PauseMenuView>();
             }
         }
 

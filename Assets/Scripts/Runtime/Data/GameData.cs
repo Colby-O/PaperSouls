@@ -7,7 +7,9 @@ namespace PaperSouls.Runtime.Data
     [System.Serializable]
     internal class GameData
     {
-        // Test Vairable
-        public int Test;
+        // Profile ID
+        public int ProfileID = -1;
+        // Seed for the procedual generation
+        public int Seed;
     }
 }

@@ -1,6 +1,6 @@
 namespace PaperSouls.Runtime.UI.View
 {
-    public class ExternalInventoryView : InventoryView
+    internal sealed class ExternalInventoryView : InventoryView
     {
         public override void Show()
         {

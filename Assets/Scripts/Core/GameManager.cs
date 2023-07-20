@@ -47,8 +47,8 @@ namespace PaperSouls.Core
         {
             if (_instance) return;
 
-            GameManager gameManagerPreafab = Resources.Load<GameManager>(PrefabPath);
-            GameManager gameManager = Instantiate(gameManagerPreafab);
+            GameManager gameManagerPrefab = Resources.Load<GameManager>(PrefabPath);
+            GameManager gameManager = Instantiate(gameManagerPrefab);
 
             gameManager.name = gameManager.GetApplicationName();
 

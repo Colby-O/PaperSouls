@@ -35,7 +35,7 @@ namespace PaperSouls.Runtime.MonoSystems.GameState
         public void ChangeToDeadState()
         {
             CurrentState = GameStates.Dead;
-            StartCoroutine(PaperSoulsGameManager.ResetGame());
+            GameManager.Emit<RestartGameMessage>(new());
         }
 
         private void ChangeGameState(ChangeGameStateMessage msg)

@@ -3,8 +3,8 @@ using UnityEngine.UI;
 using PaperSouls.Core;
 using PaperSouls.Runtime.MonoSystems.UI;
 
-namespace PaperSouls.Runtime.UI.View { 
-    public class SettingsView : View
+namespace PaperSouls.Runtime.UI.View {
+    internal sealed class SettingsView : View
     {
         [SerializeField] private Button _graphicSettingsButton;
         [SerializeField] private Button _controlSettingsButton;

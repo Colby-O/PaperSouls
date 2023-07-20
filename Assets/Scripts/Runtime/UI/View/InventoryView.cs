@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public abstract class InventoryView : View
+    internal abstract class InventoryView : View
     {
         [SerializeField] protected GameObject _invenotryView;
         [SerializeField] protected GameObject _dyanmicView;
