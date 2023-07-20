@@ -7,7 +7,7 @@ using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public class SkillTreeView : View
+    internal sealed class SkillTreeView : View
     {
         [SerializeField] private Button _nextButton;
         [SerializeField] private Button _previousButton;

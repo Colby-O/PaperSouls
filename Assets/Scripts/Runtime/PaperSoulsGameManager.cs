@@ -8,6 +8,7 @@ using PaperSouls.Runtime.MonoSystems.GameState;
 using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.MonoSystems.DataPersistence;
 using PaperSouls.Runtime.MonoSystems;
+using PaperSouls.Runtime.UI.View;
 using PaperSouls.Runtime.Items;
 
 namespace PaperSouls.Runtime
@@ -16,11 +17,9 @@ namespace PaperSouls.Runtime
     {
         [Header("Holders")]
         [SerializeField] private GameObject _monoSystemParnet;
-        [SerializeField] private GameObject _controllerParnet;
 
         [Header("MonoSystems")]
         [SerializeField] private AudioMonoSystem _audioMonoSystem;
-        [SerializeField] private SceneMonoSystem _sceneMonoSystem;
         [SerializeField] public UIMonoSystem _uiMonoSystem;
         [SerializeField] private GameStateMonoSystem _gameStateMonoSystem;
         [SerializeField] private DataPersistenceMonoSystem _dataPersistenceMonoSystem;
@@ -32,6 +31,7 @@ namespace PaperSouls.Runtime
         [SerializeField] private GameStates _intialState = GameStates.MainMenu;
         private static GameObject _player = null;
         public static bool AccpetPlayerInput { get; set; }
+        public static int Seed { get; set; }
         public static GameObject Player { 
             get 
             { 
@@ -44,11 +44,37 @@ namespace PaperSouls.Runtime
         }
         private bool _firstTimeRunning = false;
 
+        private void StartGame(StartGameMessage msg) => StartCoroutine(StartGame());
+
+        private void RestartGame(RestartGameMessage msg) => StartCoroutine(ResetGame());
+
+        private void GotoMainMenu(GotoMainMenuMessage msg) => StartCoroutine(GotoMainMenu());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private IEnumerator StartGame()
+        {
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("DungeonGenerationScene");
+
+            _uiMonoSystem.Show<LoadingScreenView>();
+            LoadingScreenView loadingScreen = _uiMonoSystem.GetCurrentView<LoadingScreenView>();
+            while (!asyncLoad.isDone)
+            {
+                float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+                if (loadingScreen != null) loadingScreen.IncreaseProgressBar(progress);
+                yield return null;
+            }
+            _dataPersistenceMonoSystem.Data.Seed = Seed;
+            if (_player == null) _player = GameObject.Find("Player");
+            Emit<ResetViewMessage>(new());
+            Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+        }
 
         /// <summary>
         /// Function to be ran once a game is reset i.e. the player dies.
         /// </summary>
-        public static IEnumerator ResetGame()
+        private IEnumerator ResetGame()
         {
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
@@ -62,13 +88,39 @@ namespace PaperSouls.Runtime
             Emit<ChangeGameStateMessage>(new(GameStates.Playing));
         }
 
+        private IEnumerator GotoMainMenu()
+        {
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(0);
+
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            Emit<ResetViewMessage>(new());
+            Emit<ChangeGameStateMessage>(new(GameStates.MainMenu));
+        }
+
+        private void AddListeners()
+        {
+            AddListener<StartGameMessage>(StartGame);
+            AddListener<RestartGameMessage>(RestartGame);
+            AddListener<GotoMainMenuMessage>(GotoMainMenu);
+        }
+
+        private void RemoveListeners()
+        {
+            RemoveListener<StartGameMessage>(StartGame);
+            RemoveListener<RestartGameMessage>(RestartGame);
+            RemoveListener<GotoMainMenuMessage>(GotoMainMenu);
+        }
+
         /// <summary>
         /// Attaches all MonoSystems to the GameManager
         /// </summary>
         private void AttachMonoSystems()
         {
             AddMonoSystem<AudioMonoSystem, IAudioMonoSystem>(_audioMonoSystem);
-            //AddMonoSystem<SceneMonoSystem, ISceneMonoSystem>(_sceneMonoSystem);
             AddMonoSystem<UIMonoSystem, IUIMonoSystem>(_uiMonoSystem);
             AddMonoSystem<GameStateMonoSystem, IGameStateMonoSystem>(_gameStateMonoSystem);
             AddMonoSystem<DataPersistenceMonoSystem, IDataPersistenceMonoSystem>(_dataPersistenceMonoSystem);
@@ -86,11 +138,15 @@ namespace PaperSouls.Runtime
 
             // Initalzie all Databases
             _itemDatabase.SetItemIDs();
+            
+            // Adds Event Listeners
+            AddListeners();
 
             // Ensures all MonoSystems call Awake at the same time.
             _monoSystemParnet.SetActive(true);
-            _controllerParnet.SetActive(true);
         }
+
+        private void OnDestroy() => RemoveListeners();
 
         private void Start()
         {

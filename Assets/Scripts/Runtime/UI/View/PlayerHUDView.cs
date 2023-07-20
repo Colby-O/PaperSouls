@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public class PlayerHUDView : View
+    internal sealed class PlayerHUDView : View
     {
         public override void Init() { }
 

@@ -5,7 +5,7 @@ using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public class MenuInventoryView : InventoryView
+    internal sealed class MenuInventoryView : InventoryView
     {
         [SerializeField] private Button _nextButton;
         [SerializeField] private Button _previousButton;

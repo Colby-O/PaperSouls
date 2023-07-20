@@ -26,6 +26,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private List<Vector2Int> _pathStarts;
         private List<Vector2Int> _pathEnds;
 
+        private Vector3 _startPos;
+
         private static readonly Vector2Int[] DIRECTIONS = new[]
         {
         new Vector2Int(0, 1),
@@ -689,21 +691,27 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
         }
 
+        public void OnGameLoad()
+        {
+            GameObject.Find("Player").transform.position = new Vector3(_startPos.x, _startPos.y + 0.5f, _startPos.z);
+            Camera.main.transform.position = new Vector3(_startPos.x, _startPos.y + 0.8f, _startPos.z - 3f);
+        }
+
         private void Awake()
         {
+            _seed = PaperSoulsGameManager.Seed;
             GenerateDungeon();
+            _startPos = _roomList[Random.Range(0, _roomList.Count)].Prefab.transform.position;
         }
 
         private void Start()
         {
-            Vector3 startPos = _roomList[Random.Range(0, _roomList.Count)].Prefab.transform.position;
-            PaperSoulsGameManager.Player.transform.position = new Vector3(startPos.x, startPos.y + 0.5f, startPos.z);
-            Camera.main.transform.position = new Vector3(startPos.x, startPos.y + 0.8f, startPos.z - 3f);
+            OnGameLoad();
         }
 
         private void Update()
         {
-            if(RegenerateDungeon)
+            if (RegenerateDungeon)
             {
                 RegenerateDungeon = false;
                 DestroyDungeon();

@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using PaperSouls.Core;
 using PaperSouls.Runtime.MonoSystems.GameState;
 using PaperSouls.Runtime.MonoSystems.UI;
 
 namespace PaperSouls.Runtime.UI.View
 {
-    public class MainMenuView : View
+    internal sealed class MainMenuView : View
     {
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _settingsButton;
@@ -18,7 +17,8 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void StartGame()
         {
-            GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+            //GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<ProfileSelectView>();
         }
 
         /// <summary>

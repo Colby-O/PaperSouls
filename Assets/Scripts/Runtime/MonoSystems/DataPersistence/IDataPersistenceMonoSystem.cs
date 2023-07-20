@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PaperSouls.Core;
+using PaperSouls.Runtime.Data;
 
 namespace PaperSouls.Runtime.MonoSystems.DataPersistence
 {
@@ -21,5 +22,10 @@ namespace PaperSouls.Runtime.MonoSystems.DataPersistence
         /// Loads a game from JSON file
         /// </summary>
         public void SaveGame();
+
+        /// <summary>
+        /// Loads all profiles
+        /// </summary>
+        public Dictionary<string, GameData> FetchAllProfiles();
     }
 }
