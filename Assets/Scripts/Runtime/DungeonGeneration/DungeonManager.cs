@@ -16,6 +16,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private List<Room> _roomList;
         [SerializeField] private Vector3 _tileSize = Vector3.zero;
 
+        [SerializeField] private Transform _player;
+
         private TileType[,] _grid;
         private List<DungeonObject> _dungeonObjects;
         private List<Hallway> _hallwayVarients;
@@ -693,8 +695,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         public void OnGameLoad()
         {
-            GameObject.Find("Player").transform.position = new Vector3(_startPos.x, _startPos.y + 0.5f, _startPos.z);
+            _player.transform.position = new Vector3(_startPos.x, _startPos.y + 0.5f, _startPos.z);
             Camera.main.transform.position = new Vector3(_startPos.x, _startPos.y + 0.8f, _startPos.z - 3f);
+            UnityEngine.Debug.Log(_player.transform.position);
         }
 
         private void Awake()
@@ -702,10 +705,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _seed = PaperSoulsGameManager.Seed;
             GenerateDungeon();
             _startPos = _roomList[Random.Range(0, _roomList.Count)].Prefab.transform.position;
-        }
-
-        private void Start()
-        {
             OnGameLoad();
         }
 

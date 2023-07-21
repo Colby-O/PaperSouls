@@ -27,12 +27,16 @@ namespace PaperSouls.Runtime.Sprite
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(newRotation), _turnSpeed * Time.deltaTime);
         }
 
-        public virtual void Start()
+        protected virtual void Awake()
+        {
+        }
+
+        protected virtual void Start()
         {
             RotateTarget = Camera.main.transform;
         }
 
-        public virtual void LateUpdate()
+        protected virtual void LateUpdate()
         {
             RotateTowardsCamera();
         }
