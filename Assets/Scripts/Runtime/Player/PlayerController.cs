@@ -23,7 +23,6 @@ namespace PaperSouls.Runtime.Player
         [SerializeField] private float _dashStrength = 10;
         [SerializeField] private float _dashFalloff = 0.5f;
         [SerializeField] private float _jumpHeight = 10;
-        [SerializeField] private float _jumpFalloff = 0.5f;
         [SerializeField] private float _gravityMultiplier = 3;
         [SerializeField] private UseableItem _quickUseItem;
 
@@ -38,12 +37,9 @@ namespace PaperSouls.Runtime.Player
 
         private bool _isWalking;
         private bool _isSprinting;
-        private Vector3 _jumpForce;
         private Vector3 _dashForce;
-        private Vector3 _jumpVel;
         private Vector3 _dashVel;
         private float _gravity = -9.81f;
-        private float _gravityForceOnPlayer = 0.0f;
         private float _verticalMovement;
         private float _horizontalMovement;
 
@@ -60,14 +56,12 @@ namespace PaperSouls.Runtime.Player
         private InputAction _dashAction;
         private InputAction _quickUseAction;
 
-        private Vector3 _targetDirection;
+        private Vector3 _playerVelocity;
         private Vector2 _cameraAngle;
 
         private Vector2 _rawMovementInput;
         private Vector2 _rawMousePosition;
 
-        private bool _walkingSoundPlaying = false;
-        private bool _runningSoundPlaying = false;
         private bool _dashing = false;
 
         /// <summary>
@@ -80,52 +74,32 @@ namespace PaperSouls.Runtime.Player
 
             Vector3 forward = Camera.main.transform.TransformDirection(Vector3.forward);
             forward.y = 0;
+            forward = forward.normalized;
 
             Vector3 right = Camera.main.transform.TransformDirection(Vector3.right);
+            right.y = 0;
+            right = right.normalized;
 
-            _targetDirection = _horizontalMovement * right + _verticalMovement * forward;
+            Vector3 movement = (
+                (_horizontalMovement * right + _verticalMovement * forward).normalized *
+                ((_isSprinting) ? _playerManger.PlayerSettings.playerSpeedRunning : _playerManger.PlayerSettings.playerSpeedWalking)
+            );
 
-            _isWalking = _targetDirection.magnitude > 0;
+            _playerVelocity = new Vector3(
+                movement.x,
+                _playerVelocity.y,
+                movement.z
+            );
 
-            /*
-            if (_dashing) return;
-            else if (_isWalking && !_isSprinting)
-            {
-                if (_runningSoundPlaying)
-                {
-                    _runningSoundPlaying = false;
-                    AudioManger.Instance.StopSFX();
-                }
-                _walkingSoundPlaying = true;
-                AudioManger.Instance.PlaySFX("Walking", false);
-            }
-            else if (_isWalking && _isSprinting)
-            {
-                if (_walkingSoundPlaying)
-                {
-                    _walkingSoundPlaying = false;
-                    AudioManger.Instance.StopSFX();
-                }
-                _runningSoundPlaying = true;
-                AudioManger.Instance.PlaySFX("Running", false);
-            }
-            else if (_walkingSoundPlaying || _runningSoundPlaying) 
-            {
-                _walkingSoundPlaying = false;
-                _runningSoundPlaying = false;
-                AudioManger.Instance.StopSFX();
-            }
-            */
+            _isWalking = _playerVelocity.magnitude > 0;
         }
 
         /// <summary>
-        /// Processes the players movement
+        /// Applys the players movement
         /// </summary>
-        private void ProcessPlayerMovement()
+        private void ApplyPlayerMovement()
         {
-            Vector3 playerMovement = _targetDirection * ((_isSprinting) ? _playerManger.PlayerSettings.playerSpeedRunning : _playerManger.PlayerSettings.playerSpeedWalking);
-
-            _characterController.Move(playerMovement);
+            _characterController.Move(_playerVelocity);
         }
 
         /// <summary>
@@ -133,18 +107,8 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         private void ApplyGravity()
         {
-            if (_characterController.isGrounded && _gravityForceOnPlayer < 0.0f) _gravityForceOnPlayer = -1.0f;
-            else _gravityForceOnPlayer += _gravity * _gravityMultiplier * Time.deltaTime;
-            _targetDirection.y = _gravityForceOnPlayer;
-        }
-
-        /// <summary>
-        /// Process a jump
-        /// </summary>
-        private void ProcessJump()
-        {
-            _jumpForce = Vector3.SmoothDamp(_jumpForce, Vector3.zero, ref _jumpVel, _jumpFalloff);
-            _targetDirection += _jumpForce;
+            if (_characterController.isGrounded && _playerVelocity.y < 0.0f) _playerVelocity.y = -1.0f;
+            else _playerVelocity.y += _gravity * _gravityMultiplier;
         }
 
         /// <summary>
@@ -154,8 +118,7 @@ namespace PaperSouls.Runtime.Player
         {
             if (_characterController.isGrounded && PaperSoulsGameManager.AccpetPlayerInput)
             {
-                _jumpForce = Vector3.up * _jumpHeight;
-                _gravityForceOnPlayer = 0;
+                _playerVelocity.y = _jumpHeight;
             }
         }
 
@@ -198,7 +161,7 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         private void UpdateCameraAngle()
         {
-            _cameraAngle += _rawMousePosition;
+            _cameraAngle += _rawMousePosition * _sensitivity;
             _cameraAngle.y = Mathf.Clamp(_cameraAngle.y, _minViewY, _maxViewY);
         }
 
@@ -230,10 +193,7 @@ namespace PaperSouls.Runtime.Player
         private void ProcessPlayer()
         {
             GetPlayerTargetDirection();
-            ApplyGravity();
-            ProcessJump();
             ProcessDash();
-            ProcessPlayerMovement();
         }
 
         /// <summary>
@@ -262,7 +222,7 @@ namespace PaperSouls.Runtime.Player
                 _dashing = false;
                 _dashTrail.SetActive(false);
             }
-            _targetDirection += _dashForce;
+            _playerVelocity += _dashForce;
         }
 
         /// <summary>
@@ -288,16 +248,25 @@ namespace PaperSouls.Runtime.Player
             inventoryHolder.InventoryManger.OnInventoryChange?.Invoke(slot);
         }
 
-        public override void Start()
+        protected override void Awake()
         {
-            base.Start();
-
-            _dashTrail.SetActive(false);
+            base.Awake();
 
             _characterController = GetComponent<CharacterController>();
             _playerInput = GetComponent<PlayerInput>();
             _playerManger = GetComponent<PlayerManger>();
             _animator = GetComponentInChildren<Animator>();
+
+            _characterController.enabled = false;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            _characterController.enabled = true;
+
+            _dashTrail.SetActive(false);
 
             _isWalking = false;
             _isSprinting = false;
@@ -331,8 +300,19 @@ namespace PaperSouls.Runtime.Player
             if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead || 
                 GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.MainMenu) return;
             ProcessPlayer();
-            ProcessCamera();
             HandleAnimations();
+        }
+
+        void FixedUpdate()
+        {
+            ApplyGravity();
+            ApplyPlayerMovement();
+        }
+
+        protected override void LateUpdate()
+        {
+            ProcessCamera();
+            base.LateUpdate();
         }
     }
 }

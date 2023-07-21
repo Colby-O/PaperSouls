@@ -1868,7 +1868,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Esc
+  m_Text: "\e\x01"
 --- !u!222 &136894860
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7555,7 +7555,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Space
+  m_Text: " \x01"
 --- !u!222 &539148100
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9203,7 +9203,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: W/A/S/D
+  m_Text: "W\x01/A\x01/S\x01/D\x01"
 --- !u!222 &631629823
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16566,7 +16566,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Q
+  m_Text: "Q\x01"
 --- !u!222 &1078084312
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17431,8 +17431,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225512395}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.184, y: 0.74, z: -0.0040305}
-  m_LocalScale: {x: 6.6412, y: 6.6412, z: 6.6412}
+  m_LocalPosition: {x: 0, y: 0.143, z: -0.0040305}
+  m_LocalScale: {x: 6.6412, y: 16.817898, z: 6.6412}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1108899573}
@@ -19142,6 +19142,7 @@ MonoBehaviour:
   _seed: 1
   _dungeonData: {fileID: 11400000, guid: 5672e533775c96b4ab167e523150f7f1, type: 2}
   _tileSize: {x: 4, y: 1, z: 4}
+  _player: {fileID: 1757476891}
   _drawDelaunayTriangulation: 0
   _drawMST: 0
   _drawFinalGraph: 0
@@ -19648,7 +19649,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: E
+  m_Text: "E\x01"
 --- !u!222 &1323226050
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20025,7 +20026,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I
+  m_Text: "I\x01"
 --- !u!222 &1329499754
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -26337,7 +26338,6 @@ GameObject:
   - component: {fileID: 1757476887}
   - component: {fileID: 1757476886}
   - component: {fileID: 1757476885}
-  - component: {fileID: 1757476884}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -26345,19 +26345,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &1757476884
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1757476883}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 0.5}
-  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!114 &1757476885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26424,12 +26411,11 @@ MonoBehaviour:
   _lookSpeed: 10
   _minViewY: -70
   _maxViewY: 70
-  _sensitivity: {x: 1, y: 1}
-  _dashStrength: 15
+  _sensitivity: {x: 0.4, y: 0.4}
+  _dashStrength: 1
   _dashFalloff: 0.1
-  _jumpHeight: 6
-  _jumpFalloff: 0.3
-  _gravityMultiplier: 3
+  _jumpHeight: 0.24
+  _gravityMultiplier: 0.002
   _quickUseItem: {fileID: 11400000, guid: 1148833b14541a44b807be0c54d75b17, type: 2}
   _playerUI: {fileID: 1822657608}
   _inventoryUI: {fileID: 791091749}
