@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using PaperSouls.Runtime.Interfaces;
@@ -15,12 +16,11 @@ namespace PaperSouls.Runtime.UI.View
     {
         [Header("Console Settings")]
         [SerializeField] private List<ConsoleCommand> _commands;
-        [SerializeField] private string _prefix;
         [SerializeField] private Color _defaultColor = Color.white;
 
         [Header("References")]
         [SerializeField] private TMP_InputField _commandInput;
-        [SerializeField] private TMP_Text _textAera;
+        [SerializeField] private TMP_InputField _textAera;
         [SerializeField] private Button _submitButton;
         [SerializeField] private ScrollRect _scrollRect;
 
@@ -55,12 +55,32 @@ namespace PaperSouls.Runtime.UI.View
         }
 
         /// <summary>
+        /// Scroll console view to bottom at the end of the frame
+        /// </summary>
+        private IEnumerator ScrollToBottom()
+        {
+            // we need to wait for the current frame to end and all canvas activity
+            // to finish before we scroll the view
+            yield return new WaitForEndOfFrame();
+            _scrollRect.verticalNormalizedPosition = 0;
+        }
+
+        /// <summary>
+        /// Moves input cursor to the end at the end of the frame
+        /// </summary>
+        private IEnumerator InputCursorToEnd()
+        {
+            yield return new WaitForEndOfFrame();
+            _commandInput.MoveTextEnd(false);
+        }
+
+        /// <summary>
         /// Prints a command to the Console Window.
         /// </summary>
         private void PrintToCommandWindow(string msg, Color? color = null)
         {
             _textAera.text += $" <color={ ToRGBHex(color ?? _defaultColor) }>{ msg }</color>\n";
-            _scrollRect.normalizedPosition = new Vector2(0, 0);
+            StartCoroutine(ScrollToBottom());
         }
 
         /// <summary>
@@ -85,8 +105,9 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void ResetInputField()
         {
-            _commandInput.text = _prefix;
+            _commandInput.text = "";
             _historySlot = 0;
+            _commandInput.ActivateInputField();
         }
 
         /// <summary>
@@ -105,7 +126,10 @@ namespace PaperSouls.Runtime.UI.View
         {
             ConsoleResponse msg = _console.ProcessCommand(val);
             PrintToCommandWindow(val);
-            if (_commandHistory.Count == 0 || !_commandHistory[^1].Equals(val, System.StringComparison.OrdinalIgnoreCase)) _commandHistory.Add(val);
+            if (_commandHistory.Count == 0 || !_commandHistory[^1].Equals(val, System.StringComparison.OrdinalIgnoreCase))
+            {
+                _commandHistory.Add(val);
+            }
 
             if (msg.Type == ResponseType.Help) Help();
             else if (msg.Type == ResponseType.Clear) _textAera.text = string.Empty;
@@ -123,7 +147,7 @@ namespace PaperSouls.Runtime.UI.View
         {
             _commands = Resources.LoadAll<ConsoleCommand>("").ToList();
             ResetInputField();
-            _console = new DeveloperConsole(_prefix, _commands);
+            _console = new DeveloperConsole(_commands);
         }
 
         public override void Show()
@@ -131,6 +155,7 @@ namespace PaperSouls.Runtime.UI.View
             base.Show();
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
+            ResetInputField();
         }
 
         /// <summary>
@@ -141,6 +166,7 @@ namespace PaperSouls.Runtime.UI.View
             if (_historySlot < _commandHistory.Count) _historySlot++;
             if (_historySlot > _commandHistory.Count || _historySlot < 1) return;
             _commandInput.text = _commandHistory[^_historySlot];
+            StartCoroutine(InputCursorToEnd());
         }
 
         /// <summary>
@@ -151,10 +177,11 @@ namespace PaperSouls.Runtime.UI.View
             if (_historySlot > 0) _historySlot--;
             if (_historySlot < 1 || _historySlot > _commandHistory.Count)
             {
-                _commandInput.text = _prefix;
+                _commandInput.text = "";
                 return;
             }
             _commandInput.text = _commandHistory[^_historySlot];
+            StartCoroutine(InputCursorToEnd());
         }
 
         private void BackToDefaultCommand(InputAction.CallbackContext e) => ResetInputField();
