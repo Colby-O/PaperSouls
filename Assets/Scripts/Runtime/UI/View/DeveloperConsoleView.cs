@@ -80,7 +80,7 @@ namespace PaperSouls.Runtime.UI.View
         private void PrintToCommandWindow(string msg, Color? color = null)
         {
             _textAera.text += $" <color={ ToRGBHex(color ?? _defaultColor) }>{ msg }</color>\n";
-            StartCoroutine(ScrollToBottom());
+            if (gameObject.activeSelf) StartCoroutine(ScrollToBottom());
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace PaperSouls.Runtime.UI.View
             if (_historySlot < _commandHistory.Count) _historySlot++;
             if (_historySlot > _commandHistory.Count || _historySlot < 1) return;
             _commandInput.text = _commandHistory[^_historySlot];
-            StartCoroutine(InputCursorToEnd());
+            if (gameObject.activeSelf) StartCoroutine(InputCursorToEnd());
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace PaperSouls.Runtime.UI.View
                 return;
             }
             _commandInput.text = _commandHistory[^_historySlot];
-            StartCoroutine(InputCursorToEnd());
+            if (gameObject.activeSelf) StartCoroutine(InputCursorToEnd());
         }
 
         private void BackToDefaultCommand(InputAction.CallbackContext e) => ResetInputField();
@@ -203,6 +203,8 @@ namespace PaperSouls.Runtime.UI.View
             _nextCommandAction.performed += NextCommand;
             _previousCommandAction.performed += PreviousCommand;
             _defaultCommand.performed += BackToDefaultCommand;
+            StartCoroutine(ScrollToBottom());
+            StartCoroutine(InputCursorToEnd());
         }
 
         private void OnDisable()
