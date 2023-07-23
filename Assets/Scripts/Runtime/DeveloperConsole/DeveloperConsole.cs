@@ -8,12 +8,10 @@ namespace PaperSouls.Runtime.Console
 {
     internal sealed class DeveloperConsole
     {
-        private readonly string _prefix;
         private readonly IEnumerable<IConsoleCommand> _commands;
 
-        public DeveloperConsole(string prefix, IEnumerable<IConsoleCommand> commands)
+        public DeveloperConsole(IEnumerable<IConsoleCommand> commands)
         {
-            _prefix = prefix;
             _commands = commands;
         }
 
@@ -23,14 +21,6 @@ namespace PaperSouls.Runtime.Console
         public ConsoleResponse ProcessCommand(string input)
         {
             ConsoleResponse msg = null;
-
-            if (!input.StartsWith(_prefix))
-            {
-                msg = new($"Commands need to start with the prefex '{_prefix}'.", ResponseType.Error);
-                return msg;
-            }
-
-            input = input.Remove(0, _prefix.Length);
 
             string[] inputSplit = input.Split(' ');
 
