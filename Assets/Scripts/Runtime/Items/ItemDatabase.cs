@@ -18,7 +18,7 @@ namespace PaperSouls.Runtime.Items
         {
             _itemDatabase = new();
 
-            List<Item> foundItems = Resources.LoadAll<Item>(path: "Data").OrderBy(e => e.id).ToList();
+            List<Item> foundItems = Resources.LoadAll<Item>("").OrderBy(e => e.id).ToList();
 
             List<Item> hasIDInRange = foundItems.Where(e => e.id != -1 && e.id < foundItems.Count).OrderBy(e => e.id).ToList();
             List<Item> hasIDNotInRange = foundItems.Where(e => e.id != -1 && e.id >= foundItems.Count).OrderBy(e => e.id).ToList();
@@ -60,6 +60,19 @@ namespace PaperSouls.Runtime.Items
         public Item GetItem(string name)
         {
             return _itemDatabase.Find(e => e.displayName == name);
+        }
+
+        public override string ToString()
+        {
+            string res = string.Empty;
+            res += " Item Database\n";
+            foreach (Item item in _itemDatabase)
+            {
+                res += " |-----------------------------------|\n";
+                res += " " + item.ToString() + "\n";
+            }
+            res += " |-----------------------------------|";
+            return res;
         }
     }
 }

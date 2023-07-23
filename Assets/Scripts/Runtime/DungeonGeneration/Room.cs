@@ -189,6 +189,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
             this.AvailableExits = new Stack<Transform>(exits);
         }
 
+        public override string ToString()
+        {
+            return $"RoomID: {ID} Position: {Prefab.transform.position} Size: {Size}";
+        }
+
         public void DrawZones()
         {
             for (int i = 0; i < Size.x; i++)

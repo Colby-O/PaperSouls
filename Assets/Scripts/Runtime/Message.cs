@@ -21,6 +21,14 @@ namespace PaperSouls.Runtime
         }
     }
 
+    internal sealed class QuitGameMessage : IMessage
+    {
+        public QuitGameMessage()
+        {
+
+        }
+    }
+
     internal sealed class GotoMainMenuMessage : IMessage
     {
         public GotoMainMenuMessage()

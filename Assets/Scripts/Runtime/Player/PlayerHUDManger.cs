@@ -23,6 +23,7 @@ namespace PaperSouls.Runtime.Player
 
         private int _ammoCount;
         private int _level;
+        private float _maxHealth;
 
         /// <summary>
         /// Updates UI ammo count
@@ -30,6 +31,7 @@ namespace PaperSouls.Runtime.Player
         public void UpdateAmmoCount(int amount)
         {
             _ammoCount += amount;
+            _ammoCount = (_ammoCount >= 0) ? _ammoCount : 0;
             _ammoCountGUI.text = _ammoCount.ToString();
         }
 
@@ -48,6 +50,13 @@ namespace PaperSouls.Runtime.Player
         {
             UpdateAmmoCount(-1);
         }
+
+        public void SetAmmoCount(int amount)
+        {
+            _ammoCount = (amount >= 0) ? amount : 0;
+            _ammoCountGUI.text = _ammoCount.ToString();
+        }
+
         /// <summary>
         /// Gets the current ammo count
         /// </summary>
@@ -57,10 +66,19 @@ namespace PaperSouls.Runtime.Player
         }
 
         /// <summary>
+        /// Gets the player max health in the UI
+        /// </summary>
+        public float GetMaxPlayerHealth()
+        {
+            return _maxHealth;
+        }
+
+        /// <summary>
         /// Sets the player max health in the UI
         /// </summary>
         public void SetMaxPlayerHealth(float maxHealth)
         {
+            _maxHealth = maxHealth;
             _healthBar.SetMaxValue(maxHealth);
         }
 
@@ -99,9 +117,15 @@ namespace PaperSouls.Runtime.Player
         /// <summary>
         /// Gets the players current level
         /// </summary>
-        public int GetCurrentLevel()
+        public int GetLevel()
         {
             return _level;
+        }
+
+        public void SetLevel(int level)
+        {
+            _level = (level >= 1) ? level : 1;
+            _levelGUI.text = _level.ToString();
         }
 
         /// <summary>

@@ -21,5 +21,20 @@ namespace PaperSouls.Runtime.MonoSystems.Audio
         /// Sets the music volume level
         /// </summary>
         public void SetMusicVolume(float volume);
+
+        /// <summary>
+        /// Gets the overall volume level
+        /// </summary>
+        public float GetOverallVolume();
+
+        /// <summary>
+        /// Gets the SFX volume level
+        /// </summary>
+        public float GetSfXVolume();
+
+        /// <summary>
+        /// Gets the music volume level
+        /// </summary>
+        public float GetMusicVolume();
     }
 }

@@ -26,6 +26,8 @@ namespace PaperSouls.Runtime
 
         [Header("Databases")]
         [SerializeField] private ItemDatabase _itemDatabase;
+        public static ItemDatabase ItemDatabase { get { return ((PaperSoulsGameManager)_instance)._itemDatabase; } }
+
 
         [Header("Global Variables")]
         [SerializeField] private GameStates _intialState = GameStates.MainMenu;
@@ -49,6 +51,8 @@ namespace PaperSouls.Runtime
         private void RestartGame(RestartGameMessage msg) => StartCoroutine(ResetGame());
 
         private void GotoMainMenu(GotoMainMenuMessage msg) => StartCoroutine(GotoMainMenu());
+
+        private void QuitGame(QuitGameMessage msg) => QuitGame();
 
         /// <summary>
         /// 
@@ -88,6 +92,15 @@ namespace PaperSouls.Runtime
             Emit<ChangeGameStateMessage>(new(GameStates.Playing));
         }
 
+        /// <summary>
+        /// Quits the game
+        /// </summary>
+        private void QuitGame()
+        {
+            Debug.Log("Quitting!");
+            Application.Quit();
+        }
+
         private IEnumerator GotoMainMenu()
         {
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(0);
@@ -106,6 +119,7 @@ namespace PaperSouls.Runtime
             AddListener<StartGameMessage>(StartGame);
             AddListener<RestartGameMessage>(RestartGame);
             AddListener<GotoMainMenuMessage>(GotoMainMenu);
+            AddListener<QuitGameMessage>(QuitGame);
         }
 
         private void RemoveListeners()
@@ -113,6 +127,7 @@ namespace PaperSouls.Runtime
             RemoveListener<StartGameMessage>(StartGame);
             RemoveListener<RestartGameMessage>(RestartGame);
             RemoveListener<GotoMainMenuMessage>(GotoMainMenu);
+            RemoveListener<QuitGameMessage>(QuitGame);
         }
 
         /// <summary>

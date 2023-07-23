@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using PaperSouls.Runtime.Helpers;
+using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime.DungeonGeneration
 {
@@ -592,6 +594,37 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _dungeonHolder.transform.rotation = _dungeonData.DungeonProperties.Rotation;
         }
 
+        public bool TeleportPlayerToRoom(int roomID)
+        {
+            Room room = _roomList.Find(room => room.ID == roomID);
+
+            if (room == null) return false;
+
+            if(PaperSoulsGameManager.Player.TryGetComponent<PlayerController>(out PlayerController player))
+            {
+                Vector3 newPos = room.Prefab.transform.position;
+                newPos.y = 1.0f;
+                player.TeleportTo(newPos);
+                return true;
+            }
+
+            return false;
+        }
+
+        public override string ToString()
+        {
+            string res = string.Empty;
+            res += " Dungeon Room List\n";
+
+            foreach (Room room in _roomList)
+            {
+                res += " |---------------------------------------------------------------------------------------------------------|\n";
+                res += " " + room.ToString() + "\n";
+            }
+            res += " |---------------------------------------------------------------------------------------------------------|";
+            return res;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -697,7 +730,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             _player.transform.position = new Vector3(_startPos.x, _startPos.y + 0.5f, _startPos.z);
             Camera.main.transform.position = new Vector3(_startPos.x, _startPos.y + 0.8f, _startPos.z - 3f);
-            UnityEngine.Debug.Log(_player.transform.position);
         }
 
         private void Awake()

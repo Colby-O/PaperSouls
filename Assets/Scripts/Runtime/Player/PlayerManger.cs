@@ -4,25 +4,37 @@ using UnityEngine;
 using PaperSouls.Core;
 using PaperSouls.Runtime.Interfaces;
 using PaperSouls.Runtime.MonoSystems.GameState;
+using PaperSouls.Runtime.Inventory;
+using PaperSouls.Runtime.Data;
 
 namespace PaperSouls.Runtime.Player
 {
 
-    internal sealed class PlayerManger : MonoBehaviour, IDamageable
+    internal sealed class PlayerManger : MonoBehaviour, IDamageable, IDataPersistence
     {
         public PlayerSettings PlayerSettings;
         public PlayerHUDManger PlayerHUD;
 
+        public InventoryHolder ItemInventory;
+        public InventoryHolder EquipmentInventory;
+
         private float _currentHealth;
         private float _currentXP;
         private float _maxXP;
+        private int _level;
+        private int _ammoCount = 30;
+
+        public void SetMaxHealth(float maxHealth)
+        {
+            PlayerHUD.SetMaxPlayerHealth(maxHealth);
+        }
 
         /// <summary>
         /// Checks of the player's health is full
         /// </summary>
         public bool IsFullHealth()
         {
-            return _currentHealth >= PlayerSettings.health;
+            return _currentHealth >= PlayerHUD.GetMaxPlayerHealth();
         }
 
         /// <summary>
@@ -64,7 +76,7 @@ namespace PaperSouls.Runtime.Player
             {
                 float leftOverXP = _currentXP - _maxXP;
                 PlayerHUD.LevelUp();
-                _maxXP = PlayerSettings.baseXPToLevelUp + PlayerSettings.xpIncreasePerLevel * (PlayerHUD.GetCurrentLevel() - 1);
+                _maxXP = PlayerSettings.baseXPToLevelUp + PlayerSettings.xpIncreasePerLevel * (PlayerHUD.GetLevel() - 1);
                 PlayerHUD.SetMaxPlayerXP(_maxXP);
                 _currentXP = leftOverXP;
                 PlayerHUD.UpdatePlayerXP(_currentXP);
@@ -89,12 +101,41 @@ namespace PaperSouls.Runtime.Player
             ResetHealth();
         }
 
+        public bool SaveData(ref GameData data)
+        {
+            data.CurrentHealth = _currentHealth;
+            data.CurrentXP = _currentXP;
+            data.CurrentLevel = PlayerHUD.GetLevel();
+            data.AmmoCount = PlayerHUD.GetAmmoCount();
+            return true;
+        }
+
+        public bool LoadData(GameData data)
+        {
+            _currentHealth = data.CurrentHealth;
+            _currentXP = data.CurrentXP;
+            _level = data.CurrentLevel;
+            _ammoCount = (data.AmmoCount >= 0) ? data.AmmoCount : _ammoCount;
+            return true;
+        }
+
+        public override string ToString()
+        {
+            return $"Health: {_currentHealth} / {PlayerHUD.GetMaxPlayerHealth()}\n" +
+                   $"Level: {PlayerHUD.GetLevel()}\n" +
+                   $"Current XP: {_currentXP}\n" +
+                   $"XP needed for next level: {_maxXP}\n" +
+                   $"Ammo Count: {PlayerHUD.GetAmmoCount()}";
+        }
+
         private void Start()
         {
-            _currentHealth = PlayerSettings.health;
-            _maxXP = PlayerSettings.baseXPToLevelUp;
-            _currentXP = 0;
+            _currentHealth = (_currentHealth <= 0) ? PlayerSettings.health : _currentHealth;
+            _maxXP = (_level <= 1) ? PlayerSettings.baseXPToLevelUp : PlayerSettings.baseXPToLevelUp + PlayerSettings.xpIncreasePerLevel * (_level - 1);
+            _currentXP = (_currentXP <= 0) ? 0 : _currentXP;
 
+            PlayerHUD.SetAmmoCount(_ammoCount);
+            PlayerHUD.SetLevel(_level);
             PlayerHUD.SetMaxPlayerHealth(_currentHealth);
             PlayerHUD.SetMaxPlayerXP(_maxXP);
             PlayerHUD.UpdatePlayerHealth(_currentHealth);

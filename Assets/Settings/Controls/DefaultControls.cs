@@ -316,6 +316,15 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""88c1cecb-db81-4ce5-a83b-d0e13003feeb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -338,6 +347,85 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Close"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c4d909d-6def-43f6-ac42-43da908cda37"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Console"",
+            ""id"": ""62e8e8b1-c30b-4bfe-b2f7-39549ce50a93"",
+            ""actions"": [
+                {
+                    ""name"": ""HistoryNext"",
+                    ""type"": ""Button"",
+                    ""id"": ""50d7e2d4-e889-471e-9dbe-3179ee0e273d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HistoryPrevious"",
+                    ""type"": ""Button"",
+                    ""id"": ""7005a338-0068-44eb-85fa-f45baff4f417"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DefaultCommand"",
+                    ""type"": ""Button"",
+                    ""id"": ""1da0b584-bf9f-4c6c-be3c-ac2d3c3a3260"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""bb351724-84bd-441f-970e-c1c3de41461d"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HistoryNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8c68787e-0412-466b-8136-d02b9bf53e74"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HistoryPrevious"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8d3e5499-4549-4248-b444-1f51d7002630"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DefaultCommand"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -363,6 +451,12 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
         m_UI_Close = m_UI.FindAction("Close", throwIfNotFound: true);
+        m_UI_Console = m_UI.FindAction("Console", throwIfNotFound: true);
+        // Console
+        m_Console = asset.FindActionMap("Console", throwIfNotFound: true);
+        m_Console_HistoryNext = m_Console.FindAction("HistoryNext", throwIfNotFound: true);
+        m_Console_HistoryPrevious = m_Console.FindAction("HistoryPrevious", throwIfNotFound: true);
+        m_Console_DefaultCommand = m_Console.FindAction("DefaultCommand", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -537,12 +631,14 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Inventory;
     private readonly InputAction m_UI_Close;
+    private readonly InputAction m_UI_Console;
     public struct UIActions
     {
         private @DefaultControls m_Wrapper;
         public UIActions(@DefaultControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
         public InputAction @Close => m_Wrapper.m_UI_Close;
+        public InputAction @Console => m_Wrapper.m_UI_Console;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -558,6 +654,9 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
                 @Close.started -= m_Wrapper.m_UIActionsCallbackInterface.OnClose;
                 @Close.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnClose;
                 @Close.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnClose;
+                @Console.started -= m_Wrapper.m_UIActionsCallbackInterface.OnConsole;
+                @Console.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnConsole;
+                @Console.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnConsole;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -568,10 +667,62 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
                 @Close.started += instance.OnClose;
                 @Close.performed += instance.OnClose;
                 @Close.canceled += instance.OnClose;
+                @Console.started += instance.OnConsole;
+                @Console.performed += instance.OnConsole;
+                @Console.canceled += instance.OnConsole;
             }
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Console
+    private readonly InputActionMap m_Console;
+    private IConsoleActions m_ConsoleActionsCallbackInterface;
+    private readonly InputAction m_Console_HistoryNext;
+    private readonly InputAction m_Console_HistoryPrevious;
+    private readonly InputAction m_Console_DefaultCommand;
+    public struct ConsoleActions
+    {
+        private @DefaultControls m_Wrapper;
+        public ConsoleActions(@DefaultControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @HistoryNext => m_Wrapper.m_Console_HistoryNext;
+        public InputAction @HistoryPrevious => m_Wrapper.m_Console_HistoryPrevious;
+        public InputAction @DefaultCommand => m_Wrapper.m_Console_DefaultCommand;
+        public InputActionMap Get() { return m_Wrapper.m_Console; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ConsoleActions set) { return set.Get(); }
+        public void SetCallbacks(IConsoleActions instance)
+        {
+            if (m_Wrapper.m_ConsoleActionsCallbackInterface != null)
+            {
+                @HistoryNext.started -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnHistoryNext;
+                @HistoryNext.performed -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnHistoryNext;
+                @HistoryNext.canceled -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnHistoryNext;
+                @HistoryPrevious.started -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnHistoryPrevious;
+                @HistoryPrevious.performed -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnHistoryPrevious;
+                @HistoryPrevious.canceled -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnHistoryPrevious;
+                @DefaultCommand.started -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnDefaultCommand;
+                @DefaultCommand.performed -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnDefaultCommand;
+                @DefaultCommand.canceled -= m_Wrapper.m_ConsoleActionsCallbackInterface.OnDefaultCommand;
+            }
+            m_Wrapper.m_ConsoleActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @HistoryNext.started += instance.OnHistoryNext;
+                @HistoryNext.performed += instance.OnHistoryNext;
+                @HistoryNext.canceled += instance.OnHistoryNext;
+                @HistoryPrevious.started += instance.OnHistoryPrevious;
+                @HistoryPrevious.performed += instance.OnHistoryPrevious;
+                @HistoryPrevious.canceled += instance.OnHistoryPrevious;
+                @DefaultCommand.started += instance.OnDefaultCommand;
+                @DefaultCommand.performed += instance.OnDefaultCommand;
+                @DefaultCommand.canceled += instance.OnDefaultCommand;
+            }
+        }
+    }
+    public ConsoleActions @Console => new ConsoleActions(this);
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -590,5 +741,12 @@ public partial class @DefaultControls : IInputActionCollection2, IDisposable
     {
         void OnInventory(InputAction.CallbackContext context);
         void OnClose(InputAction.CallbackContext context);
+        void OnConsole(InputAction.CallbackContext context);
+    }
+    public interface IConsoleActions
+    {
+        void OnHistoryNext(InputAction.CallbackContext context);
+        void OnHistoryPrevious(InputAction.CallbackContext context);
+        void OnDefaultCommand(InputAction.CallbackContext context);
     }
 }

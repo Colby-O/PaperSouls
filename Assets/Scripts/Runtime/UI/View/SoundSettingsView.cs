@@ -51,5 +51,13 @@ namespace PaperSouls.Runtime.UI.View
             _backButton.onClick.AddListener(GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast);
             _audioMonoSystem = GameManager.GetMonoSystem<IAudioMonoSystem>();
         }
+
+        public override void Show()
+        {
+            base.Show();
+            _overallSound.value = _audioMonoSystem.GetOverallVolume();
+            _sfxSound.value = _audioMonoSystem.GetSfXVolume();
+            _musicSound.value = _audioMonoSystem.GetMusicVolume();
+        }
     }
 }

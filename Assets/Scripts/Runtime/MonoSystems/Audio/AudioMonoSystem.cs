@@ -151,6 +151,21 @@ namespace PaperSouls.Runtime.MonoSystems.Audio
             _musicSound = volume;
         }
 
+        public float GetOverallVolume()
+        {
+            return _overallSound;
+        }
+
+        public float GetSfXVolume()
+        {
+            return _sfxSound;
+        }
+
+        public float GetMusicVolume()
+        {
+            return _musicSound;
+        }
+
         private void Awake()
         {
             SetOverallVolume(1.0f);

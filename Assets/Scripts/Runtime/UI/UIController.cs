@@ -21,6 +21,7 @@ namespace PaperSouls.Runtime.UI
 
         private InputAction _menuAction;
         private InputAction _closeAction;
+        private InputAction _consoleAction;
 
         /// <summary>
         /// Displays an external inventory such as chests. On get called when 
@@ -74,20 +75,33 @@ namespace PaperSouls.Runtime.UI
                 GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Paused));
                 _uiMonoSystem.Show<MenuInventoryView>();
             }
-            else CloseCurrent();
+            else if (_uiMonoSystem.GetCurrentViewIs<MenuInventoryView>()) CloseCurrent();
+        }
+
+        public void ToggleConsole()
+        {
+            if (_uiMonoSystem.GetCurrentViewIs<PlayerHUDView>())
+            {
+                GameManager.Emit<ChangeGameStateMessage>(new(GameStates.Paused));
+                _uiMonoSystem.Show<DeveloperConsoleView>();
+            }
+            else if (_uiMonoSystem.GetCurrentViewIs<DeveloperConsoleView>()) CloseCurrent();
         }
 
         private void ToggleInventory(InputAction.CallbackContext e) => ToggleInventory();
        
 
         private void CloseCurrent(InputAction.CallbackContext e) => CloseCurrent();
-        
+
+
+        private void ToggleConsole(InputAction.CallbackContext e) => ToggleConsole();
 
         private void AddListeners()
         {
             InventoryHolder.OnDynamicInventoryDisplayRequest += DisplayInventory;
             _menuAction.performed += ToggleInventory;
             _closeAction.performed += CloseCurrent;
+            _consoleAction.performed += ToggleConsole;
         }
 
         private void RemoveListeners()
@@ -95,6 +109,7 @@ namespace PaperSouls.Runtime.UI
             InventoryHolder.OnDynamicInventoryDisplayRequest -= DisplayInventory;
             _menuAction.performed -= ToggleInventory;
             _closeAction.performed -= CloseCurrent;
+            _consoleAction.performed -= ToggleConsole;
         }
 
         private void OnEnable()
@@ -115,6 +130,7 @@ namespace PaperSouls.Runtime.UI
 
             _menuAction = _uiInput.actions["Inventory"];
             _closeAction = _uiInput.actions["Close"];
+            _consoleAction = _uiInput.actions["Console"];
         }
     }
 }

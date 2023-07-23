@@ -79,5 +79,10 @@ namespace PaperSouls.Runtime.Items
             if (other == null) return false;
             return id == other.id;
         }
+
+        public override string ToString()
+        {
+            return $"ID: {id} Name: {displayName}";
+        }
     }
 }

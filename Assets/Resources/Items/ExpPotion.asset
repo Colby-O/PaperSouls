@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad5b209dde56bd41a19b95f9a0a8f6f, type: 3}
   m_Name: ExpPotion
   m_EditorClassIdentifier: 
-  id: -1
-  displayName: XP Potion
+  id: 2
+  displayName: XPPotion
   description: Add XP to the user
   itemPrefab: {fileID: 573380351855779729, guid: 1bb36f1efa6588547952253bb594864b, type: 3}
   icon: {fileID: 21300000, guid: 4f780b3ef5ae53f4da316fa5848d14cd, type: 3}
