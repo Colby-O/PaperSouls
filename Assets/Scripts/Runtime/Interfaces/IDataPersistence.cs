@@ -11,12 +11,12 @@ namespace PaperSouls.Runtime.Interfaces
         /// Load the <paramref name="data"/>.
         /// Current implementation requires this be done between scenes.
         /// </summary>
-        public bool SaveData(GameData data);
+        public bool SaveData(ref GameData data);
 
         /// <summary>
         /// save the <paramref name="data"/>.
         /// Current implementation requires this be done between scenes.
         /// </summary>
-        public bool LoadData(ref GameData data);
+        public bool LoadData(GameData data);
     }
 }

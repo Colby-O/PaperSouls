@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33c4434ecdea784a80cfcd35d7b5702, type: 3}
+  m_Name: TeleportCommand
+  m_EditorClassIdentifier: 
+  _command: teleport
+  _description: "teleport \u201Cx\u201D \u201Cy\u201D \u201Cz\u201D  // Teleports
+    the player to coordinates x, y, z"

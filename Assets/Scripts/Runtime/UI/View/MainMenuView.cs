@@ -26,7 +26,7 @@ namespace PaperSouls.Runtime.UI.View
         /// </summary>
         private void QuitGame()
         {
-            Application.Quit();
+            GameManager.Emit<QuitGameMessage>(new());
         }
 
         /// <summary>

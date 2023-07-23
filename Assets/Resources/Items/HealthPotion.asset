@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad5b209dde56bd41a19b95f9a0a8f6f, type: 3}
   m_Name: HealthPotion
   m_EditorClassIdentifier: 
-  id: -1
-  displayName: Health Potion
+  id: 4
+  displayName: HealthPotion
   description: 
   itemPrefab: {fileID: 573380351855779729, guid: 05e8b2a384e99c44bb4326991d444fb5, type: 3}
   icon: {fileID: 21300000, guid: 595de860a26ad004c884bc67ebe3a314, type: 3}
+  pickupType: 0
   rarity: 0
   maxStackSize: 4
   slotType: 1

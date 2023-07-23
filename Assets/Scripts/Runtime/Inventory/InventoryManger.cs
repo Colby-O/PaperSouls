@@ -61,7 +61,12 @@ namespace PaperSouls.Runtime.Inventory
         {
             if (GetFreeInventorySlot(out InventorySlot freeSlot))
             {
-                freeSlot.UpdateInventorySlot(item, amount);
+                if (item.maxStackSize < amount)
+                {
+                    freeSlot.UpdateInventorySlot(item, item.maxStackSize);
+                    AddToInventory(item, amount - item.maxStackSize);
+
+                } else freeSlot.UpdateInventorySlot(item, amount);
                 OnInventoryChange?.Invoke(freeSlot);
                 return true;
             }

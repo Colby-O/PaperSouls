@@ -248,6 +248,15 @@ namespace PaperSouls.Runtime.Player
             inventoryHolder.InventoryManger.OnInventoryChange?.Invoke(slot);
         }
 
+        public void TeleportTo(Vector3 pos)
+        {
+            _characterController.enabled = false;
+
+            transform.position = pos;
+
+            _characterController.enabled = true;
+        }
+
         protected override void Awake()
         {
             base.Awake();
@@ -298,13 +307,15 @@ namespace PaperSouls.Runtime.Player
         void Update()
         {
             if (GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.Dead || 
-                GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.MainMenu) return;
+                GameManager.GetMonoSystem<IGameStateMonoSystem>().GetCurrentState() == GameStates.MainMenu ||
+                !_characterController.enabled) return;
             ProcessPlayer();
             HandleAnimations();
         }
 
         void FixedUpdate()
         {
+            if (!_characterController.enabled) return;
             ApplyGravity();
             ApplyPlayerMovement();
         }

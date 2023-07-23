@@ -54,7 +54,7 @@ namespace PaperSouls.Runtime.MonoSystems.DataPersistence
                 return;
             }
 
-            foreach (var obj in _dataPersistencesObjects) obj.LoadData(ref _gameData);
+            foreach (var obj in _dataPersistencesObjects) obj.LoadData(_gameData);
             
         }
 
@@ -64,7 +64,7 @@ namespace PaperSouls.Runtime.MonoSystems.DataPersistence
 
             if (_gameData == null) Debug.LogError("GameData is null. Please call NewGame() before SaveGame().");
             
-            foreach (var obj in _dataPersistencesObjects) obj.SaveData(_gameData);
+            foreach (var obj in _dataPersistencesObjects) obj.SaveData(ref _gameData);
 
             _jsonHandler.Save(_gameData, _currentProfileName);
         }
