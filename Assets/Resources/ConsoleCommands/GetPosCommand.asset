@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b347cbd017dfac6168d259d2a63283ef, type: 3}
   m_Name: GetPosCommand
   m_EditorClassIdentifier: 
-  _command: get_player_pos
+  _command: get_pos
   _description: get_pos // Displays the player's current position
