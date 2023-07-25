@@ -8,9 +8,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
     [System.Serializable]
     internal sealed class Dungeon 
     {
-        public int Seed { get; set; }
-        public SerializableGrid Grid { get; set; }
-        public List<SerializableRoom> RoomList { get; set; }
+        public int Seed;
+        public SerializableGrid Grid;
+        public List<SerializableRoom> RoomList;
 
         public Dungeon()
         {

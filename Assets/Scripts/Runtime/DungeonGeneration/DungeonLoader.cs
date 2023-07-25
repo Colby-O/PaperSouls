@@ -40,24 +40,25 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         private void GenerateHallwayVarients()
         {
-            _hallwayVarients = new();
-
-            _hallwayVarients.Add(null);
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 180f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 90f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 90f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 0f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.StrightHallway, 0f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 180f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 0f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 270f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 0f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.StrightHallway, 90f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 270f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 270f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 180f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 90f));
-            _hallwayVarients.Add(InstantiateHallwayPrefab(_dungeonData.DungeonProperties.FourWayHallway, 0f));
+            _hallwayVarients = new()
+            {
+                null,
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 180f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.StrightHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 180f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 270f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.StrightHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 270f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 270f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 180f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.FourWayHallway, 0f)
+            };
 
             foreach (GameObject hallway in _hallwayVarients)
             {
@@ -110,7 +111,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private GameObject InstantiateDungeonHallwayObject(GameObject prefab, Vector3 roomPosition, Vector3 roomSize, int hallwayID)
         {
-            GameObject newObject = GameObject.Instantiate(prefab, roomPosition, prefab.transform.localRotation);
+            GameObject newObject = Object.Instantiate(prefab, roomPosition, prefab.transform.localRotation);
             newObject.transform.localScale = roomSize;
             newObject.name = "Hallway_" + hallwayID.ToString();
             newObject.transform.parent = _dungeonHolder.transform;
@@ -129,21 +130,25 @@ namespace PaperSouls.Runtime.DungeonGeneration
             Vector3 scale = new Vector3(1, 1, 1);
 
             GameObject hallwayObject = InstantiateDungeonHallwayObject(hallway, position, scale, hallwayID);
-            hallwayObject.transform.parent = _dungeonHolder.transform;
             hallwayObject.SetActive(true);
 
-            GameObject hallwayInstance = Object.Instantiate(hallwayObject);
-            hallwayInstance.name = "Hallway_" + hallwayID.ToString();
-            _dungeonObjects.Add(hallwayInstance);
+            _dungeonObjects.Add(hallwayObject);
         }
 
         private void GenerateRooms()
         {
-            foreach (SerializableRoom room in _roomList) _roomGenerator.GenerateFromRoom(room);
+            foreach (SerializableRoom room in _roomList)
+            {
+                GameObject roomObj = _roomGenerator.GenerateFromRoom(room, false).GameObject;
+                roomObj.transform.parent = _dungeonHolder.transform;
+                _dungeonObjects.Add(roomObj);
+            }
         }
 
         private void GenerateHallways()
         {
+            GenerateHallwayVarients();
+
             for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
             {
                 for (int j = 0; j < _dungeonData.DungeonProperties.GridSize; j++)
@@ -158,17 +163,22 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
         }
 
-        public void Load(Dungeon dungeon)
+        public void Unload()
+        {
+            foreach (GameObject obj in _dungeonObjects) Object.Destroy(obj);
+        }
+
+        public List<GameObject> Load(Dungeon dungeon)
         {
             _roomList = dungeon.RoomList;
             _grid = dungeon.Grid.Deserialize();
-            _roomGenerator = new(dungeon.Seed, _tileSize);
-            Random.InitState(dungeon.Seed);
+            _roomGenerator = new(_dungeonData.RoomData, dungeon.Seed, _tileSize);
             _dungeonHolder = new("Dungeon");
             _dungeonObjects = new();
-            GenerateHallwayVarients();
+            Random.InitState(dungeon.Seed);
             GenerateRooms();
             GenerateHallways();
+            return _dungeonObjects;
         }
     }
 }

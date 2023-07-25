@@ -16,10 +16,10 @@ MonoBehaviour:
     Scale: {x: 1, y: 1, z: 1}
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
-    GridSize: 100
+    GridSize: 220
     LoopProabilty: 0.2
-    RoomSize: {x: 4, y: 10}
-    NumberOfRooms: {x: 10, y: 20}
+    RoomSize: {x: 4, y: 8}
+    NumberOfRooms: {x: 150, y: 180}
     NumberOfExits: {x: 2, y: 5}
     RoomSpacing: 2
     StrightHallway: {fileID: 8068585483525543141, guid: 44765bd21a67fb94e983255d1955ce21, type: 3}
@@ -34,7 +34,7 @@ MonoBehaviour:
       HALLWAY_AND_ROOM: 1000000
       ROOM_SPACING: 20
       TURN_PENAILITY: 1
-      HALLWAY_SPACING: 6
+      HALLWAY_SPACING: 10
     AllowGridExtensions: 1
     GridExtensionAmount: 5
     MaxNumberOfRoomPlacementTries: 100
@@ -43,4 +43,58 @@ MonoBehaviour:
     maxSubRoomSize: 0
     proabilityForSplit: 0.5
     useRandomFloorRotation: 1
-    recipes: []
+    recipes:
+    - Objects:
+      - ID: 0
+        GameObject: {fileID: 1280623292940598577, guid: c66a4d9f460b7734fa96cb49f8b9f992, type: 3}
+        Proability: 0.5
+        zone: 0
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding:
+        - ID: 0
+          GameObject: {fileID: 1280623292940598577, guid: c66a4d9f460b7734fa96cb49f8b9f992, type: 3}
+          Proability: 1
+        FillProbability: 1
+        SurroundProbability: 0.2
+      - ID: 1
+        GameObject: {fileID: 2597236283302229396, guid: ee6d807a9c21bff43a8d2ac55c94d4e3, type: 3}
+        Proability: 0.5
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: -0.5
+        Padding: 0
+        Surrounding: []
+        FillProbability: 0.5
+        SurroundProbability: 1
+      Fillables:
+      - Item: {fileID: 3074893473975973668, guid: 46de3ead73e60f14c877473aa3cbae02, type: 3}
+        Probability: 0.531
+        Scale: {x: 1, y: 1, z: 1}
+        Offset: 0
+      - Item: {fileID: 7494977885351949440, guid: 31c7fdcff3b7f8f43bdafc0aa09f9bd9, type: 3}
+        Probability: 0.556
+        Scale: {x: 1, y: 1, z: 1}
+        Offset: 0
+      PlacementProbability:
+        Room: 0.05
+        Edge: 0.03
+    wallObjects:
+    - ID: 0
+      GameObject: {fileID: 1771786041075331442, guid: ba9f765e0efffd2499069b177705ba1f, type: 3}
+      Proability: 1
+    enterenceObjects:
+    - ID: 0
+      GameObject: {fileID: 2857444661267083842, guid: 23005635930eb4d4fabd884350154582, type: 3}
+      Proability: 1
+    floorObjects:
+    - ID: 0
+      GameObject: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
+      Proability: 1
+    pillarObjects:
+    - ID: 0
+      GameObject: {fileID: 2457838449191676406, guid: 782d59ccb21efe449acc0d48274db7ae, type: 3}
+      Proability: 1
+    SubRoomWallObjects: []
+    SubRoomEnterenceObjects: []

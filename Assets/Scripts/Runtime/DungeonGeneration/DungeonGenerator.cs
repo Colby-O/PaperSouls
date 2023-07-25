@@ -32,7 +32,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         public DungeonGenerator(int seed, DungeonData properties, Vector3 tileSize)
         {
-            _roomGenerator = new(seed, new((int)tileSize.x, (int)tileSize.z));
+            _roomGenerator = new(properties.RoomData, seed, new((int)tileSize.x, (int)tileSize.z));
             _roomList = new();
             _paths = new();
             _pathStarts = new();

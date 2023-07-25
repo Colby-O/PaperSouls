@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PaperSouls.Runtime.DungeonGeneration;
 
 namespace PaperSouls.Runtime.Data
 {
@@ -9,8 +10,9 @@ namespace PaperSouls.Runtime.Data
     {
         // Profile ID
         public int ProfileID = -1;
+
         // Seed for the procedual generation
-        public int Seed;
+        public Dungeon Dungeon;
 
         // Player Infomation
         public Vector3 Position;

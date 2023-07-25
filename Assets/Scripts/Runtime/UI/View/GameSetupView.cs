@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using PaperSouls.Core;
 using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.MonoSystems.DataPersistence;
-using PaperSouls.Runtime.MonoSystems.GameState;
+using PaperSouls.Runtime.MonoSystems.DungeonGeneration;
 using PaperSouls.Runtime.Data;
 
 namespace PaperSouls.Runtime.UI.View
@@ -60,13 +60,12 @@ namespace PaperSouls.Runtime.UI.View
             if (_profileName == string.Empty) return;
             if (!_useRandomSeed && _seed == string.Empty) return;
 
-            if (!System.Int32.TryParse(_seed, out int seed) && !_useRandomSeed) return;
+            if (!int.TryParse(_seed, out int seed) && !_useRandomSeed) return;
             if (_useRandomSeed) seed = Random.Range(-1000000, 1000000);
 
 
             GameManager.Emit<ChangeProfileMessage>(new(_profileName));
-            PaperSoulsGameManager.Seed = seed;
-
+            GameManager.Emit<GenerateDungeonMessage>(new(seed));
             GameManager.Emit<StartGameMessage>(new());
         }
 

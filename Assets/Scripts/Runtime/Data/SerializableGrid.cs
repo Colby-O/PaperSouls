@@ -9,8 +9,8 @@ namespace PaperSouls.Runtime.Data
     [System.Serializable]
     internal sealed class SerializableGrid
     {
-        private List<TileType> _tiles;
-        private int _gridSize = 0;
+        [SerializeField] private List<TileType> _tiles;
+        [SerializeField] private int _gridSize = 0;
 
         public SerializableGrid()
         {

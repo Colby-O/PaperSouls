@@ -22,6 +22,11 @@ namespace PaperSouls.Runtime.Data
             ID = roomID;
             State = state;
         }
+
+        public override string ToString()
+        {
+            return $"RoomID: {ID} Position: {Position} Size: {Size}";
+        }
     }
 }
 
