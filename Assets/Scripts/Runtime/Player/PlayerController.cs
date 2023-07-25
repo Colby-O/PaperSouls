@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using PaperSouls.Core;
@@ -142,18 +143,58 @@ namespace PaperSouls.Runtime.Player
         }
 
         /// <summary>
+        /// calculates the raycast to the camera with an offset
+        /// and returns the distance and the resulting position
+        /// of the camera if there was a collision
+        /// </summary>
+        private (float distance, Vector3 newPos) CalculateCameraCollisionWithOffset(Vector3 offset)
+        {
+            Vector3 direction = Camera.main.transform.position + offset - transform.position;
+            Ray ray = new(transform.position, direction.normalized);
+
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, direction.magnitude))
+            {
+                if (hitInfo.transform.tag.CompareTo("Player") == 1) {
+                    return (hitInfo.distance, hitInfo.point - offset);
+                }
+            }
+
+            return (float.MaxValue, Vector3.zero);
+        }
+
+        /// <summary>
         /// Check if there is any object in the way of the cameras view of the player
         /// </summary>
         private void CheckCameriaCollision()
         {
-            Vector3 direction = Camera.main.transform.position - transform.position;
-            Ray ray = new(transform.position, direction.normalized);
+            Camera cam = Camera.main;
+            // calculate the size of the viewport in world space
+            float viewHeight = 2.0f * Mathf.Tan(Mathf.Deg2Rad * cam.fieldOfView * 0.5f) * cam.nearClipPlane;
+            float viewWidth = viewHeight / cam.pixelHeight * cam.pixelWidth;
 
-            Debug.DrawLine(ray.origin, ray.origin + direction.magnitude * ray.direction, Color.blue);
+            // check all 4 corners of the camera viewport in world space
+            // to insure they are not intersecting any objects
+            (float distance, Vector3 newPos)[] corners = {
+                CalculateCameraCollisionWithOffset(
+                    -cam.transform.right * viewWidth / 2.0f + camTransform.up * viewHeight / 2.0f
+                ),
+                CalculateCameraCollisionWithOffset(
+                    cam.transform.right * viewWidth / 2.0f + camTransform.up * viewHeight / 2.0f
+                ),
+                CalculateCameraCollisionWithOffset(
+                    -cam.transform.right * viewWidth / 2.0f - camTransform.up * viewHeight / 2.0f
+                ),
+                CalculateCameraCollisionWithOffset(
+                    cam.transform.right * viewWidth / 2.0f - camTransform.up * viewHeight / 2.0f
+                ),
+            };
 
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, direction.magnitude))
+            if (corners.Any(c => c.distance != float.MaxValue))
             {
-                if (hitInfo.transform.tag.CompareTo("Player") == 1) Camera.main.transform.position = hitInfo.point;
+                // set camera pos to the closest intersection
+                Camera.main.transform.position = corners.Aggregate(
+                    (m, n) => m.distance < n.distance ? m : n
+                ).newPos;
             }
         }
 
