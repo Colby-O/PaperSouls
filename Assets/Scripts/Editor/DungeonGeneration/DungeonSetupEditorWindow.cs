@@ -8,12 +8,12 @@ namespace PaperSouls.PaperSoulsEditor.DungeonGeneration
     {
         private string _assetPath;
 
-        [MenuItem("Window/Dungeon Setup")]
-        public static void OpenWindow(DungeonData data)
-        {
-            DungeonSetupEditorWindow window = GetWindow<DungeonSetupEditorWindow>("Dungeon Setup");
-            window._serializedObject = new SerializedObject(data);
-        }
+        //[MenuItem("Window/Dungeon Setup")]
+        //public static void OpenWindow(DungeonData data)
+        //{
+        //    DungeonSetupEditorWindow window = GetWindow<DungeonSetupEditorWindow>("Dungeon Setup");
+        //    window._serializedObject = new SerializedObject(data);
+        //}
 
         private void OnGUI()
         {

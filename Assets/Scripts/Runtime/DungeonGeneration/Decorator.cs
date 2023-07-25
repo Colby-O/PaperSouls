@@ -16,7 +16,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private RoomZone[,] _grid;
         private GameObject _parent;
         private Vector3 _roomPosition;
-        private Vector3 _roomSize;
+        private Vector2Int _gridSize;
 
 
         public Decorator(int seed, Recipe recipe)
@@ -61,7 +61,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 for (int j = -Mathf.FloorToInt(size.y / 2); j < Mathf.CeilToInt(size.y / 2); j++)
                 {
-                    //Debug.Log(pos.x + i);
                     _grid[pos.x + i, pos.y + j] = RoomZone.Invalid;
                 }
             }
@@ -86,7 +85,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 for (int j = -Mathf.FloorToInt(size.y / 2); j < Mathf.CeilToInt(size.y / 2); j++)
                 {
-                    if (pos.x + i < 0 || pos.y + j < 0 || pos.x + i >= _roomSize.x || pos.y + j >= _roomSize.z) return false;
+                    if (pos.x + i < 0 || pos.y + j < 0 || pos.x + i >= _gridSize.x || pos.y + j >= _gridSize.y) return false;
                 }
             }
             return true;
@@ -95,9 +94,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private Quaternion GetRotation(Vector2Int pos)
         {
             if (pos.y == 0) return Quaternion.Euler(0, 0, 0);
-            else if (pos.y == (int)(_roomSize.z - 1)) return Quaternion.Euler(0, 180, 0);
+            else if (pos.y == (_gridSize.y - 1)) return Quaternion.Euler(0, 180, 0);
             else if (pos.x == 0) return Quaternion.Euler(0, 90, 0);
-            else if (pos.x == (int)(_roomSize.x - 1)) return Quaternion.Euler(0, 270, 0);
+            else if (pos.x == (_gridSize.x - 1)) return Quaternion.Euler(0, 270, 0);
             else
             {
                 int rand = Random.Range(0, 4);
@@ -155,7 +154,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 obj = objectToPlace.Surrounding[Random.Range(0, objectToPlace.Surrounding.Count)];
             } while (obj.Proability < Random.value);
 
-            return obj.Prefab;
+            return obj.GameObject;
         }
 
         public void AddSourroundingObjects(GameObject objectToPlace, DecorationObject parnetObjectPrefab, float placementProbability)
@@ -186,7 +185,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 if (rotation.eulerAngles.y == 90 || rotation.eulerAngles.y == 270) size = new Vector2(objectToPlace.Size.z, objectToPlace.Size.x);
                 else size = new Vector2(objectToPlace.Size.x, objectToPlace.Size.z);
 
-                Vector3 position = _roomPosition + new Vector3(-_roomSize.x / 2f + pos.x + (((int)size.x) % 2 == 1 ? 0.5f : 0), 0, -_roomSize.z / 2f + pos.y + (((int)size.y) % 2 == 1 ? 0.5f : 0));
+                Vector3 position = _roomPosition + new Vector3(-_gridSize.x / 2f + pos.x + (((int)size.x) % 2 == 1 ? 0.5f : 0), 0, -_gridSize.y / 2f + pos.y + (((int)size.y) % 2 == 1 ? 0.5f : 0));
                 if (zone != RoomZone.Edge) { }
                 else if (rotation.eulerAngles.y == 90) position.x += objectToPlace.edgeOffset;
                 else if (rotation.eulerAngles.y == 270) position.x -= objectToPlace.edgeOffset;
@@ -198,12 +197,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     )
                 {
                     AddObjectToGrid(pos, new Vector2(size.x, size.y));
-                    GameObject decorationObj = GameObject.Instantiate(objectToPlace.Prefab, position, rotation);
+                    GameObject decorationObj = Object.Instantiate(objectToPlace.GameObject, position, rotation);
                     decorationObj.transform.parent = _parent.transform;
                     decorationObj.transform.localScale = objectToPlace.Scale;
                     DungeonObject decoration = new(decorationObj, _dectorations.Count);
-                    AddFillables(decoration.Prefab, objectToPlace.FillProbability);
-                    AddSourroundingObjects(decoration.Prefab, objectToPlace, objectToPlace.SurroundProbability);
+                    AddFillables(decoration.GameObject, objectToPlace.FillProbability);
+                    AddSourroundingObjects(decoration.GameObject, objectToPlace, objectToPlace.SurroundProbability);
                     _dectorations.Add(decoration);
                 }
             }
@@ -213,13 +212,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             _dectorations = new();
             _grid = room.Grid.Clone() as RoomZone[,];
-            _roomSize = room.Size;
-            _roomPosition = room.Prefab.transform.position;
+            _gridSize = room.GridSize;
+            _roomPosition = room.Position;
             _parent = new GameObject("dectorations");
 
-            for (int i = 0; i < _roomSize.x; i++)
+            for (int i = 0; i < _gridSize.x; i++)
             {
-                for (int j = 0; j < _roomSize.z; j++)
+                for (int j = 0; j < _gridSize.y; j++)
                 {
                     RoomZone zone = _grid[i, j];
                     float placementProability = ZonePlacementChance(zone);
@@ -231,11 +230,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 }
             }
 
-            _parent.transform.parent = room.Prefab.transform;
+            _parent.transform.parent = room.GameObject.transform;
 
             room.Decorations = _dectorations;
-            room.SetGrid(_grid);
-            //room.DrawZones();
+            room.Grid = _grid;
         }
     }
 }

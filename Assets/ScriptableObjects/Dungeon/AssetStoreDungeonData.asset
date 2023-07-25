@@ -9,24 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33496dacd4c4b644bb38bce2fd9d9d1a, type: 3}
-  m_Name: AssetStoreDungeonData 1
+  m_Script: {fileID: 11500000, guid: a925a714209d5cf4cabeb51b6c5f1abe, type: 3}
+  m_Name: AssetStoreDungeonData
   m_EditorClassIdentifier: 
   DungeonProperties:
     Scale: {x: 1, y: 1, z: 1}
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
-    GridSize: 250
+    GridSize: 240
     LoopProabilty: 0.2
+    AllowGridExtensions: 1
     RoomSize: {x: 4, y: 8}
-    NumberOfRooms: {x: 100, y: 120}
+    NumberOfRooms: {x: 150, y: 180}
     NumberOfExits: {x: 2, y: 5}
     RoomSpacing: 2
-    StrightHallway: {fileID: 8016355262488674176, guid: 8d7bc1e69f7477240b7c2a25d07f13c0, type: 3}
-    CurvedHallway: {fileID: 7576471161998938267, guid: d0745dcfb2be7aa4c9a27a8c74ad62fb, type: 3}
-    ThreeWayHallway: {fileID: 6328252842807809934, guid: c4675cf0a1bf25a459552c646ef12f3e, type: 3}
-    FourWayHallway: {fileID: 5573197932425755762, guid: bec135c8842a12546849ff75120f0f28, type: 3}
-    EnterenceHallway: {fileID: 7980712249837886056, guid: 4675c8d50cb78734ab472512b02722d0, type: 3}
+    StrightHallway: {fileID: 8068585483525543141, guid: 44765bd21a67fb94e983255d1955ce21, type: 3}
+    CurvedHallway: {fileID: 2518497721306097859, guid: 1139cbc340650484ba6afb942f490072, type: 3}
+    ThreeWayHallway: {fileID: 3424373962839084454, guid: 468b5939b767b0d4c8bcc29cedd91a1d, type: 3}
+    FourWayHallway: {fileID: 4882296413225704600, guid: 35a956977509ab643999864a09ee8239, type: 3}
+    EnterenceHallway: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
     Weights:
       EMPTY: 10
       ROOM: 1000000
@@ -34,20 +35,17 @@ MonoBehaviour:
       HALLWAY_AND_ROOM: 1000000
       ROOM_SPACING: 20
       TURN_PENAILITY: 1
-      HALLWAY_SPACING: 6
-    AllowGridExtensions: 1
-    GridExtensionAmount: 50
-    MaxNumberOfRoomPlacementTries: 100
+      HALLWAY_SPACING: 10
   RoomData:
     minSubRoomSize: 4
     maxSubRoomSize: 4
     proabilityForSplit: 0.788
     useRandomFloorRotation: 1
-    recipes:
+    Recipes:
     - Objects:
       - ID: 0
-        Proability: 1
-        _prefab: {fileID: 1092845396861356, guid: 063a04615f0d544caa94d9ee3a5c046c, type: 3}
+        GameObject: {fileID: 1092845396861356, guid: 063a04615f0d544caa94d9ee3a5c046c, type: 3}
+        Proability: 0.5
         zone: 1
         Scale: {x: 1, y: 1, z: 1}
         edgeOffset: 0
@@ -56,8 +54,8 @@ MonoBehaviour:
         FillProbability: 1
         SurroundProbability: 1
       - ID: 1
-        Proability: 1
-        _prefab: {fileID: 395228030810487856, guid: fd3ea3b4c8f35974aa9d1da78c1578c8, type: 3}
+        GameObject: {fileID: 395228030810487856, guid: fd3ea3b4c8f35974aa9d1da78c1578c8, type: 3}
+        Proability: 0.8
         zone: 1
         Scale: {x: 1, y: 1, z: 1}
         edgeOffset: 0
@@ -65,41 +63,31 @@ MonoBehaviour:
         Surrounding: []
         FillProbability: 0.3
         SurroundProbability: 1
-      - ID: 2
-        Proability: 1
-        _prefab: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
-        zone: 0
-        Scale: {x: 1, y: 1, z: 1}
-        edgeOffset: 0
-        Padding: 2
-        Surrounding:
-        - ID: 0
-          Proability: 1
-          _prefab: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
-        FillProbability: 1
-        SurroundProbability: 0.5
       - ID: 3
-        Proability: 0.4
-        _prefab: {fileID: 2585656391134499034, guid: 84ca9004d28f59b48a6042c8a397ea91, type: 3}
+        GameObject: {fileID: 2585656391134499034, guid: 84ca9004d28f59b48a6042c8a397ea91, type: 3}
+        Proability: 0.6
         zone: 0
         Scale: {x: 1, y: 1, z: 1}
         edgeOffset: 0
         Padding: 2
         Surrounding:
         - ID: 0
+          GameObject: {fileID: 1882123684952522, guid: 6aad0d1539fce44149b4630ba73b7462, type: 3}
           Proability: 1
-          _prefab: {fileID: 1882123684952522, guid: 6aad0d1539fce44149b4630ba73b7462, type: 3}
         FillProbability: 0.5
         SurroundProbability: 0.5
       - ID: 4
-        Proability: 1
-        _prefab: {fileID: 7174705083062705454, guid: 1d2f53510b58e9046b4408bc3f6a3b8c, type: 3}
+        GameObject: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
+        Proability: 0.8
         zone: 1
         Scale: {x: 1, y: 1, z: 1}
         edgeOffset: 0
         Padding: 1
-        Surrounding: []
-        FillProbability: 1
+        Surrounding:
+        - ID: 0
+          GameObject: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
+          Proability: 1
+        FillProbability: 0
         SurroundProbability: 1
       Fillables:
       - Item: {fileID: 573380351855779729, guid: 05e8b2a384e99c44bb4326991d444fb5, type: 3}
@@ -131,28 +119,28 @@ MonoBehaviour:
         Edge: 0.07
     wallObjects:
     - ID: 0
-      Proability: 1
-      _prefab: {fileID: 5956329800012508605, guid: 3310f9ed8c4405644a74385a500fa94b, type: 3}
+      GameObject: {fileID: 5956329800012508605, guid: 3310f9ed8c4405644a74385a500fa94b, type: 3}
+      Proability: 0.8
     - ID: 1
-      Proability: 0.3
-      _prefab: {fileID: 6763929914808610939, guid: f7b106931e48ca54981459b3fb666d12, type: 3}
+      GameObject: {fileID: 6763929914808610939, guid: f7b106931e48ca54981459b3fb666d12, type: 3}
+      Proability: 0.2
     enterenceObjects:
     - ID: 0
+      GameObject: {fileID: 6935724315202908233, guid: 2a6a56710ca7b6f46b41f5694fec16a0, type: 3}
       Proability: 1
-      _prefab: {fileID: 6935724315202908233, guid: 2a6a56710ca7b6f46b41f5694fec16a0, type: 3}
     floorObjects:
     - ID: 0
+      GameObject: {fileID: 7980712249837886056, guid: 4675c8d50cb78734ab472512b02722d0, type: 3}
       Proability: 1
-      _prefab: {fileID: 7980712249837886056, guid: 4675c8d50cb78734ab472512b02722d0, type: 3}
     pillarObjects:
     - ID: 0
-      Proability: 0
-      _prefab: {fileID: 6865484016521977728, guid: 14231e7d6e417674ca7f74980a822d06, type: 3}
+      GameObject: {fileID: 6865484016521977728, guid: 14231e7d6e417674ca7f74980a822d06, type: 3}
+      Proability: 1
     SubRoomWallObjects:
     - ID: 1
-      Proability: 0.6
-      _prefab: {fileID: 1074635709969130, guid: 4e836adc931604facb69083321123733, type: 3}
+      GameObject: {fileID: 1074635709969130, guid: 4e836adc931604facb69083321123733, type: 3}
+      Proability: 1
     SubRoomEnterenceObjects:
     - ID: 1
+      GameObject: {fileID: 1233450460934722, guid: 5ff6beab0f3d041d191e1710bcd8f25f, type: 3}
       Proability: 1
-      _prefab: {fileID: 1233450460934722, guid: 5ff6beab0f3d041d191e1710bcd8f25f, type: 3}

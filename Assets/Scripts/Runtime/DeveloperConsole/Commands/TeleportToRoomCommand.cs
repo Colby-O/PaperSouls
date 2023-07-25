@@ -23,7 +23,7 @@ namespace PaperSouls.Runtime.Console
                 return false;
             }
 
-            if(!_dungeonManager.TeleportPlayerToRoom(roomID))
+            if(!_dungeonManager.TeleportTo(roomID))
             {
                 msg = new($"Failed to teleport player to room {roomID}. Check if {roomID} is a vaild ID.", ResponseType.Error);
                 return false;

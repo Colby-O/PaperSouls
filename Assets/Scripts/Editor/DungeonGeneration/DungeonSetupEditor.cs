@@ -10,13 +10,13 @@ namespace PaperSouls.PaperSoulsEditor.DungeonGeneration
         [OnOpenAsset()]
         public static bool OpenEditor(int instanceID, int line)
         {
-            DungeonData obj = EditorUtility.InstanceIDToObject(instanceID) as DungeonData;
-            if (obj)
-            {
-                DungeonSetupEditorWindow.OpenWindow(obj);
-                return true;
-            }
-
+            //DungeonData obj = EditorUtility.InstanceIDToObject(instanceID) as DungeonData;
+            //if (obj)
+            //{
+            //    DungeonSetupEditorWindow.OpenWindow(obj);
+            //    return true;
+            //}
+            //
             return false;
         }
     }
@@ -28,7 +28,7 @@ namespace PaperSouls.PaperSoulsEditor.DungeonGeneration
         {
             if (GUILayout.Button("Open Editor"))
             {
-                DungeonSetupEditorWindow.OpenWindow((DungeonData)target);
+                //DungeonSetupEditorWindow.OpenWindow((DungeonData)target);
             }
         }
     }

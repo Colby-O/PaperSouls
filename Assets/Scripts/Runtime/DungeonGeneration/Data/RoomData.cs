@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [System.Serializable]
-    public class RoomData
+    internal sealed class RoomData
     {
         [Min(1)] public int minSubRoomSize;
         [Min(1)] public int maxSubRoomSize;
@@ -24,7 +24,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         [Range(0, 1)] public float proabilityForSplit = 0.5f;
         public bool useRandomFloorRotation = true;
 
-        public List<Recipe> recipes;
+        public List<Recipe> Recipes;
 
         public List<DungeonObject> wallObjects;
         public List<DungeonObject> enterenceObjects;

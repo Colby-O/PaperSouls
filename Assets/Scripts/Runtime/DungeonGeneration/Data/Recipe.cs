@@ -5,14 +5,14 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [System.Serializable]
-    public sealed class ZonePlacementProbability
+    internal sealed class ZonePlacementProbability
     {
         [Range(0, 1)] public float Room = 1.0f;
         [Range(0, 1)] public float Edge = 1.0f;
     }
 
     [System.Serializable]
-    public class FillableItem
+    internal sealed class FillableItem
     {
         public GameObject Item;
         [Range(0, 1)] public float Probability = 1.0f;
@@ -21,7 +21,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     }
 
     [System.Serializable]
-    public class Recipe
+    internal sealed class Recipe
     {
         public List<DecorationObject> Objects;
         public List<FillableItem> Fillables;

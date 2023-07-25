@@ -7,9 +7,11 @@ using PaperSouls.Runtime.MonoSystems.Audio;
 using PaperSouls.Runtime.MonoSystems.GameState;
 using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.MonoSystems.DataPersistence;
+using PaperSouls.Runtime.MonoSystems.DungeonGeneration;
 using PaperSouls.Runtime.MonoSystems;
 using PaperSouls.Runtime.UI.View;
 using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime
 {
@@ -23,6 +25,7 @@ namespace PaperSouls.Runtime
         [SerializeField] public UIMonoSystem _uiMonoSystem;
         [SerializeField] private GameStateMonoSystem _gameStateMonoSystem;
         [SerializeField] private DataPersistenceMonoSystem _dataPersistenceMonoSystem;
+        [SerializeField] private DungeonMonoSystem _dungeonMonoSystem;
 
         [Header("Databases")]
         [SerializeField] private ItemDatabase _itemDatabase;
@@ -69,10 +72,15 @@ namespace PaperSouls.Runtime
                 if (loadingScreen != null) loadingScreen.IncreaseProgressBar(progress);
                 yield return null;
             }
-            _dataPersistenceMonoSystem.Data.Seed = Seed;
             if (_player == null) _player = GameObject.Find("Player");
+            Emit<LoadDungeonMessage>(new(_dataPersistenceMonoSystem.Data.Dungeon));
+            Emit<StartChunkLoadingMessage>(new());
             Emit<ResetViewMessage>(new());
             Emit<ChangeGameStateMessage>(new(GameStates.Playing));
+            Seed = _dataPersistenceMonoSystem.Data.Dungeon.Seed;
+            // Futrure Bug: If player position is really zero it will bug out.
+            if (_dataPersistenceMonoSystem.Data.Position != Vector3.zero) Player.GetComponent<PlayerController>().TeleportTo(_dataPersistenceMonoSystem.Data.Position);
+            else _dungeonMonoSystem.TeleportTo(0);
         }
 
         /// <summary>
@@ -87,7 +95,9 @@ namespace PaperSouls.Runtime
                 yield return null;
             }
 
+            Emit<LoadDungeonMessage>(new(_dataPersistenceMonoSystem.Data.Dungeon));
             if (_player == null) _player = GameObject.Find("Player");
+            _dungeonMonoSystem.TeleportTo(0);
             Emit<ResetViewMessage>(new());
             Emit<ChangeGameStateMessage>(new(GameStates.Playing));
         }
@@ -139,6 +149,7 @@ namespace PaperSouls.Runtime
             AddMonoSystem<UIMonoSystem, IUIMonoSystem>(_uiMonoSystem);
             AddMonoSystem<GameStateMonoSystem, IGameStateMonoSystem>(_gameStateMonoSystem);
             AddMonoSystem<DataPersistenceMonoSystem, IDataPersistenceMonoSystem>(_dataPersistenceMonoSystem);
+            AddMonoSystem<DungeonMonoSystem, IDungeonMonoSystem>(_dungeonMonoSystem);
         }
 
         protected override string GetApplicationName()

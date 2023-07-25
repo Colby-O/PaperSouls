@@ -1,5 +1,53 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &183635007991249625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3523134416923089852}
+  - component: {fileID: 166349642978401664}
+  m_Layer: 0
+  m_Name: DungeonMonoSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3523134416923089852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183635007991249625}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9112257400000342709}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &166349642978401664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183635007991249625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7e09367930530548a7880378efa4dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultSeed: 0
+  _data: {fileID: 11400000, guid: e6707017cdb879443a10ccca16aa2dfe, type: 2}
+  _tileSize: {x: 4, y: 0, z: 4}
+  _rendererDistance: 100
 --- !u!1 &982150140764461863
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,6 +305,7 @@ MonoBehaviour:
   _uiMonoSystem: {fileID: 8001112089810898255}
   _gameStateMonoSystem: {fileID: 5710553424541729558}
   _dataPersistenceMonoSystem: {fileID: 8469837807348926109}
+  _dungeonMonoSystem: {fileID: 166349642978401664}
   _itemDatabase: {fileID: 11400000, guid: abc1eb9b623590d41b644d8ee4c37207, type: 2}
   _intialState: 1
 --- !u!1 &5046233742367403795
@@ -583,6 +632,7 @@ Transform:
   - {fileID: 4731035149319008076}
   - {fileID: 6542600124146367301}
   - {fileID: 1124792839861520438}
+  - {fileID: 3523134416923089852}
   m_Father: {fileID: 6036856414621031219}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

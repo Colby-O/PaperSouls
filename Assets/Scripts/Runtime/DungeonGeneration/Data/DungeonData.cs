@@ -5,14 +5,16 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [CreateAssetMenu(fileName = "DungeonData", menuName = "Dungeon/Data")]
-    public sealed class DungeonData : ScriptableObject
+    internal sealed class DungeonData : ScriptableObject
     {
         public DungeonProperties DungeonProperties;
         public RoomData RoomData;
 
         private void OnEnable()
         {
-            foreach (Recipe recipe in RoomData.recipes)
+            if (RoomData == null || RoomData.Recipes == null) return;
+            // Calculates the size of each object in the recipe.
+            foreach (Recipe recipe in RoomData.Recipes)
             {
                 recipe.Init();
             }

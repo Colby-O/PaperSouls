@@ -107,7 +107,7 @@ namespace PaperSouls.Runtime.Helpers
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                string dataJSON = JsonUtility.ToJson(data, true);
+                string dataJSON = JsonUtility.ToJson(data, false);
 
                 using FileStream fileStream = new(path, FileMode.Create);
                 if (_encryptData)

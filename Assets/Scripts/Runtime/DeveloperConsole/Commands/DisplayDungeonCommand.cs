@@ -11,7 +11,7 @@ namespace PaperSouls.Runtime.Console
         {
             if (!base.Process(args, out msg)) return false;
 
-            string dungeonLayout = _dungeonManager.ToString();
+            string dungeonLayout = _dungeonManager.DungeonToString();
 
             msg = new(dungeonLayout, ResponseType.Response);
 

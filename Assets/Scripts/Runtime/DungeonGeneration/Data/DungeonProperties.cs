@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [System.Serializable]
-    public class DungeonProperties
+    internal sealed class DungeonProperties
     {
         [Header("Dungeon Properties")]
         public Vector3 Scale = Vector3.one;
@@ -13,6 +13,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public Quaternion Rotation = Quaternion.identity;
         public int GridSize;
         public float LoopProabilty = 0.2f;
+        public bool AllowGridExtensions = true;
 
         [Header("Room Properties")]
         public Vector2Int RoomSize;
@@ -29,8 +30,5 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         [Header("Generation Properties")]
         public TileWeights Weights;
-        public bool AllowGridExtensions = true;
-        public int GridExtensionAmount;
-        public int MaxNumberOfRoomPlacementTries;
     }
 }

@@ -7,6 +7,7 @@ using PaperSouls.Core;
 using PaperSouls.Runtime.Interfaces;
 using PaperSouls.Runtime.MonoSystems.UI;
 using PaperSouls.Runtime.MonoSystems.DataPersistence;
+using PaperSouls.Runtime.MonoSystems.DungeonGeneration;
 using PaperSouls.Runtime.Data;
 
 namespace PaperSouls.Runtime.UI.View
@@ -30,7 +31,6 @@ namespace PaperSouls.Runtime.UI.View
             Debug.Log($"Opening Profile {profileName}");
             GameManager.Emit<SetProfileIDMessage>(new(profileID));
             GameManager.Emit<ChangeProfileMessage>(new(profileName));
-            PaperSoulsGameManager.Seed = profileData.Seed;
             GameManager.Emit<StartGameMessage>(new());
         }
 

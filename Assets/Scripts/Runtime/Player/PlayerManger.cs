@@ -19,11 +19,13 @@ namespace PaperSouls.Runtime.Player
         public InventoryHolder EquipmentInventory;
 
         private float _currentHealth;
+        private float _maxHealth;
         private float _currentXP;
         private float _maxXP;
         private int _level;
         private int _ammoCount = 30;
 
+        private Vector3 lastPos;
         public void SetMaxHealth(float maxHealth)
         {
             PlayerHUD.SetMaxPlayerHealth(maxHealth);
@@ -107,6 +109,8 @@ namespace PaperSouls.Runtime.Player
             data.CurrentXP = _currentXP;
             data.CurrentLevel = PlayerHUD.GetLevel();
             data.AmmoCount = PlayerHUD.GetAmmoCount();
+            data.Position = lastPos;
+            data.MaxHealth = PlayerHUD.GetMaxPlayerHealth();
             return true;
         }
 
@@ -116,6 +120,7 @@ namespace PaperSouls.Runtime.Player
             _currentXP = data.CurrentXP;
             _level = data.CurrentLevel;
             _ammoCount = (data.AmmoCount >= 0) ? data.AmmoCount : _ammoCount;
+            _maxHealth = data.MaxHealth;
             return true;
         }
 
@@ -131,12 +136,13 @@ namespace PaperSouls.Runtime.Player
         private void Start()
         {
             _currentHealth = (_currentHealth <= 0) ? PlayerSettings.health : _currentHealth;
+            _maxHealth = (_maxHealth <= 0) ? PlayerSettings.health : _maxHealth;
             _maxXP = (_level <= 1) ? PlayerSettings.baseXPToLevelUp : PlayerSettings.baseXPToLevelUp + PlayerSettings.xpIncreasePerLevel * (_level - 1);
             _currentXP = (_currentXP <= 0) ? 0 : _currentXP;
 
             PlayerHUD.SetAmmoCount(_ammoCount);
             PlayerHUD.SetLevel(_level);
-            PlayerHUD.SetMaxPlayerHealth(_currentHealth);
+            PlayerHUD.SetMaxPlayerHealth(_maxHealth);
             PlayerHUD.SetMaxPlayerXP(_maxXP);
             PlayerHUD.UpdatePlayerHealth(_currentHealth);
             PlayerHUD.UpdatePlayerXP(_currentXP);
@@ -145,6 +151,7 @@ namespace PaperSouls.Runtime.Player
         private void Update()
         {
             ProcessLevel();
+            lastPos = transform.position;
         }
     }
 }
