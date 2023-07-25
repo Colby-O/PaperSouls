@@ -176,16 +176,16 @@ namespace PaperSouls.Runtime.Player
             // to insure they are not intersecting any objects
             (float distance, Vector3 newPos)[] corners = {
                 CalculateCameraCollisionWithOffset(
-                    -cam.transform.right * viewWidth / 2.0f + camTransform.up * viewHeight / 2.0f
+                    -cam.transform.right * viewWidth / 2.0f + cam.transform.up * viewHeight / 2.0f
                 ),
                 CalculateCameraCollisionWithOffset(
-                    cam.transform.right * viewWidth / 2.0f + camTransform.up * viewHeight / 2.0f
+                    cam.transform.right * viewWidth / 2.0f + cam.transform.up * viewHeight / 2.0f
                 ),
                 CalculateCameraCollisionWithOffset(
-                    -cam.transform.right * viewWidth / 2.0f - camTransform.up * viewHeight / 2.0f
+                    -cam.transform.right * viewWidth / 2.0f - cam.transform.up * viewHeight / 2.0f
                 ),
                 CalculateCameraCollisionWithOffset(
-                    cam.transform.right * viewWidth / 2.0f - camTransform.up * viewHeight / 2.0f
+                    cam.transform.right * viewWidth / 2.0f - cam.transform.up * viewHeight / 2.0f
                 ),
             };
 
