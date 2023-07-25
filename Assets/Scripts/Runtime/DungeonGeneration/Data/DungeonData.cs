@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [CreateAssetMenu(fileName = "DungeonData", menuName = "Dungeon/Data")]
-    public sealed class DungeonData : ScriptableObject
+    internal sealed class DungeonData : ScriptableObject
     {
         public DungeonProperties DungeonProperties;
         public RoomData RoomData;

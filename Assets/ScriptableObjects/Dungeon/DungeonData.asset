@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a925a714209d5cf4cabeb51b6c5f1abe, type: 3}
+  m_Name: DungeonData
+  m_EditorClassIdentifier: 
+  DungeonProperties:
+    Scale: {x: 1, y: 1, z: 1}
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    GridSize: 100
+    LoopProabilty: 0.2
+    RoomSize: {x: 4, y: 10}
+    NumberOfRooms: {x: 10, y: 20}
+    NumberOfExits: {x: 2, y: 5}
+    RoomSpacing: 2
+    StrightHallway: {fileID: 8068585483525543141, guid: 44765bd21a67fb94e983255d1955ce21, type: 3}
+    CurvedHallway: {fileID: 2518497721306097859, guid: 1139cbc340650484ba6afb942f490072, type: 3}
+    ThreeWayHallway: {fileID: 3424373962839084454, guid: 468b5939b767b0d4c8bcc29cedd91a1d, type: 3}
+    FourWayHallway: {fileID: 4882296413225704600, guid: 35a956977509ab643999864a09ee8239, type: 3}
+    EnterenceHallway: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
+    Weights:
+      EMPTY: 10
+      ROOM: 1000000
+      HALLWAY: 5
+      HALLWAY_AND_ROOM: 1000000
+      ROOM_SPACING: 20
+      TURN_PENAILITY: 1
+      HALLWAY_SPACING: 6
+    AllowGridExtensions: 1
+    GridExtensionAmount: 5
+    MaxNumberOfRoomPlacementTries: 100
+  RoomData:
+    minSubRoomSize: 0
+    maxSubRoomSize: 0
+    proabilityForSplit: 0.5
+    useRandomFloorRotation: 1
+    recipes: []

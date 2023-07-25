@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [System.Serializable]
-    public class RoomData
+    internal sealed class RoomData
     {
         [Min(1)] public int minSubRoomSize;
         [Min(1)] public int maxSubRoomSize;

@@ -19135,19 +19135,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1290890150}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20fab61964e07164ab245abb0fba7067, type: 3}
+  m_Script: {fileID: 11500000, guid: dadd0cb45e73f2047997c82b795f545d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RegenerateDungeon: 0
-  _seed: 1
-  _dungeonData: {fileID: 11400000, guid: 5672e533775c96b4ab167e523150f7f1, type: 2}
-  _tileSize: {x: 4, y: 1, z: 4}
-  _player: {fileID: 1757476891}
-  _drawDelaunayTriangulation: 0
-  _drawMST: 0
-  _drawFinalGraph: 0
-  _drawHallwayPaths: 0
-  _drawGridTiles: 0
+  _seed: 0
+  _dungeonData: {fileID: 11400000, guid: e6707017cdb879443a10ccca16aa2dfe, type: 2}
+  _tileSize: {x: 4, y: 0, z: 4}
 --- !u!1 &1306555341
 GameObject:
   m_ObjectHideFlags: 0

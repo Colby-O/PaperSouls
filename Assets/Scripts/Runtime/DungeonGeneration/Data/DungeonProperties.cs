@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PaperSouls.Runtime.DungeonGeneration
 {
     [System.Serializable]
-    public class DungeonProperties
+    internal sealed class DungeonProperties
     {
         [Header("Dungeon Properties")]
         public Vector3 Scale = Vector3.one;

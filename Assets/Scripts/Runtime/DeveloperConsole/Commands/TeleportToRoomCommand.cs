@@ -23,11 +23,11 @@ namespace PaperSouls.Runtime.Console
                 return false;
             }
 
-            if(!_dungeonManager.TeleportPlayerToRoom(roomID))
-            {
-                msg = new($"Failed to teleport player to room {roomID}. Check if {roomID} is a vaild ID.", ResponseType.Error);
-                return false;
-            }
+            //if(!_dungeonManager.TeleportPlayerToRoom(roomID))
+            //{
+            //    msg = new($"Failed to teleport player to room {roomID}. Check if {roomID} is a vaild ID.", ResponseType.Error);
+            //    return false;
+            //}
 
             msg = new(ResponseType.None);
 
