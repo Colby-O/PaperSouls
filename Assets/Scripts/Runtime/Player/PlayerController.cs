@@ -8,6 +8,7 @@ using PaperSouls.Runtime.Inventory;
 using PaperSouls.Runtime.Items;
 using PaperSouls.Runtime.MonoSystems.Audio;
 using PaperSouls.Runtime.MonoSystems.GameState;
+using PaperSouls.Runtime.MonoSystems.DungeonGeneration;
 
 namespace PaperSouls.Runtime.Player
 {
@@ -250,11 +251,13 @@ namespace PaperSouls.Runtime.Player
 
         public void TeleportTo(Vector3 pos)
         {
+            GameManager.Emit<StopChunkLoadingMessage>(new());
             _characterController.enabled = false;
 
             transform.position = pos;
 
             _characterController.enabled = true;
+            GameManager.Emit<StartChunkLoadingMessage>(new());
         }
 
         protected override void Awake()

@@ -89,6 +89,8 @@ namespace PaperSouls.Runtime.MonoSystems.DungeonGeneration
                 PlayerController player = PaperSoulsGameManager.Player.GetComponent<PlayerController>();
                 if (player != null)
                 {
+                    SerializableRoom room = _dungeon.RoomList.Find(room => room.ID == id);
+                    if (room == null) return false;
                     Vector3 roomPosition = _dungeon.RoomList.Find(room => room.ID == id).Position;
                     roomPosition.y += 0.5f;
                     player.TeleportTo(roomPosition);
@@ -135,6 +137,7 @@ namespace PaperSouls.Runtime.MonoSystems.DungeonGeneration
         {
             List<GameObject> objectToRemove = new();
 
+            // Deactivates the object far away from the player
             if (PaperSoulsGameManager.Player != null && _dungeonObjects != null && _dungeonObjects.Count > 0)
             {
                 foreach (GameObject obj in _dungeonObjects)
@@ -154,6 +157,7 @@ namespace PaperSouls.Runtime.MonoSystems.DungeonGeneration
 
             yield return new WaitForSeconds(0.01f);
 
+            // Check if any dungeon objects were deleted for whatever reason
             if (objectToRemove.Count > 0)
             {
                 foreach (GameObject obj in objectToRemove)
@@ -164,7 +168,7 @@ namespace PaperSouls.Runtime.MonoSystems.DungeonGeneration
 
             yield return new WaitForSeconds(0.01f);
 
-            StartCoroutine(CheckActivation());
+            StartCoroutine(nameof(CheckActivation));
         }
 
 

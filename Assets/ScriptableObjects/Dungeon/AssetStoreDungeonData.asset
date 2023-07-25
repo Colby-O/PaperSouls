@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a925a714209d5cf4cabeb51b6c5f1abe, type: 3}
+  m_Name: AssetStoreDungeonData
+  m_EditorClassIdentifier: 
+  DungeonProperties:
+    Scale: {x: 1, y: 1, z: 1}
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    GridSize: 240
+    LoopProabilty: 0.2
+    AllowGridExtensions: 1
+    RoomSize: {x: 4, y: 8}
+    NumberOfRooms: {x: 150, y: 180}
+    NumberOfExits: {x: 2, y: 5}
+    RoomSpacing: 2
+    StrightHallway: {fileID: 8068585483525543141, guid: 44765bd21a67fb94e983255d1955ce21, type: 3}
+    CurvedHallway: {fileID: 2518497721306097859, guid: 1139cbc340650484ba6afb942f490072, type: 3}
+    ThreeWayHallway: {fileID: 3424373962839084454, guid: 468b5939b767b0d4c8bcc29cedd91a1d, type: 3}
+    FourWayHallway: {fileID: 4882296413225704600, guid: 35a956977509ab643999864a09ee8239, type: 3}
+    EnterenceHallway: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
+    Weights:
+      EMPTY: 10
+      ROOM: 1000000
+      HALLWAY: 5
+      HALLWAY_AND_ROOM: 1000000
+      ROOM_SPACING: 20
+      TURN_PENAILITY: 1
+      HALLWAY_SPACING: 10
+  RoomData:
+    minSubRoomSize: 4
+    maxSubRoomSize: 4
+    proabilityForSplit: 0.788
+    useRandomFloorRotation: 1
+    Recipes:
+    - Objects:
+      - ID: 0
+        GameObject: {fileID: 1092845396861356, guid: 063a04615f0d544caa94d9ee3a5c046c, type: 3}
+        Proability: 0.5
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 0
+        Surrounding: []
+        FillProbability: 1
+        SurroundProbability: 1
+      - ID: 1
+        GameObject: {fileID: 395228030810487856, guid: fd3ea3b4c8f35974aa9d1da78c1578c8, type: 3}
+        Proability: 0.8
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding: []
+        FillProbability: 0.3
+        SurroundProbability: 1
+      - ID: 3
+        GameObject: {fileID: 2585656391134499034, guid: 84ca9004d28f59b48a6042c8a397ea91, type: 3}
+        Proability: 0.6
+        zone: 0
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 2
+        Surrounding:
+        - ID: 0
+          GameObject: {fileID: 1882123684952522, guid: 6aad0d1539fce44149b4630ba73b7462, type: 3}
+          Proability: 1
+        FillProbability: 0.5
+        SurroundProbability: 0.5
+      - ID: 4
+        GameObject: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
+        Proability: 0.8
+        zone: 1
+        Scale: {x: 1, y: 1, z: 1}
+        edgeOffset: 0
+        Padding: 1
+        Surrounding:
+        - ID: 0
+          GameObject: {fileID: 1461943976964086610, guid: e932398e4d76db84888abd6092a2b522, type: 3}
+          Proability: 1
+        FillProbability: 0
+        SurroundProbability: 1
+      Fillables:
+      - Item: {fileID: 573380351855779729, guid: 05e8b2a384e99c44bb4326991d444fb5, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.2
+      - Item: {fileID: 573380351855779729, guid: 1bb36f1efa6588547952253bb594864b, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.2
+      - Item: {fileID: 60430134869750427, guid: 195f439e6e01c2844b3e337425f9cae2, type: 3}
+        Probability: 1
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.2
+      - Item: {fileID: 5051164189392831580, guid: 16c6c30cb5aec674e967b65dd9388b85, type: 3}
+        Probability: 0.5
+        Scale: {x: 1.5, y: 1.5, z: 1.5}
+        Offset: 0.25
+      - Item: {fileID: 230301453563810707, guid: 4b0c3e090cb1d5f478cfd107b788995c, type: 3}
+        Probability: 0.5
+        Scale: {x: 3, y: 3, z: 3}
+        Offset: 0.2
+      - Item: {fileID: 1299813586667246, guid: 1491530b488d043f1970cfdacf1ca889, type: 3}
+        Probability: 1
+        Scale: {x: 0.8, y: 0.8, z: 0.8}
+        Offset: 0
+      PlacementProbability:
+        Room: 0.026
+        Edge: 0.07
+    wallObjects:
+    - ID: 0
+      GameObject: {fileID: 5956329800012508605, guid: 3310f9ed8c4405644a74385a500fa94b, type: 3}
+      Proability: 0.8
+    - ID: 1
+      GameObject: {fileID: 6763929914808610939, guid: f7b106931e48ca54981459b3fb666d12, type: 3}
+      Proability: 0.2
+    enterenceObjects:
+    - ID: 0
+      GameObject: {fileID: 6935724315202908233, guid: 2a6a56710ca7b6f46b41f5694fec16a0, type: 3}
+      Proability: 1
+    floorObjects:
+    - ID: 0
+      GameObject: {fileID: 7980712249837886056, guid: 4675c8d50cb78734ab472512b02722d0, type: 3}
+      Proability: 1
+    pillarObjects:
+    - ID: 0
+      GameObject: {fileID: 6865484016521977728, guid: 14231e7d6e417674ca7f74980a822d06, type: 3}
+      Proability: 1
+    SubRoomWallObjects:
+    - ID: 1
+      GameObject: {fileID: 1074635709969130, guid: 4e836adc931604facb69083321123733, type: 3}
+      Proability: 1
+    SubRoomEnterenceObjects:
+    - ID: 1
+      GameObject: {fileID: 1233450460934722, guid: 5ff6beab0f3d041d191e1710bcd8f25f, type: 3}
+      Proability: 1

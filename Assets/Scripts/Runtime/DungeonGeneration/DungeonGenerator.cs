@@ -9,6 +9,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
 {
     internal sealed class DungeonGenerator
     {
+        // Constants
+        public const int GridExtensionAmount = 10;
+        public const int MaxNumberOfRoomPlacementTries = 100;
+
         // Properties
         private int _seed;
         private DungeonData _dungeonData;
@@ -54,8 +58,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 }
             }
         }
-
-
 
         /// <summary>
         /// Create a new room given a prefab, position, scale, and id
@@ -123,7 +125,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             TileType[,] oldGrid = _grid.Clone() as TileType[,];
             int oldGridSize = _dungeonData.DungeonProperties.GridSize;
-            _dungeonData.DungeonProperties.GridSize += _dungeonData.DungeonProperties.GridExtensionAmount;
+            _dungeonData.DungeonProperties.GridSize += GridExtensionAmount;
             _grid = new TileType[_dungeonData.DungeonProperties.GridSize, _dungeonData.DungeonProperties.GridSize];
 
             for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
@@ -177,7 +179,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 roomSize = GetVaildRoomSize();
 
                 numberOfPlacementTries += 1;
-                if (_dungeonData.DungeonProperties.MaxNumberOfRoomPlacementTries < numberOfPlacementTries)
+                if (MaxNumberOfRoomPlacementTries < numberOfPlacementTries)
                 {
                     if (!_dungeonData.DungeonProperties.AllowGridExtensions) break;
                     ExtendGridSize();
@@ -271,7 +273,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Place a allway along a path
         /// </summary>
-        private void AddHallwayToGrid(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start, Vector2Int end)
+        private void AddHallwayToGrid(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int start)
         {
             Vector2Int gridPT = start;
             while (true)
@@ -281,7 +283,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 if (!cameFrom.ContainsKey(gridPT)) break;
                 else gridPT = cameFrom[gridPT];
             }
-            //AddHallwayTileToGrid(end);
         }
 
         /// <summary>
@@ -302,7 +303,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _pathEnds.Add(end);
             _paths.Add(path);
 
-            AddHallwayToGrid(path, end, start);
+            AddHallwayToGrid(path, end);
         }
 
         /// <summary>
@@ -322,6 +323,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return false;
         }
 
+        /// <summary>
+        /// Generates room data
+        /// </summary>
         private void PlaceRooms()
         {
             int numberOfRooms = Random.Range(
@@ -339,7 +343,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         }
 
         /// <summary>
-        /// 
+        /// Determines which room are connected
         /// </summary>
         private void ConstructLayout()
         {
@@ -383,7 +387,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         }
 
         /// <summary>
-        /// 
+        /// Find path the hallways will take between connecting rooms
         /// </summary>
         private void ConstructHallways()
         {
@@ -410,7 +414,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 int numberOfTries = 0;
                 while (room.ExitsUsed != room.Exits.Count)
                 {
-                    if (numberOfTries > _dungeonData.DungeonProperties.MaxNumberOfRoomPlacementTries)
+                    if (numberOfTries > MaxNumberOfRoomPlacementTries)
                     {
                         if (!_dungeonData.DungeonProperties.AllowGridExtensions) break;
                         numberOfTries = 0;

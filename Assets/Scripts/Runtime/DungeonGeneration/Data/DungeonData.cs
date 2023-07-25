@@ -12,7 +12,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         private void OnEnable()
         {
-            foreach (Recipe recipe in RoomData.recipes)
+            if (RoomData == null || RoomData.Recipes == null) return;
+            // Calculates the size of each object in the recipe.
+            foreach (Recipe recipe in RoomData.Recipes)
             {
                 recipe.Init();
             }

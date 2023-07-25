@@ -340,16 +340,29 @@ namespace PaperSouls.Runtime.DungeonGeneration
             switch (RoomSide)
             {
                 case RoomSide.Right:
-                    AddEnterenceToGrid(new Vector2Int(wallIndex * Mathf.RoundToInt(_scale.x * _tileSize.x), _roomSize.y - _tileSize.y - 1), new Vector2Int((int)(_scale.x * _tileSize.x), 1));
+                    AddEnterenceToGrid(
+                        new Vector2Int(wallIndex * Mathf.RoundToInt(_scale.x * _tileSize.x), _roomSize.y - _tileSize.y - 1), 
+                        new Vector2Int((int)(_scale.x * _tileSize.x), 1)
+                    );
                     break;
                 case RoomSide.Bottom:
-                    AddEnterenceToGrid(new Vector2Int(_roomSize.x - _tileSize.x - 1, wallIndex * Mathf.RoundToInt(_scale.y * _tileSize.y)), new Vector2Int(1, (int)(_scale.y * _tileSize.y)));
+                    AddEnterenceToGrid(
+                        new Vector2Int(_roomSize.x - _tileSize.x - 1, wallIndex * Mathf.RoundToInt(_scale.y * _tileSize.y)), 
+                        new Vector2Int(1, (int)(_scale.y * _tileSize.y))
+                    );
                     break;
                 case RoomSide.Left:
-                    AddEnterenceToGrid(new Vector2Int(wallIndex * Mathf.RoundToInt(_scale.x * _tileSize.x), 0), new Vector2Int((int)(_scale.x * _tileSize.x), 1));
+                    AddEnterenceToGrid(new Vector2Int(
+                        wallIndex * Mathf.RoundToInt(_scale.x * _tileSize.x), 0),
+                        new Vector2Int((int)(_scale.x * _tileSize.x),
+                        1)
+                    );
                     break;
                 case RoomSide.Top:
-                    AddEnterenceToGrid(new Vector2Int(0, wallIndex * Mathf.RoundToInt(_scale.y * _tileSize.y)), new Vector2Int(1, (int)(_scale.y * _tileSize.y)));
+                    AddEnterenceToGrid(
+                        new Vector2Int(0, wallIndex * Mathf.RoundToInt(_scale.y * _tileSize.y)),
+                        new Vector2Int(1, (int)(_scale.y * _tileSize.y))
+                    );
                     break;
             }
         }
@@ -434,10 +447,14 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
         }
 
+        /// <summary>
+        /// Generates the GameObject for a room
+        /// </summary>
         private void GenerateRoom()
         {
             CreateWalls();
             CreateFloors();
+            // Not Working
             //AddSubroomsToGrid();
             //GenerateSubRooms()
         }
@@ -450,6 +467,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             Random.State state = Random.state;
             Initialization(positon, size, numEnterences);
             List<Vector3> exits = GenerateExitLocations();
+            for (int i = 0; i < exits.Count; i++) exits[i] += _roomPosition;
             return new Room(positon, size, exits, state, id);
         }
 
@@ -474,7 +492,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             Room room = GenerateRoomObject(positon, size, numEnterences, id);
 
-            Decorator decorator = new(Random.Range(-10000, 10000), _roomData.recipes[Random.Range(0, _roomData.recipes.Count)]);
+            Decorator decorator = new(Random.Range(-10000, 10000), _roomData.Recipes[Random.Range(0, _roomData.Recipes.Count)]);
 
             InitializeHolders(id);
             GenerateRoom();

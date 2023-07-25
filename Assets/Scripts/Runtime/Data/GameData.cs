@@ -15,10 +15,11 @@ namespace PaperSouls.Runtime.Data
         public Dungeon Dungeon;
 
         // Player Infomation
-        public Vector3 Position;
+        public Vector3 Position = Vector3.zero;
         public int CurrentLevel = -1;
         public int AmmoCount = -1;
         public float CurrentHealth = -1;
+        public float MaxHealth = -1;
         public float CurrentXP = -1;
     }
 }

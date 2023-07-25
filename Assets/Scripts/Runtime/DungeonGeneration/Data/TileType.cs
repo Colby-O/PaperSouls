@@ -6,11 +6,29 @@ namespace PaperSouls.Runtime.DungeonGeneration
 {
     internal enum TileType : int
     {
+        /// <summary>
+        /// Empty Tile Slot
+        /// </summary>
         Empty,
+        /// <summary>
+        /// Room Tile
+        /// </summary>
         Room,
+        /// <summary>
+        /// Hallway Tile
+        /// </summary>
         Hallway,
+        /// <summary>
+        /// Hallway and Room Tile Overlap
+        /// </summary>
         HallwayAndRoom,
+        /// <summary>
+        /// Tile Next To Room
+        /// </summary>
         RoomSpacing,
+        /// <summary>
+        /// Tile Next To Hallway
+        /// </summary>
         HallwaySpacing
     }
 

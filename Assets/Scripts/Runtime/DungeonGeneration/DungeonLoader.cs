@@ -33,11 +33,17 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _tileSize = new((int)tileSize.x, (int)tileSize.z);
         }
 
+        /// <summary>
+        /// Creates a copy of a Hallway with rotation y.
+        /// </summary>
         private GameObject InstantiateHallwayPrefab(GameObject obj, float y)
         {
             return Object.Instantiate(obj, Vector3.zero, Quaternion.Euler(0f, y, 0f));
         }
 
+        /// <summary>
+        /// Creates Different Hallway vairents from a single rotation
+        /// </summary>
         private void GenerateHallwayVarients()
         {
             _hallwayVarients = new()
@@ -60,6 +66,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 InstantiateHallwayPrefab(_dungeonData.DungeonProperties.FourWayHallway, 0f)
             };
 
+            // Hides each of the hallway vairents in the scene
             foreach (GameObject hallway in _hallwayVarients)
             {
                 if (hallway != null)
@@ -135,16 +142,22 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _dungeonObjects.Add(hallwayObject);
         }
 
+        /// <summary>
+        /// Places the rooms
+        /// </summary>
         private void GenerateRooms()
         {
             foreach (SerializableRoom room in _roomList)
             {
-                GameObject roomObj = _roomGenerator.GenerateFromRoom(room, false).GameObject;
+                GameObject roomObj = _roomGenerator.GenerateFromRoom(room).GameObject;
                 roomObj.transform.parent = _dungeonHolder.transform;
                 _dungeonObjects.Add(roomObj);
             }
         }
 
+        /// <summary>
+        /// Places the hallways
+        /// </summary>
         private void GenerateHallways()
         {
             GenerateHallwayVarients();
@@ -163,11 +176,17 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
         }
 
+        /// <summary>
+        /// Unloads the current dungeon
+        /// </summary>
         public void Unload()
         {
             foreach (GameObject obj in _dungeonObjects) Object.Destroy(obj);
         }
 
+        /// <summary>
+        /// Loads a dungeon given dungeon object
+        /// </summary>
         public List<GameObject> Load(Dungeon dungeon)
         {
             _roomList = dungeon.RoomList;

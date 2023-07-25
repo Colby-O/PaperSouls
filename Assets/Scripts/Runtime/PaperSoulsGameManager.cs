@@ -11,6 +11,7 @@ using PaperSouls.Runtime.MonoSystems.DungeonGeneration;
 using PaperSouls.Runtime.MonoSystems;
 using PaperSouls.Runtime.UI.View;
 using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.Player;
 
 namespace PaperSouls.Runtime
 {
@@ -77,7 +78,9 @@ namespace PaperSouls.Runtime
             Emit<ResetViewMessage>(new());
             Emit<ChangeGameStateMessage>(new(GameStates.Playing));
             Seed = _dataPersistenceMonoSystem.Data.Dungeon.Seed;
-            _dungeonMonoSystem.TeleportTo(0);
+            // Futrure Bug: If player position is really zero it will bug out.
+            if (_dataPersistenceMonoSystem.Data.Position != Vector3.zero) Player.GetComponent<PlayerController>().TeleportTo(_dataPersistenceMonoSystem.Data.Position);
+            else _dungeonMonoSystem.TeleportTo(0);
         }
 
         /// <summary>

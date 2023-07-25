@@ -13,6 +13,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public Quaternion Rotation = Quaternion.identity;
         public int GridSize;
         public float LoopProabilty = 0.2f;
+        public bool AllowGridExtensions = true;
 
         [Header("Room Properties")]
         public Vector2Int RoomSize;
@@ -29,8 +30,5 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         [Header("Generation Properties")]
         public TileWeights Weights;
-        public bool AllowGridExtensions = true;
-        public int GridExtensionAmount;
-        public int MaxNumberOfRoomPlacementTries;
     }
 }
