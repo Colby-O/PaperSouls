@@ -9,6 +9,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     internal sealed class Dungeon 
     {
         public int Seed;
+        public int GridSize;
         public SerializableGrid Grid;
         public List<SerializableRoom> RoomList;
 
@@ -19,10 +20,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
             RoomList = new List<SerializableRoom>();
         }
 
-        public Dungeon(List<SerializableRoom> roomList, SerializableGrid grid, int seed)
+        public Dungeon(List<SerializableRoom> roomList, SerializableGrid grid, int gridSize, int seed)
         {
             Seed = seed;
             Grid = grid;
+            GridSize = gridSize;
             RoomList = roomList;
         }
     }

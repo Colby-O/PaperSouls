@@ -34,7 +34,7 @@ namespace PaperSouls.Runtime.MonoSystems.DungeonGeneration
         {
             _loader = new(_data, _tileSize);
 
-            if (_dungeon.Grid.Deserialize() == null || _dungeon.RoomList.Count == 0)
+            if (_dungeon.Grid.Empty() || _dungeon.RoomList.Count == 0)
             {
                 Debug.LogWarning($"No Dungeon Saved! Generating new dungeon with default seed {_defaultSeed}.");
                 _generator = new(_defaultSeed, _data, _tileSize);

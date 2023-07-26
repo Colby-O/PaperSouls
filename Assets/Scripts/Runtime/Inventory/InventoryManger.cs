@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using PaperSouls.Runtime.Items;
+using PaperSouls.Runtime.Data;
 
 namespace PaperSouls.Runtime.Inventory
 {
@@ -32,6 +33,15 @@ namespace PaperSouls.Runtime.Inventory
             InventorySlots = new(size);
 
             for (int i = 0; i < size; i++) InventorySlots.Add(new());
+        }
+
+        /// <summary>
+        /// Deseralize a List of Seralizanble inventory slots
+        /// </summary>
+        public InventoryManger(List<SerializableInventorySlot> slots)
+        {
+            InventorySlots = new();
+            foreach (SerializableInventorySlot slot in slots) InventorySlots.Add(slot.Deserialize());
         }
 
         /// <summary>
@@ -152,6 +162,13 @@ namespace PaperSouls.Runtime.Inventory
             }
 
             return true;
+        }
+
+        public List<SerializableInventorySlot> Seralize()
+        {
+            List<SerializableInventorySlot> serializableSlots = new();
+            foreach (InventorySlot slot in InventorySlots) serializableSlots.Add(new((slot.ItemData != null) ? slot.ItemData.id : -1, slot.StackSize)); 
+            return serializableSlots;
         }
     }
 }

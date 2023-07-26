@@ -12,6 +12,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
         private Vector2Int _tileSize;
         private TileType[,] _grid;
+        private int _gridSize;
         private List<SerializableRoom> _roomList;
 
         List<GameObject> _hallwayVarients;
@@ -105,7 +106,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    if (pos.x + i < _dungeonData.DungeonProperties.GridSize && pos.y + j < _dungeonData.DungeonProperties.GridSize && pos.x + i >= 0 && pos.y + j >= 0) tiles[i + 1, j + 1] = _grid[pos.x + i, pos.y + j];
+                    if (pos.x + i < _gridSize && pos.y + j < _gridSize && pos.x + i >= 0 && pos.y + j >= 0) tiles[i + 1, j + 1] = _grid[pos.x + i, pos.y + j];
                     else tiles[i + 1, j + 1] = TileType.Empty;
                 }
             }
@@ -162,16 +163,16 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             GenerateHallwayVarients();
 
-            for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
+            for (int i = 0; i < _gridSize; i++)
             {
-                for (int j = 0; j < _dungeonData.DungeonProperties.GridSize; j++)
+                for (int j = 0; j < _gridSize; j++)
                 {
                     Vector2Int gridPos = new Vector2Int(i, j);
                     TileType[,] tiles = GetSurroundingTiles(gridPos);
 
                     int key = GetHallwayOrention(tiles);
 
-                    if (_grid[i, j] == TileType.Hallway) CreateHallwayMesh(gridPos, key, i * _dungeonData.DungeonProperties.GridSize + j);
+                    if (_grid[i, j] == TileType.Hallway) CreateHallwayMesh(gridPos, key, i * _gridSize + j);
                 }
             }
         }
@@ -191,6 +192,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         {
             _roomList = dungeon.RoomList;
             _grid = dungeon.Grid.Deserialize();
+            _gridSize = dungeon.GridSize;
             _roomGenerator = new(_dungeonData.RoomData, dungeon.Seed, _tileSize);
             _dungeonHolder = new("Dungeon");
             _dungeonObjects = new();

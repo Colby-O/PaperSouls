@@ -17,7 +17,7 @@ namespace PaperSouls.Runtime.UI.Inventory
         {
             _slotDictionary = new();
 
-            if (_slots.Length != inventory.NumOfInventorySlots) Debug.Log($"Inventory _slots out of sync on {this.gameObject}");
+            if (_slots.Length != inventory.NumOfInventorySlots) Debug.LogError($"Inventory _slots out of sync on {this.gameObject}");
 
             for (int i = 0; i < inventory.NumOfInventorySlots; i++)
             {
@@ -27,18 +27,26 @@ namespace PaperSouls.Runtime.UI.Inventory
             }
         }
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
 
-            if (_inventoryHolder != null)
+            if (_inventoryHolder != null &&
+                _inventoryHolder.InventoryManger != null &&
+                _slots.Length == _inventoryHolder.InventoryManger.NumOfInventorySlots
+            )
+            {
+                _inventoryManger = _inventoryHolder.InventoryManger;
+                _inventoryManger.OnInventoryChange += UpdateSlot;
+            }
+            else if (_inventoryHolder != null)
             {
                 if (GetComponent<GridLayoutGroup>() != null) _inventoryHolder.ResizeInventory(GridLayoutGroupHelper.GetSize(GetComponent<GridLayoutGroup>()));
                 else _inventoryHolder.ResizeInventory(new Vector2Int(_slots.Length, 1));
                 _inventoryManger = _inventoryHolder.InventoryManger;
                 _inventoryManger.OnInventoryChange += UpdateSlot;
             }
-            else Debug.Log($"No inventory assigned to {this.gameObject}");
+            else Debug.LogError($"No inventory assigned to {this.gameObject}");
 
             AssignSlot(_inventoryManger);
         }
