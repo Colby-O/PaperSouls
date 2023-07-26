@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PaperSouls.Runtime.DungeonGeneration;
+using PaperSouls.Runtime.Inventory;
 
 namespace PaperSouls.Runtime.Data
 {
@@ -21,5 +22,7 @@ namespace PaperSouls.Runtime.Data
         public float CurrentHealth = -1;
         public float MaxHealth = -1;
         public float CurrentXP = -1;
+        public List<SerializableInventorySlot> ItemInventory = null;
+        public List<SerializableInventorySlot> EquipmentInventory = null;
     }
 }

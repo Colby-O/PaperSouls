@@ -43,7 +43,7 @@ namespace PaperSouls.Runtime.Items
         }
     }
 
-    [CreateAssetMenu(fileName = "Item", menuName = "Items/Item", order = 1)]
+    [System.Serializable, CreateAssetMenu(fileName = "Item", menuName = "Items/Item", order = 1)]
     internal class Item : ScriptableObject
     {
         [Header("Header Infomation")]

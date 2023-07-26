@@ -15,8 +15,8 @@ namespace PaperSouls.Runtime.Player
         public PlayerSettings PlayerSettings;
         public PlayerHUDManger PlayerHUD;
 
-        public InventoryHolder ItemInventory;
-        public InventoryHolder EquipmentInventory;
+        public InventoryHolder ItemInventory = null;
+        public InventoryHolder EquipmentInventory = null;
 
         private float _currentHealth;
         private float _maxHealth;
@@ -111,6 +111,8 @@ namespace PaperSouls.Runtime.Player
             data.AmmoCount = PlayerHUD.GetAmmoCount();
             data.Position = lastPos;
             data.MaxHealth = PlayerHUD.GetMaxPlayerHealth();
+            data.ItemInventory = ItemInventory.InventoryManger.Seralize();
+            data.EquipmentInventory = EquipmentInventory.InventoryManger.Seralize();
             return true;
         }
 
@@ -121,6 +123,8 @@ namespace PaperSouls.Runtime.Player
             _level = data.CurrentLevel;
             _ammoCount = (data.AmmoCount >= 0) ? data.AmmoCount : _ammoCount;
             _maxHealth = data.MaxHealth;
+            if (data.ItemInventory != null && data.ItemInventory.Count != 0) ItemInventory.InventoryManger = new(data.ItemInventory);
+            if (data.EquipmentInventory != null && data.EquipmentInventory.Count != 0) EquipmentInventory.InventoryManger = new(data.EquipmentInventory);
             return true;
         }
 

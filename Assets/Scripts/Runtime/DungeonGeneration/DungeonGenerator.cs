@@ -21,6 +21,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         // Dungeon Components
         private List<Room> _roomList;
         private TileType[,] _grid;
+        private int _gridSize;
 
         // Helper Classes
         private DelaunayTriangulation _triangulation;
@@ -48,11 +49,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             Random.InitState(_seed);
 
-            _grid = new TileType[_dungeonData.DungeonProperties.GridSize, _dungeonData.DungeonProperties.GridSize];
+            _gridSize = _dungeonData.DungeonProperties.GridSize;
+            _grid = new TileType[_gridSize, _gridSize];
 
-            for (int j = 0; j < _dungeonData.DungeonProperties.GridSize; j++)
+            for (int j = 0; j < _gridSize; j++)
             {
-                for (int k = 0; k < _dungeonData.DungeonProperties.GridSize; k++)
+                for (int k = 0; k < _gridSize; k++)
                 {
                     _grid[j, k] = TileType.Empty;
                 }
@@ -83,9 +85,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 for (int k = -(roomSize.y + minRoomSpacing) / 2; k < (roomSize.y + minRoomSpacing) / 2; k++)
                 {
                     if (
-                        roomPosition.x + j >= _dungeonData.DungeonProperties.GridSize || 
+                        roomPosition.x + j >= _gridSize || 
                         roomPosition.x + j < 0 || 
-                        roomPosition.y + k >= _dungeonData.DungeonProperties.GridSize || 
+                        roomPosition.y + k >= _gridSize || 
                         roomPosition.y + k < 0
                     )
                     {
@@ -124,11 +126,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
         void ExtendGridSize()
         {
             TileType[,] oldGrid = _grid.Clone() as TileType[,];
-            int oldGridSize = _dungeonData.DungeonProperties.GridSize;
-            _dungeonData.DungeonProperties.GridSize += GridExtensionAmount;
-            _grid = new TileType[_dungeonData.DungeonProperties.GridSize, _dungeonData.DungeonProperties.GridSize];
+            int oldGridSize = _gridSize;
+            _gridSize += GridExtensionAmount;
+            _grid = new TileType[_gridSize, _gridSize];
 
-            for (int i = 0; i < _dungeonData.DungeonProperties.GridSize; i++)
+            for (int i = 0; i < _gridSize; i++)
             {
                 for (int j = 0; j < oldGridSize; j++)
                 {
@@ -172,8 +174,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             do
             {
                 roomPosition = new(
-                    Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10), 
-                    Random.Range(10, _dungeonData.DungeonProperties.GridSize - 10)
+                    Random.Range(10, _gridSize - 10), 
+                    Random.Range(10, _gridSize - 10)
                     );
 
                 roomSize = GetVaildRoomSize();
@@ -443,11 +445,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private Dungeon ConstructSeralizableDungeon()
         {
-            SerializableGrid serializableGrid = new(_grid, _dungeonData.DungeonProperties.GridSize);
+            SerializableGrid serializableGrid = new(_grid, _gridSize);
             List<SerializableRoom> rooms = new();
             foreach (Room room in _roomList) rooms.Add(room.ToSerializableRoom());
 
-            return new(rooms, serializableGrid, _seed);
+            return new(rooms, serializableGrid, _gridSize, _seed);
         }
 
         /// <summary>

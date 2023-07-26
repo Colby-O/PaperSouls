@@ -117,8 +117,7 @@ namespace PaperSouls.Runtime.UI.Inventory
         }
 
         protected virtual void Awake() { }
+        protected virtual void Start() { }
     }
 }
-
-// "word" - Roo 2K23
 
