@@ -598,7 +598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _filename: SaveData
   _createNewGameIfNull: 1
-  _useEncryption: 0
+  _useEncryption: 1
   _currentProfileName: Development
 --- !u!1 &8229235000364535575
 GameObject:
