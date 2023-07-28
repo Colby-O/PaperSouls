@@ -307,7 +307,7 @@ MonoBehaviour:
   _dataPersistenceMonoSystem: {fileID: 8469837807348926109}
   _dungeonMonoSystem: {fileID: 166349642978401664}
   _itemDatabase: {fileID: 11400000, guid: abc1eb9b623590d41b644d8ee4c37207, type: 2}
-  _intialState: 1
+  _intialState: 0
 --- !u!1 &5046233742367403795
 GameObject:
   m_ObjectHideFlags: 0

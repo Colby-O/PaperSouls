@@ -38,3 +38,10 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Server files
+PaperSoulsServer/.vscode
+PaperSoulsServer/build/
+PaperSoulsServer/.editorconfig
+PaperSoulsServer/*.exe
+PaperSoulsServer/*.a

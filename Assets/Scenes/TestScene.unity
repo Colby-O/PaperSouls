@@ -6527,27 +6527,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4071997271234991968, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 28.65
       objectReference: {fileID: 0}
     - target: {fileID: 6957056893940967602, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6957056893940967602, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6957056893940967602, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 6957056894845751429, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6957056894845751429, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6957056894928827041, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_Pivot.x
@@ -6636,6 +6636,10 @@ PrefabInstance:
     - target: {fileID: 6957056894928827070, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
       propertyPath: m_Name
       value: DeveloperConsole
+      objectReference: {fileID: 0}
+    - target: {fileID: 6957056894928827070, guid: 5c44fdbdcc8e39e4b89fb77248ac4caa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34081,8 +34085,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerSettings: {fileID: 11400000, guid: 55df384f3849c354a86458292b49d7aa, type: 2}
   PlayerHUD: {fileID: 725666825}
-  ItemInventory: {fileID: 0}
-  EquipmentInventory: {fileID: 0}
+  ItemInventory: {fileID: 1775992624}
+  EquipmentInventory: {fileID: 596165188}
 --- !u!114 &2042686978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34099,11 +34103,11 @@ MonoBehaviour:
   _lookSpeed: 10
   _minViewY: -70
   _maxViewY: 70
-  _sensitivity: {x: 1, y: 1}
-  _dashStrength: 15
+  _sensitivity: {x: 0.4, y: 0.4}
+  _dashStrength: 1
   _dashFalloff: 0.1
-  _jumpHeight: 6
-  _gravityMultiplier: 3
+  _jumpHeight: 0.24
+  _gravityMultiplier: 0.002
   _quickUseItem: {fileID: 11400000, guid: 1148833b14541a44b807be0c54d75b17, type: 2}
   _playerUI: {fileID: 725666824}
   _inventoryUI: {fileID: 306765554}
@@ -36265,9 +36269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37d7d4ba3600a3d419f32323f83c1f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsOpen: 0
-  _parnet: {fileID: 706634203275501854}
-  _isRotatingDoor: 1
+  _itemRequiredToUnlock: {fileID: 0}
+  _lockProbability: 0
   _rotationSpeed: 1
   _rotationAmount: 90
   _forwardDirection: 0
