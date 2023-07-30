@@ -99,7 +99,9 @@ namespace PaperSouls.Runtime.Inventory
             {
                 Vector3 playerFrontLocaton = PaperSoulsGameManager.Player.transform.position + 2 * PaperSoulsGameManager.Player.transform.forward;
                 Vector3 dropLocaton = new Vector3(playerFrontLocaton.x + 0.1f * i, 0, playerFrontLocaton.z + 0.1f * i);
-                GameObject.Instantiate(InventorySlot.ItemData.itemPrefab, new Vector3(dropLocaton.x, 0, dropLocaton.z), Quaternion.identity);
+                GameObject obj = GameObject.Instantiate(InventorySlot.ItemData.itemPrefab, new Vector3(dropLocaton.x, 0.3f, dropLocaton.z), Quaternion.identity);
+                obj.transform.localScale = InventorySlot.ItemData.itemPrefab.transform.localScale;
+                obj.GetComponent<ItemPickup>().SetAttractSpeed(0.0f);
             }
 
             ClearSlot();

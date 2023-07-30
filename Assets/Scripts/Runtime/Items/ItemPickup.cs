@@ -12,15 +12,43 @@ namespace PaperSouls.Runtime.Items
     internal class ItemPickup : MonoBehaviour
     {
         [SerializeField] private float _pickUpRadius = 0.1f;
+        [SerializeField] private float _attractRadius = 2.0f;
+        [SerializeField] private float _attractSpeed = 1f;
         [SerializeField] private Item _itemData;
 
+        private float _attrachDiableTime = 1.0f;
+        private float _timeAttrachDisabledFor;
+        private bool _isAttrachDiable = false;
+
         private SphereCollider _itemCollider;
+
+        public void SetAttractSpeed(float attractSpeed) => _attractSpeed = attractSpeed;
 
         private void Awake()
         {
             _itemCollider = GetComponent<SphereCollider>();
             _itemCollider.isTrigger = true;
             _itemCollider.radius = _pickUpRadius;
+        }
+
+        private void Update()
+        {
+            if (_isAttrachDiable)
+            {
+                if (_timeAttrachDisabledFor >= _attrachDiableTime) _isAttrachDiable = false;
+                else _timeAttrachDisabledFor += Time.deltaTime;
+                return;
+            }
+
+            if ((PaperSoulsGameManager.Player.transform.position - transform.position).magnitude <= 0.01f)
+            {
+                _isAttrachDiable = true;
+                _timeAttrachDisabledFor = 0.0f;
+            }
+            else if ((PaperSoulsGameManager.Player.transform.position - transform.position).magnitude <= _attractRadius)
+            {
+                transform.position += (PaperSoulsGameManager.Player.transform.position - transform.position).normalized * _attractSpeed * Time.deltaTime;
+            }
         }
 
         private void OnTriggerEnter(Collider other)

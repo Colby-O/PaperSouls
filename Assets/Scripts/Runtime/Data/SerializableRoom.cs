@@ -13,14 +13,33 @@ namespace PaperSouls.Runtime.Data
         public int NumberOfExits;
         public int ID;
         public Random.State State;
+        public List<int> LeftExits;
+        public List<int> RightExits;
+        public List<int> TopExits;
+        public List<int> BottomExits;
 
-        public SerializableRoom(Vector3 roomPosition, Vector3 roomSize, int numberOfExits, int roomID, Random.State state)
+
+        public SerializableRoom(
+            Vector3 roomPosition, 
+            Vector3 roomSize, 
+            int numberOfExits, 
+            int roomID, 
+            Random.State state,
+            List<int> leftExits,
+            List<int> rightExits,
+            List<int> topExits,
+            List<int> bottomExits
+            )
         {
             Position = roomPosition;
             Size = roomSize;
             NumberOfExits = numberOfExits;
             ID = roomID;
             State = state;
+            LeftExits = leftExits;
+            RightExits = rightExits;
+            TopExits = topExits;
+            BottomExits = bottomExits;
         }
 
         public override string ToString()

@@ -14,7 +14,7 @@ namespace PaperSouls.Runtime.MonoSystems.DungeonGeneration
     internal sealed class DungeonMonoSystem : MonoBehaviour, IDungeonMonoSystem, IDataPersistence
     {
         [SerializeField] private int _defaultSeed;
-        [SerializeField] private DungeonData _data;
+        [SerializeField] private DungeonProperties _data;
         [SerializeField] private Vector3 _tileSize = Vector3.zero;
         [SerializeField] private int _rendererDistance;
 
