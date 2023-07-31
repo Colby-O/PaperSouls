@@ -461,6 +461,31 @@ namespace PaperSouls.Runtime.DungeonGeneration
             //GenerateSubRooms()
         }
 
+        private Room GenerateFromRoom(Vector3 positon, Vector3 size, int id, bool drawGrid = false)
+        {
+            Decorator decorator = new(Random.Range(-10000, 10000), _roomData.Recipes[Random.Range(0, _roomData.Recipes.Count)]);
+            Initialization(positon, size);
+            InitializeHolders(id);
+            GenerateRoom();
+
+            _roomHolder.transform.position = _roomPosition;
+            Room room = new Room(positon, size, new(), Random.state, id);
+            room.GameObject = _roomHolder;
+            room.Position = _roomPosition - new Vector3(_tileSize.x / 2.0f, 0, _tileSize.y / 2.0f);
+            room.Grid = _grid;
+            room.GridSize = new(_roomSize.x - _tileSize.x, _roomSize.y - _tileSize.y);
+            room.LeftExits = _exitsLeft;
+            room.RightExits = _exitsRight;
+            room.TopExits = _exitsTop;
+            room.BottomExits = _exitsBottom;
+
+            decorator.DecorateRoom(ref room);
+
+            if (drawGrid) room.DrawGrid();
+
+            return room;
+        }
+
         /// <summary>
         /// Constructs a room object that can latter be used to generate a room.
         /// </summary>
@@ -500,40 +525,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
             return GenerateFromRoom(room.Position, room.Size, room.ID, drawGrid);
         }
 
-        public Room GenerateFromRoom(Vector3 positon, Vector3 size, int id, bool drawGrid = false)
-        {
-            Decorator decorator = new(Random.Range(-10000, 10000), _roomData.Recipes[Random.Range(0, _roomData.Recipes.Count)]);
-            Initialization(positon, size);
-            InitializeHolders(id);
-            GenerateRoom();
-
-            _roomHolder.transform.position = _roomPosition;
-            Room room = new Room(positon, size, new(), Random.state, id);
-            room.GameObject = _roomHolder;
-            room.Position = _roomPosition - new Vector3(_tileSize.x / 2.0f, 0, _tileSize.y / 2.0f);
-            room.Grid = _grid;
-            room.GridSize = new(_roomSize.x - _tileSize.x, _roomSize.y - _tileSize.y);
-            room.LeftExits = _exitsLeft;
-            room.RightExits = _exitsRight;
-            room.TopExits = _exitsTop;
-            room.BottomExits = _exitsBottom;
-
-            decorator.DecorateRoom(ref room);
-
-            if (drawGrid) room.DrawGrid();
-
-            return room;
-        }
-
         /// <summary>
         /// Generates a room from scratch.
         /// </summary>
         public Room Generate(Vector3 positon, Vector3 size, int numEnterences, int id, bool drawGrid = false)
         {
-            _exitsRight = new();
-            _exitsLeft = new();
-            _exitsTop = new();
-            _exitsBottom = new();
             Room room = GenerateRoomObject(positon, size, numEnterences, id);
 
             Decorator decorator = new(Random.Range(-10000, 10000), _roomData.Recipes[Random.Range(0, _roomData.Recipes.Count)]);
@@ -550,7 +546,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
             room.RightExits = _exitsRight;
             room.TopExits = _exitsTop;
             room.BottomExits = _exitsBottom;
-
 
             decorator.DecorateRoom(ref room);
 

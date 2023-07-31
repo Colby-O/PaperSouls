@@ -30,8 +30,8 @@ namespace PaperSouls.Runtime.DungeonBehaviour
             Quaternion start = transform.rotation;
             Quaternion end;
 
-            if (playerPos >= _forwardDirection) end = Quaternion.Euler(0, start.eulerAngles.y - _rotationAmount, 0);
-            else end = Quaternion.Euler(0, start.eulerAngles.y + _rotationAmount, 0);
+            if (playerPos >= _forwardDirection) end = Quaternion.Euler(0, _startRotation.y - _rotationAmount, 0);
+            else end = Quaternion.Euler(0, _startRotation.y + _rotationAmount, 0);
 
             _isOpen = true;
             float time = 0;

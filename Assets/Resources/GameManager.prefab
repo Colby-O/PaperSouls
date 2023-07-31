@@ -307,7 +307,7 @@ MonoBehaviour:
   _dataPersistenceMonoSystem: {fileID: 8469837807348926109}
   _dungeonMonoSystem: {fileID: 166349642978401664}
   _itemDatabase: {fileID: 11400000, guid: abc1eb9b623590d41b644d8ee4c37207, type: 2}
-  _intialState: 0
+  _intialState: 1
 --- !u!1 &5046233742367403795
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +485,10 @@ MonoBehaviour:
   _overallSound: 1
   _sfxSound: 1
   _musicSound: 1
-  _musicSounds: []
+  _musicSounds:
+  - id: 0
+    name: SurfaceSong
+    audio: {fileID: 8300000, guid: bcc516951cb673a4495b4ea6bb663e99, type: 3}
   _sfxSounds:
   - id: 0
     name: Item Pickup

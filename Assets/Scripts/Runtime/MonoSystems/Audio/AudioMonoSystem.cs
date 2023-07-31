@@ -137,18 +137,22 @@ namespace PaperSouls.Runtime.MonoSystems.Audio
         public void SetOverallVolume(float volume)
         {
             _overallSound = volume;
+            _musicSource.volume = _overallSound * _musicSound;
+            _sfxSource.volume = _overallSound * _sfxSound;
         }
 
 
         public void SetSfXVolume(float volume)
         {
             _sfxSound = volume;
+            _sfxSource.volume = _overallSound * _sfxSound;
         }
 
 
         public void SetMusicVolume(float volume)
         {
             _musicSound = volume;
+            _musicSource.volume = _overallSound * _musicSound;
         }
 
         public float GetOverallVolume()

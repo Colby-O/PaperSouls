@@ -9,7 +9,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
     internal sealed class DungeonGenerator
     {
         private const int MaxNumberOfMainRoomPlacementTries = 100;
-        private const int MaxNumberOfRoomPlacementTries = 200;
+        private const int MaxNumberOfRoomPlacementTries = 1000;
         private const int GridExtensionAmount = 10;
 
         // Generation seed
@@ -22,10 +22,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
         // List of room in the dungeon
         private List<Room> _primaryRoomList;
         private List<Room> _secondaryRoomList;
-        // A grid that store what each tile type is at each position (MAKE PRIVATE BEFORE COMMIT)
-        public TileType[,] _grid;
-        // Size of the map (MAKE PRIVATE BEFORE COMMIT)
-        public int _gridSize;
+        // A grid that store what each tile type is at each position
+        private TileType[,] _grid;
+        // Size of the map
+        private int _gridSize;
 
         private Dictionary<int, List<int>> _edgeList;
         private List<Dictionary<Vector2Int, Vector2Int>> _paths;
@@ -258,28 +258,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _primaryRoomList.Add(_roomGenerator.GenerateRoomObject(position, size, numExits, roomID));
         }
 
-        /// <summary>
-        /// Replaces a tile in the grid with another.
-        /// Cannot make this generic without some work since there
-        /// is not generic == operator in C#. However if we need a 
-        /// similar feature for another part of the coebase we should
-        /// but in the work to make this generic then.
-        /// </summary>
-        public int ReplaceTile(TileType[,] arr, TileType val, TileType newVal)
-        {
-            int count = 0;
-
-            for (int i = 0; i < arr.GetLength(0); i++)
-            {
-                for (int j = 0; j < arr.GetLength(1); j++)
-                {
-                    if (arr[i, j] == val) arr[i, j] = newVal;
-                }
-            }
-
-            return count;
-        }
-
         private void PlaceMainRooms()
         {
             // TODO: Add the option for this function to place remade rooms.
@@ -308,29 +286,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             }
 
             // Replace all invaild tiles with empty
-            ReplaceTile(_grid, TileType.Invaild, TileType.Empty);
-        }
-
-        /// <summary>
-        /// Count the number of elements equal to val in the grid.
-        /// Cannot make this generic without some work since there
-        /// is not generic == operator in C#. However if we need a 
-        /// similar feature for another part of the coebase we should
-        /// but in the work to make this generic then.
-        /// </summary>
-        public int CountTile(TileType[,] arr, TileType val, int border)
-        {
-            int count = 0;
-
-            for (int i = border; i < arr.GetLength(0) - border; i++)
-            {
-                for (int j = border; j < arr.GetLength(1) - border; j++)
-                {
-                    if (arr[i, j] == val) count++;
-                }
-            }
-
-            return count;
+            ArrayHelper.Replace(_grid, TileType.Invaild, TileType.Empty);
         }
 
         /// <summary>
@@ -338,7 +294,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private void FillGridWithRooms()
         {
-            int totalNumberOfAvailableTiles = CountTile(_grid, TileType.Empty, DungeonProperties.GenerationProperties.BorderSpacing);
+            int totalNumberOfAvailableTiles = ArrayHelper.Count(_grid, TileType.Empty, DungeonProperties.GenerationProperties.BorderSpacing);
             float fillPercentage = 0;
             int numberOfPlacementTries = 0;
             while (fillPercentage < DungeonProperties.GenerationProperties.RoomDensity)
@@ -369,7 +325,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
                 if (MaxNumberOfRoomPlacementTries < numberOfPlacementTries) break;
 
-                fillPercentage = 1.0f - CountTile(_grid, TileType.Empty, DungeonProperties.GenerationProperties.BorderSpacing) / (float)totalNumberOfAvailableTiles;
+                fillPercentage = 1.0f - ArrayHelper.Count(_grid, TileType.Empty, DungeonProperties.GenerationProperties.BorderSpacing) / (float)totalNumberOfAvailableTiles;
             }
         }
 
@@ -661,82 +617,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private void FindSecondaryRoomExits()
         {
-            foreach (Room room in _secondaryRoomList)
-            {
-                Vector2Int pos = new Vector2Int(Mathf.RoundToInt(room.Position.x / TileSize.x), Mathf.RoundToInt(room.Position.z / TileSize.z));
-                Vector2Int size = new Vector2Int(Mathf.RoundToInt(room.Size.x / TileSize.x), Mathf.RoundToInt(room.Size.z / TileSize.z));
-                Vector2Int sizeHalf = new Vector2Int(Mathf.RoundToInt(size.x / 2), Mathf.RoundToInt(size.y / 2));
-
-                room.LeftExits = new();
-                room.RightExits = new();
-                room.TopExits = new();
-                room.BottomExits = new();
-
-                // Check Left Wall
-                for (int i = pos.x - sizeHalf.x; i < pos.x + sizeHalf.x; i++)
-                {
-                    //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //cube.transform.position = new Vector3(i * TileSize.x, 1, TileSize.z * (pos.y - sizeHalf.y - 1));
-                    //cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.green);
-                    if (
-                        _grid[i, pos.y - sizeHalf.y] == TileType.HallwayAndRoom &&
-                        _grid[i, pos.y - sizeHalf.y - 1] == TileType.Hallway
-                    ) room.LeftExits.Add(i - pos.x + sizeHalf.x);
-                    else if (
-                        _grid[i, pos.y - sizeHalf.y - 1] == TileType.HallwayAndRoom ||
-                        _grid[i, pos.y - sizeHalf.y - 1] == TileType.Room
-                    ) room.LeftExits.Add(-(i - pos.x + sizeHalf.x));
-                }
-
-                // Check Right Wall
-                for (int i = pos.x - sizeHalf.x; i < pos.x + sizeHalf.x; i++)
-                {
-                    //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //cube.transform.position = new Vector3(i * TileSize.x, 1, TileSize.z * (pos.y + sizeHalf.y));
-                    //cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.green);
-                    if (
-                        _grid[i, pos.y + sizeHalf.y - 1] == TileType.HallwayAndRoom &&
-                        _grid[i, pos.y + sizeHalf.y] == TileType.Hallway
-                    ) room.RightExits.Add(i - pos.x + sizeHalf.x);
-                    else if (
-                        _grid[i, pos.y + sizeHalf.y] == TileType.HallwayAndRoom ||
-                        _grid[i, pos.y + sizeHalf.y] == TileType.Room
-                    ) room.RightExits.Add(-(i - pos.x + sizeHalf.x));
-                }
-
-                // Check Top Wall
-                for (int i = pos.y - sizeHalf.y; i < pos.y + sizeHalf.y; i++)
-                {
-                    //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //cube.transform.position = new Vector3((pos.x - sizeHalf.x - 1) * TileSize.x, 1, TileSize.z * i);
-                    //cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.green);
-                    if (
-                        _grid[pos.x - sizeHalf.x, i] == TileType.HallwayAndRoom &&
-                        _grid[pos.x - sizeHalf.x - 1, i] == TileType.Hallway
-                    ) room.TopExits.Add(i - pos.y + sizeHalf.y);
-                    else if (
-                        _grid[pos.x - sizeHalf.x - 1, i] == TileType.HallwayAndRoom ||
-                        _grid[pos.x - sizeHalf.x - 1, i] == TileType.Room
-                    ) room.TopExits.Add(-(i - pos.y + sizeHalf.y));
-                }
-
-                // Check Bottom Wall
-                for (int i = pos.y - sizeHalf.y; i < pos.y + sizeHalf.y; i++)
-                {
-                    //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //cube.transform.position = new Vector3((pos.x + sizeHalf.x) * TileSize.x, 1, TileSize.z * i);
-                    //cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.green);
-                    if (
-                        _grid[pos.x + sizeHalf.x - 1, i] == TileType.HallwayAndRoom &&
-                        _grid[pos.x + sizeHalf.x, i] == TileType.Hallway
-                    ) room.BottomExits.Add(i - pos.y + sizeHalf.y);
-                    else if (
-                        _grid[pos.x + sizeHalf.x, i] == TileType.HallwayAndRoom ||
-                        _grid[pos.x + sizeHalf.x, i] == TileType.Room
-                    ) room.BottomExits.Add(-(i - pos.y + sizeHalf.y));
-                }
-                
-            }
+            foreach (Room room in _secondaryRoomList) room.FindExits(_grid, TileSize);
         }
 
         /// <summary>
@@ -748,8 +629,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             //         must vist to progress i.e. boss rooms 
             PlaceMainRooms();
 
-            // Step 2: Fills the grid with "normal" rooms with a specified density.
-            //         Lower room density will result in longer hallways and vice versa
+            // Step 2: Add "dummy" room is the primary roomList to be used in the trigulation
             PlaceDummyRooms();
 
             // Step 3: Construct the connections between main rooms.
