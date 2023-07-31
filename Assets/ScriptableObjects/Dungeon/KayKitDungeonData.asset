@@ -17,14 +17,14 @@ MonoBehaviour:
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     GridSize: 100
-    LoopProabilty: 0.2
+    LoopProbabilty: 0.2
+    BranchingProbaility: 0.3
+    RoomDensity: 1
     AllowGridExtensions: 1
     NumberOfMainRooms: 5
-    RoomDensity: 1
     NumberOfDummyRooms: {x: 20, y: 35}
     MainRoomSize: {x: 15, y: 20}
     RoomSize: {x: 5, y: 10}
-    NumberOfExits: {x: 2, y: 5}
     MinDistacneBetweebMainRooms: 20
     MainRoomSpacing: 1
     RoomSpacing: 0
@@ -36,12 +36,11 @@ MonoBehaviour:
     EnterenceHallway: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
     Weights:
       EMPTY: 10
-      MAIN_ROOM: 1000000
+      MAIN_ROOM: 7
       ROOM: 7
       HALLWAY: 5
       HALLWAY_AND_ROOM: 5
       ROOM_SPACING: 20
-      MAIN_ROOM_SPACING: 20
       TURN_PENAILITY: 1
       HALLWAY_SPACING: 7
   RoomData:

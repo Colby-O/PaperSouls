@@ -469,7 +469,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             GenerateRoom();
 
             _roomHolder.transform.position = _roomPosition;
-            Room room = new Room(positon, size, new(), Random.state, id);
+            Room room = new Room(positon, size, Random.state, id);
             room.GameObject = _roomHolder;
             room.Position = _roomPosition - new Vector3(_tileSize.x / 2.0f, 0, _tileSize.y / 2.0f);
             room.Grid = _grid;
@@ -499,7 +499,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             Initialization(positon, size, numEnterences);
             List<Vector3> exits = GenerateExitLocations();
             for (int i = 0; i < exits.Count; i++) exits[i] += _roomPosition;
-            Room room = new Room(positon, size, exits, state, id);
+            Room room = new Room(positon, size, state, id);
             room.LeftExits = _exitsLeft;
             room.RightExits = _exitsRight;
             room.TopExits = _exitsTop;

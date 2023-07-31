@@ -12,16 +12,16 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public Vector3 Position = Vector3.zero;
         public Quaternion Rotation = Quaternion.identity;
         public int GridSize;
-        public float LoopProabilty = 0.2f;
+        [Range(0.0f, 1.0f)] public float LoopProbabilty = 0.2f;
+        [Range(0.0f, 1.0f)] public float BranchingProbaility;
+        [Range(0.0f, 1.0f)] public float RoomDensity;
         public bool AllowGridExtensions = true;
 
         [Header("Room Properties")]
         [Min(2)] public int NumberOfMainRooms;
-        [Range(0.0f, 1.0f)] public float RoomDensity;
         public Vector2Int NumberOfDummyRooms;
         public Vector2Int MainRoomSize;
         public Vector2Int RoomSize;
-        public Vector2Int NumberOfExits;
         [Min(0)] public int MinDistacneBetweebMainRooms;
         [Min(0)] public int MainRoomSpacing;
         [Min(0)] public int RoomSpacing;

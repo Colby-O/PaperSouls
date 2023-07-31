@@ -44,14 +44,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
     [System.Serializable]
     internal sealed class TileWeights
     {
-        private const int INF = 1000000;
         public float EMPTY = 10;
-        [HideInInspector] public float MAIN_ROOM = INF;
+        public float MAIN_ROOM = 5;
         public float ROOM = 5;
         public float HALLWAY = 5;
         public float HALLWAY_AND_ROOM = 5;
         public float ROOM_SPACING = 20;
-        public float MAIN_ROOM_SPACING = 20;
         public float TURN_PENAILITY = 1;
         public float HALLWAY_SPACING = 7;
     }

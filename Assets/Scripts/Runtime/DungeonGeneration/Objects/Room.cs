@@ -15,27 +15,16 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public List<int> TopExits;
         public List<int> BottomExits;
 
-        public List<Vector3> Exits;
         public List<DungeonObject> Decorations;
-
-        private Stack<Vector3> _availableExits;
 
         public GameObject GameObject { get; set; }
         public Vector3 Size { get; protected set; }
         public Vector3 Position { get; set; }
         public RoomZone[,] Grid {get; set;}
         public Vector2Int GridSize { get; set; } 
-        public int ExitsUsed { get; set; }
 
-        public Vector3 GetAvailableExit() => _availableExits.Pop();
-        public bool AreExitsLeft() => _availableExits.Count != 0;
-
-        public Room(Vector3 position, Vector3 size, List<Vector3> exits, Random.State state, int id)
+        public Room(Vector3 position, Vector3 size, Random.State state, int id)
         {
-            Exits = exits;
-            NumberOfExits = Exits.Count;
-            ExitsUsed = 0;
-            _availableExits = new(Exits);
             Position = position;
             Size = size;
             State = state;
@@ -45,10 +34,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Check if the room is reachable by the player
         /// </summary>
-        public bool CheckIfReachable(TileType[,] grid, Vector2Int tileSize)
+        public bool CheckIfReachable(TileType[,] grid, Vector3 tileSize)
         {
-            Vector2Int pos = new Vector2Int(Mathf.RoundToInt(Position.x / tileSize.x), Mathf.RoundToInt(Position.z / tileSize.y));
-            Vector2Int size = new Vector2Int(Mathf.RoundToInt(Size.x / tileSize.x), Mathf.RoundToInt(Size.z / tileSize.y));
+            Vector2Int pos = new Vector2Int(Mathf.RoundToInt(Position.x / tileSize.x), Mathf.RoundToInt(Position.z / tileSize.z));
+            Vector2Int size = new Vector2Int(Mathf.RoundToInt(Size.x / tileSize.x), Mathf.RoundToInt(Size.z / tileSize.z));
 
             for (int i = pos.x - Mathf.CeilToInt(size.x / 2); i < pos.x + Mathf.CeilToInt(size.x / 2); i++)
             {
@@ -64,10 +53,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Removes a room from the grid
         /// </summary>
-        public void RemoveFromGrid(ref TileType[,] grid, Vector2Int tileSize)
+        public void RemoveFromGrid(ref TileType[,] grid, Vector3 tileSize)
         {
-            Vector2Int pos = new Vector2Int(Mathf.RoundToInt(Position.x / tileSize.x), Mathf.RoundToInt(Position.z / tileSize.y));
-            Vector2Int size = new Vector2Int(Mathf.RoundToInt(Size.x / tileSize.x), Mathf.RoundToInt(Size.z / tileSize.y));
+            Vector2Int pos = new Vector2Int(Mathf.RoundToInt(Position.x / tileSize.x), Mathf.RoundToInt(Position.z / tileSize.z));
+            Vector2Int size = new Vector2Int(Mathf.RoundToInt(Size.x / tileSize.x), Mathf.RoundToInt(Size.z / tileSize.z));
 
             for (int i = pos.x - Mathf.CeilToInt(size.x / 2); i < pos.x + Mathf.CeilToInt(size.x / 2); i++)
             {
