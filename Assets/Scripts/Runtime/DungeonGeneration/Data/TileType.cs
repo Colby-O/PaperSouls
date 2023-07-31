@@ -11,6 +11,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         Empty,
         /// <summary>
+        /// Main Room Tile
+        /// </summary>
+        MainRoom,
+        /// <summary>
         /// Room Tile
         /// </summary>
         Room,
@@ -29,7 +33,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Tile Next To Hallway
         /// </summary>
-        HallwaySpacing
+        HallwaySpacing,
+        /// <summary>
+        /// Invaild Tile. Used as a proxy is 
+        /// avoid main room being too close
+        /// </summary>
+        Invaild
     }
 
     [System.Serializable]
@@ -37,11 +46,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
     {
         private const int INF = 1000000;
         public float EMPTY = 10;
-        public float ROOM = INF;
+        [HideInInspector] public float MAIN_ROOM = INF;
+        public float ROOM = 5;
         public float HALLWAY = 5;
-        public float HALLWAY_AND_ROOM = INF;
+        public float HALLWAY_AND_ROOM = 5;
         public float ROOM_SPACING = 20;
-        public float TURN_PENAILITY = 3;
+        public float MAIN_ROOM_SPACING = 20;
+        public float TURN_PENAILITY = 1;
         public float HALLWAY_SPACING = 7;
     }
 }

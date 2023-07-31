@@ -7,7 +7,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
 {
     internal sealed class DungeonLoader
     {
-        private DungeonData _dungeonData;
+        private DungeonProperties _dungeonProperties;
         private RoomGenerator _roomGenerator;
 
         private Vector2Int _tileSize;
@@ -28,9 +28,9 @@ namespace PaperSouls.Runtime.DungeonGeneration
             new Vector2Int(-1, 0)
         };
 
-        public DungeonLoader(DungeonData dungeonData, Vector3 tileSize)
+        public DungeonLoader(DungeonProperties dungeonProperties, Vector3 tileSize)
         {
-            _dungeonData = dungeonData;
+            _dungeonProperties = dungeonProperties;
             _tileSize = new((int)tileSize.x, (int)tileSize.z);
         }
 
@@ -50,21 +50,21 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _hallwayVarients = new()
             {
                 null,
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 180f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 90f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 90f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 0f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.StrightHallway, 0f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 180f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 0f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.EnterenceHallway, 270f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 0f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.StrightHallway, 90f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 270f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.CurvedHallway, 270f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 180f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.ThreeWayHallway, 90f),
-                InstantiateHallwayPrefab(_dungeonData.DungeonProperties.FourWayHallway, 0f)
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.EnterenceHallway, 180f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.EnterenceHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.CurvedHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.EnterenceHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.StrightHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.CurvedHallway, 180f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.ThreeWayHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.EnterenceHallway, 270f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.CurvedHallway, 0f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.StrightHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.ThreeWayHallway, 270f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.CurvedHallway, 270f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.ThreeWayHallway, 180f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.ThreeWayHallway, 90f),
+                InstantiateHallwayPrefab(_dungeonProperties.GenerationProperties.FourWayHallway, 0f)
             };
 
             // Hides each of the hallway vairents in the scene
@@ -88,7 +88,12 @@ namespace PaperSouls.Runtime.DungeonGeneration
 
             foreach (Vector2Int dir in DIRECTIONS)
             {
-                if (tiles[dir.x + 1, dir.y + 1] == TileType.Hallway || tiles[dir.x + 1, dir.y + 1] == TileType.HallwayAndRoom || tiles[dir.x + 1, dir.y + 1] == TileType.Room) key |= 1 << i;
+                if (
+                    tiles[dir.x + 1, dir.y + 1] == TileType.Hallway || 
+                    tiles[dir.x + 1, dir.y + 1] == TileType.HallwayAndRoom ||
+                    tiles[dir.x + 1, dir.y + 1] == TileType.Room ||
+                    tiles[dir.x + 1, dir.y + 1] == TileType.MainRoom
+                    ) key |= 1 << i;
                 i += 1;
             }
 
@@ -193,7 +198,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
             _roomList = dungeon.RoomList;
             _grid = dungeon.Grid.Deserialize();
             _gridSize = dungeon.GridSize;
-            _roomGenerator = new(_dungeonData.RoomData, dungeon.Seed, _tileSize);
+            _roomGenerator = new(_dungeonProperties.RoomData, dungeon.Seed, _tileSize);
             _dungeonHolder = new("Dungeon");
             _dungeonObjects = new();
             Random.InitState(dungeon.Seed);

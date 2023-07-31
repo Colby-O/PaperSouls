@@ -33,6 +33,7 @@ namespace PaperSouls.Runtime
 
 
         [Header("Global Variables")]
+        public static bool DisableCameraCollsions = false;
         [SerializeField] private GameStates _intialState = GameStates.MainMenu;
         private static GameObject _player = null;
         public static bool AccpetPlayerInput { get; set; }

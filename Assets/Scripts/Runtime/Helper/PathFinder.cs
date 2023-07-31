@@ -59,6 +59,10 @@ namespace PaperSouls.Runtime.Helpers
                     if (_tileWeights.EMPTY == -1) weight = Mathf.Infinity;
                     else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.EMPTY;
                     break;
+                case TileType.MainRoom:
+                    if (_tileWeights.ROOM == -1) weight = Mathf.Infinity;
+                    else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.MAIN_ROOM;
+                    break;
                 case TileType.Room:
                     if (_tileWeights.ROOM == -1) weight = Mathf.Infinity;
                     else weight = ((previous.x != next.x && previous.y != next.y) ? _tileWeights.TURN_PENAILITY : 1) * _tileWeights.ROOM;

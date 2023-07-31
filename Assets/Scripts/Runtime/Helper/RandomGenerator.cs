@@ -7,6 +7,14 @@ namespace PaperSouls.Runtime.Helpers
     internal static class RandomGenerator
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public static List<Vector2Int> PoissonDiscSampling(int numOfPoints, int radius)
+        {
+            return new();
+        }
+
+        /// <summary>
         /// Returns a random number between [min, max] biased towards values closer to min. 
         /// </summary>
         public static int GetRandomSkewed(int min, int max)

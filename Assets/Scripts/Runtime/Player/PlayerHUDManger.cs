@@ -142,6 +142,7 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         public void UpdateMeleeWeaponSlot()
         {
+            if (EquipmentInventory.InventoryManger.InventorySlots.Count < 5) return;
             if (EquipmentInventory.InventoryManger.InventorySlots[5].ItemData != null)
             {
                 UnityEngine.Sprite meleeWeaponSprite = EquipmentInventory.InventoryManger.InventorySlots[5].ItemData.icon;
@@ -160,6 +161,7 @@ namespace PaperSouls.Runtime.Player
         /// </summary>
         public void UpdateRangeWeaponSlot()
         {
+            if (EquipmentInventory.InventoryManger.InventorySlots.Count < 4) return;
             if (EquipmentInventory.InventoryManger.InventorySlots[4].ItemData != null)
             {
                 UnityEngine.Sprite rangedWeaponSprite = EquipmentInventory.InventoryManger.InventorySlots[4].ItemData.icon;

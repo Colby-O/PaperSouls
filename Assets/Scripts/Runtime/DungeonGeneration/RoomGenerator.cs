@@ -115,13 +115,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Setup for the room generator to be call on a per room basis
         /// </summary>
-        private void Initialization(Vector3 positon, Vector3 size, int numEnterences)
+        private void Initialization(Vector3 positon, Vector3 size, int numEnterences = -1)
         {
-            _exitsRight = new();
-            _exitsLeft = new();
-            _exitsTop = new();
-            _exitsBottom = new();
-
             _roomSize = new(Mathf.RoundToInt(size.x), Mathf.RoundToInt(size.z));
             _roomPosition = positon;
 
@@ -180,7 +175,7 @@ namespace PaperSouls.Runtime.DungeonGeneration
         private int GetVaildExitLocation(int min, int max, ref List<int> used)
         {
             if (max - min <= used.Count) return -1;
-            
+
             int exitLocation;
             do
             {
@@ -341,13 +336,13 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 case RoomSide.Right:
                     AddEnterenceToGrid(
-                        new Vector2Int(wallIndex * Mathf.RoundToInt(_scale.x * _tileSize.x), _roomSize.y - _tileSize.y - 1), 
+                        new Vector2Int(wallIndex * Mathf.RoundToInt(_scale.x * _tileSize.x), _roomSize.y - _tileSize.y - 1),
                         new Vector2Int((int)(_scale.x * _tileSize.x), 1)
                     );
                     break;
                 case RoomSide.Bottom:
                     AddEnterenceToGrid(
-                        new Vector2Int(_roomSize.x - _tileSize.x - 1, wallIndex * Mathf.RoundToInt(_scale.y * _tileSize.y)), 
+                        new Vector2Int(_roomSize.x - _tileSize.x - 1, wallIndex * Mathf.RoundToInt(_scale.y * _tileSize.y)),
                         new Vector2Int(1, (int)(_scale.y * _tileSize.y))
                     );
                     break;
@@ -374,10 +369,17 @@ namespace PaperSouls.Runtime.DungeonGeneration
             List<int> exitsLocations = GetExitsForRoomSide(RoomSide);
 
             bool isExit = exitsLocations.Contains(wallIndex);
+            bool isOpen = exitsLocations.Contains(-wallIndex);
+
+            if (isOpen)
+            {
+                AddEnterenceToGrid(wallIndex, RoomSide);
+                return;
+            }
 
             DungeonObject asset = (isExit) ? GetRandomAsset(_roomData.enterenceObjects) : GetRandomAsset(_roomData.wallObjects);
 
-            if(isExit) AddEnterenceToGrid(wallIndex, RoomSide);
+            if (isExit) AddEnterenceToGrid(wallIndex, RoomSide);
 
             GameObject wall = Object.Instantiate(asset.GameObject, position, Quaternion.Euler(0f, rot, 0f), _mesh.transform);
 
@@ -424,8 +426,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 for (int j = 0; j < _tileCount.y - 1; j++)
                 {
                     Vector3 position = new Vector3(
-                        -_roomSize.x / 2f + _tileSize.x * _scale.x / 2 + i * _scale.x * _tileSize.x, 
-                        0, 
+                        -_roomSize.x / 2f + _tileSize.x * _scale.x / 2 + i * _scale.x * _tileSize.x,
+                        0,
                         -_roomSize.y / 2f + _tileSize.y * _scale.y / 2f + j * _scale.y * _tileSize.y
                     );
 
@@ -459,16 +461,50 @@ namespace PaperSouls.Runtime.DungeonGeneration
             //GenerateSubRooms()
         }
 
+        private Room GenerateFromRoom(Vector3 positon, Vector3 size, int id, bool drawGrid = false)
+        {
+            Decorator decorator = new(Random.Range(-10000, 10000), _roomData.Recipes[Random.Range(0, _roomData.Recipes.Count)]);
+            Initialization(positon, size);
+            InitializeHolders(id);
+            GenerateRoom();
+
+            _roomHolder.transform.position = _roomPosition;
+            Room room = new Room(positon, size, new(), Random.state, id);
+            room.GameObject = _roomHolder;
+            room.Position = _roomPosition - new Vector3(_tileSize.x / 2.0f, 0, _tileSize.y / 2.0f);
+            room.Grid = _grid;
+            room.GridSize = new(_roomSize.x - _tileSize.x, _roomSize.y - _tileSize.y);
+            room.LeftExits = _exitsLeft;
+            room.RightExits = _exitsRight;
+            room.TopExits = _exitsTop;
+            room.BottomExits = _exitsBottom;
+
+            decorator.DecorateRoom(ref room);
+
+            if (drawGrid) room.DrawGrid();
+
+            return room;
+        }
+
         /// <summary>
         /// Constructs a room object that can latter be used to generate a room.
         /// </summary>
         public Room GenerateRoomObject(Vector3 positon, Vector3 size, int numEnterences, int id)
         {
+            _exitsRight = new();
+            _exitsLeft = new();
+            _exitsTop = new();
+            _exitsBottom = new();
             Random.State state = Random.state;
             Initialization(positon, size, numEnterences);
             List<Vector3> exits = GenerateExitLocations();
             for (int i = 0; i < exits.Count; i++) exits[i] += _roomPosition;
-            return new Room(positon, size, exits, state, id);
+            Room room = new Room(positon, size, exits, state, id);
+            room.LeftExits = _exitsLeft;
+            room.RightExits = _exitsRight;
+            room.TopExits = _exitsTop;
+            room.BottomExits = _exitsBottom;
+            return room;
         }
 
         /// <summary>
@@ -482,7 +518,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
         public Room GenerateFromRoom(SerializableRoom room, bool drawGrid = false)
         {
             Random.state = room.State;
-            return Generate(room.Position, room.Size, room.NumberOfExits, room.ID, drawGrid);
+            _exitsLeft = room.LeftExits;
+            _exitsRight = room.RightExits;
+            _exitsTop = room.TopExits;
+            _exitsBottom = room.BottomExits;
+            return GenerateFromRoom(room.Position, room.Size, room.ID, drawGrid);
         }
 
         /// <summary>
@@ -502,6 +542,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
             room.Position = _roomPosition - new Vector3(_tileSize.x / 2.0f, 0, _tileSize.y / 2.0f);
             room.Grid = _grid;
             room.GridSize = new(_roomSize.x - _tileSize.x, _roomSize.y - _tileSize.y);
+            room.LeftExits = _exitsLeft;
+            room.RightExits = _exitsRight;
+            room.TopExits = _exitsTop;
+            room.BottomExits = _exitsBottom;
 
             decorator.DecorateRoom(ref room);
 

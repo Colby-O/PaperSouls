@@ -226,7 +226,7 @@ namespace PaperSouls.Runtime.Player
             UpdateCameraAngle();
             RotateAroundTarget(Camera.main.transform.up, _cameraAngle.x);
             RotateAroundTarget(-Camera.main.transform.right, _cameraAngle.y);
-            CheckCameriaCollision();
+            if(!PaperSoulsGameManager.DisableCameraCollsions) CheckCameriaCollision();
         }
 
         /// <summary>

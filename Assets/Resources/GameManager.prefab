@@ -485,7 +485,10 @@ MonoBehaviour:
   _overallSound: 1
   _sfxSound: 1
   _musicSound: 1
-  _musicSounds: []
+  _musicSounds:
+  - id: 0
+    name: SurfaceSong
+    audio: {fileID: 8300000, guid: bcc516951cb673a4495b4ea6bb663e99, type: 3}
   _sfxSounds:
   - id: 0
     name: Item Pickup

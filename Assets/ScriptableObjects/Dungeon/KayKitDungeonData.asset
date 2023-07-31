@@ -12,17 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a925a714209d5cf4cabeb51b6c5f1abe, type: 3}
   m_Name: KayKitDungeonData
   m_EditorClassIdentifier: 
-  DungeonProperties:
+  GenerationProperties:
     Scale: {x: 1, y: 1, z: 1}
     Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     GridSize: 100
     LoopProabilty: 0.2
     AllowGridExtensions: 1
-    RoomSize: {x: 4, y: 8}
-    NumberOfRooms: {x: 40, y: 70}
+    NumberOfMainRooms: 5
+    RoomDensity: 1
+    NumberOfDummyRooms: {x: 20, y: 35}
+    MainRoomSize: {x: 15, y: 20}
+    RoomSize: {x: 5, y: 10}
     NumberOfExits: {x: 2, y: 5}
-    RoomSpacing: 2
+    MinDistacneBetweebMainRooms: 20
+    MainRoomSpacing: 1
+    RoomSpacing: 0
+    BorderSpacing: 3
     StrightHallway: {fileID: 8068585483525543141, guid: 44765bd21a67fb94e983255d1955ce21, type: 3}
     CurvedHallway: {fileID: 2518497721306097859, guid: 1139cbc340650484ba6afb942f490072, type: 3}
     ThreeWayHallway: {fileID: 3424373962839084454, guid: 468b5939b767b0d4c8bcc29cedd91a1d, type: 3}
@@ -30,12 +36,14 @@ MonoBehaviour:
     EnterenceHallway: {fileID: 15331827327175247, guid: 5ea9df0f6d30e354d8cca96c1f61b5ab, type: 3}
     Weights:
       EMPTY: 10
-      ROOM: 1000000
+      MAIN_ROOM: 1000000
+      ROOM: 7
       HALLWAY: 5
-      HALLWAY_AND_ROOM: 1000000
+      HALLWAY_AND_ROOM: 5
       ROOM_SPACING: 20
+      MAIN_ROOM_SPACING: 20
       TURN_PENAILITY: 1
-      HALLWAY_SPACING: 10
+      HALLWAY_SPACING: 7
   RoomData:
     minSubRoomSize: 4
     maxSubRoomSize: 4

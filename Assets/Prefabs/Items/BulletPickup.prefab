@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 60430134869750427}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -107,9 +107,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60430134869750427}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.099999994
   m_Center: {x: -0.000000014901161, y: 0, z: -0.000000059604645}
 --- !u!114 &1616433925493188284
@@ -125,4 +133,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pickUpRadius: 0.1
+  _attractRadius: 3
+  _attractSpeed: 5
   _itemData: {fileID: 11400000, guid: 34b0751ffc612584a99b0bfe0309104c, type: 2}
