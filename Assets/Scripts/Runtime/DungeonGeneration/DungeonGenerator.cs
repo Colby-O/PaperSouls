@@ -247,46 +247,87 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         void CreateNewRoom(
             Vector2Int roomPosition, 
-            Vector2Int roomSize, 
-            Vector2Int numberOfExits, 
-            int roomID
+            Vector2Int roomSize,
+            int roomID,
+            ref List<Room> roomList
         )
         {
             Vector3 position = new(roomPosition.x * TileSize.x, 0.0f, roomPosition.y * TileSize.z);
             Vector3 size = new(roomSize.x * TileSize.x, 0, roomSize.y * TileSize.z);
-            int numExits = Random.Range(numberOfExits.x, numberOfExits.y + 1);
-            _primaryRoomList.Add(_roomGenerator.GenerateRoomObject(position, size, numExits, roomID));
+            roomList.Add(
+                        new Room(
+                            position,
+                            size,
+                            Random.state,
+                            roomID
+                        )
+            );
         }
 
-        private void PlaceMainRooms()
+        /// <summary>
+        /// Place N rooms randomly on a grid and adds them to the primary roomList
+        /// </summary>
+        private void PlaceRooms(
+            int numberOfRooms,
+            int roomSpacing,
+            Vector2Int roomSizeLimits,
+            int minDistBetwenRooms = 0,
+            TileType tileType = TileType.MainRoom
+        )
         {
-            // TODO: Add the option for this function to place remade rooms.
-            int numberOfRooms = DungeonProperties.GenerationProperties.NumberOfMainRooms;
-            
+
             for (int i = 0; i < numberOfRooms; i++)
             {
                 if (
                     GenerateRandomMainRoomLocation(
-                        out Vector2Int roomPosition, 
-                        out Vector2Int roomSize, 
-                        DungeonProperties.GenerationProperties.MainRoomSize,
-                        DungeonProperties.GenerationProperties.MainRoomSpacing,
-                        DungeonProperties.GenerationProperties.MinDistacneBetweebMainRooms,
-                        TileType.MainRoom
+                        out Vector2Int roomPosition,
+                        out Vector2Int roomSize,
+                        roomSizeLimits,
+                        roomSpacing,
+                        minDistBetwenRooms,
+                        tileType
                     )
                 )
                 {
                     CreateNewRoom(
                         roomPosition,
                         roomSize,
-                        DungeonProperties.GenerationProperties.NumberOfExits,
-                        _primaryRoomList.Count
+                        _primaryRoomList.Count,
+                        ref _primaryRoomList
                     );
                 }
             }
+        }
+
+        private void PlaceMainRooms()
+        {
+            // TODO: Add the option for this function to place remade rooms.
+            int numberOfRooms = DungeonProperties.GenerationProperties.NumberOfMainRooms;
+
+            PlaceRooms(
+                numberOfRooms,
+                DungeonProperties.GenerationProperties.MainRoomSpacing, 
+                DungeonProperties.GenerationProperties.MainRoomSize, 
+                DungeonProperties.GenerationProperties.MinDistacneBetweebMainRooms
+            );
 
             // Replace all invaild tiles with empty
             ArrayHelper.Replace(_grid, TileType.Invaild, TileType.Empty);
+        }
+
+        /// <summary>
+        /// Places "dummy" room or in other word rooms that are triangulated but are not
+        /// "main" rooms. This make the layout more intersting than just going from main room
+        /// to main room.
+        /// </summary>
+        private void PlaceDummyRooms()
+        {
+            int numberOfRooms = Random.Range(
+                DungeonProperties.GenerationProperties.NumberOfDummyRooms.x,
+                DungeonProperties.GenerationProperties.NumberOfDummyRooms.y + 1
+            );
+
+            PlaceRooms(numberOfRooms, DungeonProperties.GenerationProperties.MainRoomSpacing, DungeonProperties.GenerationProperties.RoomSize);
         }
 
         /// <summary>
@@ -313,54 +354,18 @@ namespace PaperSouls.Runtime.DungeonGeneration
                     )
                 )
                 {
-                    _secondaryRoomList.Add(
-                        new Room(new(roomPosition.x * TileSize.x, 0.0f, roomPosition.y * TileSize.z),
-                        new(roomSize.x * TileSize.x, 0.0f, roomSize.y * TileSize.z),
-                        new(),
-                        Random.state,
-                        _secondaryRoomList.Count + _primaryRoomList.Count));
-                    numberOfPlacementTries = 0;
+                    CreateNewRoom(
+                        roomPosition,
+                        roomSize,
+                        _primaryRoomList.Count + _secondaryRoomList.Count,
+                        ref _secondaryRoomList
+                    );
                 }
                 else numberOfPlacementTries++;
 
                 if (MaxNumberOfRoomPlacementTries < numberOfPlacementTries) break;
 
                 fillPercentage = 1.0f - ArrayHelper.Count(_grid, TileType.Empty, DungeonProperties.GenerationProperties.BorderSpacing) / (float)totalNumberOfAvailableTiles;
-            }
-        }
-
-        /// <summary>
-        /// Places "dummy" room or in other word rooms that are triangulated but are not
-        /// "main" rooms. This make the layout more intersting than just going from main room
-        /// to main room.
-        /// </summary>
-        private void PlaceDummyRooms()
-        {
-            int numberOfRooms = Random.Range(
-                DungeonProperties.GenerationProperties.NumberOfDummyRooms.x, 
-                DungeonProperties.GenerationProperties.NumberOfDummyRooms.y + 1
-            );
-
-            for (int i = 0; i < numberOfRooms; i++)
-            {
-                if (
-                    GenerateRandomMainRoomLocation(
-                        out Vector2Int roomPosition,
-                        out Vector2Int roomSize,
-                        DungeonProperties.GenerationProperties.RoomSize,
-                        DungeonProperties.GenerationProperties.MainRoomSpacing,
-                        0,
-                        TileType.MainRoom
-                    )
-                )
-                {
-                    CreateNewRoom(
-                        roomPosition,
-                        roomSize,
-                        DungeonProperties.GenerationProperties.NumberOfExits,
-                        _primaryRoomList.Count
-                    );
-                }
             }
         }
 
@@ -380,44 +385,6 @@ namespace PaperSouls.Runtime.DungeonGeneration
         }
 
         /// <summary>
-        /// Finds the number of used exits on a room
-        /// </summary>
-        private void UpdateNumberOfUsedExits()
-        {
-            foreach (int vertex in _edgeList.Keys)
-            {
-                foreach (int adjVertex in _edgeList[vertex])
-                {
-                    _primaryRoomList[vertex].ExitsUsed += 1;
-                    _primaryRoomList[adjVertex].ExitsUsed += 1;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Replace a room.
-        /// Called when the original room has too little exits
-        /// </summary>
-        private void ReplaceRoom(int roomID, int numberOfExitsNeeded)
-        {
-            int usedExits = _primaryRoomList[roomID].ExitsUsed;
-            Room newRoom = _roomGenerator.GenerateRoomObject(_primaryRoomList[roomID].Position, _primaryRoomList[roomID].Size, numberOfExitsNeeded, _primaryRoomList[roomID].ID);
-            newRoom.ExitsUsed = usedExits;
-            _primaryRoomList[roomID] = newRoom;
-        }
-
-        /// <summary>
-        /// Makes sure all room have enough exits 
-        /// </summary>
-        private void CheckForRoomsWithInvaildNumberOfEdages()
-        {
-            for (int v = 0; v < _primaryRoomList.Count; v++)
-            {
-                if (_primaryRoomList[v].ExitsUsed > _primaryRoomList[v].Exits.Count) ReplaceRoom(v, _primaryRoomList[v].ExitsUsed + 1);
-            }
-        }
-
-        /// <summary>
         /// Determines which room are connected
         /// </summary>
         private void ConstructLayout()
@@ -431,12 +398,8 @@ namespace PaperSouls.Runtime.DungeonGeneration
             // Step 2: Constructs a Minimum Spanning Tree 
             _mst = new(adjacencyMatrix, vertices);
             _edgeList = _mst.GetMST();
-            UpdateNumberOfUsedExits();
 
-            // Step 3: Ensure All Rooms Have Enough Exits
-            CheckForRoomsWithInvaildNumberOfEdages();
-
-            // Step 4: Add Back Random Edge To The Tree To Create Loops
+            // Step 3: Add Back Random Edge To The Tree To Create Loops
             int numberOfVertices = vertices.Count;
 
             for (int i = 0; i < numberOfVertices; i++)
@@ -445,17 +408,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
                 {
                     float rand = Random.Range(0.0f, 1.0f);
                     if (
-                        rand <= DungeonProperties.GenerationProperties.LoopProabilty &&
+                        rand <= DungeonProperties.GenerationProperties.LoopProbabilty &&
                         adjacencyMatrix[i, v] != 0 &&
-                        !(_edgeList[i].Contains(v) || _edgeList[v].Contains(i)) &&
-                        _primaryRoomList[v].ExitsUsed < _primaryRoomList[v].Exits.Count &&
-                        _primaryRoomList[i].ExitsUsed < _primaryRoomList[i].Exits.Count
-                    )
-                    {
-                        _edgeList[i].Add(v);
-                        _primaryRoomList[i].ExitsUsed += 1;
-                        _primaryRoomList[v].ExitsUsed += 1;
-                    }
+                        !(_edgeList[i].Contains(v) || _edgeList[v].Contains(i))
+                    ) _edgeList[i].Add(v);
                 }
             }
         }
@@ -473,8 +429,11 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// </summary>
         private void AddHallwayTileToGrid(Vector2Int gridPos)
         {
-            if (_grid[gridPos.x, gridPos.y] == TileType.Room || _grid[gridPos.x, gridPos.y] == TileType.HallwayAndRoom) _grid[gridPos.x, gridPos.y] = TileType.HallwayAndRoom;
-            else if (_grid[gridPos.x, gridPos.y] == TileType.MainRoom) _grid[gridPos.x, gridPos.y] = TileType.MainRoom;
+            if (
+                _grid[gridPos.x, gridPos.y] == TileType.MainRoom || 
+                _grid[gridPos.x, gridPos.y] == TileType.Room || 
+                _grid[gridPos.x, gridPos.y] == TileType.HallwayAndRoom
+            ) _grid[gridPos.x, gridPos.y] = TileType.HallwayAndRoom;
             else _grid[gridPos.x, gridPos.y] = TileType.Hallway;
 
             for (int i = -1; i < 2; i++)
@@ -505,10 +464,10 @@ namespace PaperSouls.Runtime.DungeonGeneration
         /// <summary>
         /// Generates a path between rooms using A*
         /// </summary>
-        private void ConstructHallwayBetween(int roomIDA, int roomIDB)
+        private void ConstructHallwayBetween(int roomIDA, int roomIDB, List<Room> roomList)
         {
-            Vector3 startExit = _primaryRoomList[roomIDA].GetAvailableExit();
-            Vector3 endExit = _primaryRoomList[roomIDB].GetAvailableExit();
+            Vector3 startExit = roomList[roomIDA].Position;
+            Vector3 endExit = roomList[roomIDB].Position;
 
             Vector2Int start = GetRoomdPosition(startExit);
             Vector2Int end = GetRoomdPosition(endExit);
@@ -534,7 +493,47 @@ namespace PaperSouls.Runtime.DungeonGeneration
             {
                 foreach (int roomID in _edgeList[i])
                 {
-                    ConstructHallwayBetween(i, roomID);
+                    ConstructHallwayBetween(i, roomID, _primaryRoomList);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Places a terminal branches bewteen two secondary rooms
+        /// </summary>
+        private void AddTerminalBranch(int roomIDStart, int roomIDEnd)
+        {
+            ConstructHallwayBetween(roomIDStart, roomIDEnd, _secondaryRoomList);
+        }
+
+        /// <summary>
+        /// Fetches an unused room.
+        /// </summary>
+        private int GetUnusedRoom()
+        {
+            for (int i = 0; i < _secondaryRoomList.Count; i++)
+            {
+                if (!_secondaryRoomList[i].CheckIfReachable(_grid, TileSize)) return i;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Add terminal branches to the dungeon
+        /// </summary>
+        private void PlaceTerminalBranches()
+        {
+            List<Room> roomCopy = new(_secondaryRoomList);
+
+            for (int i = 0; i < roomCopy.Count; i++)
+            {
+                if (Random.value > DungeonProperties.GenerationProperties.BranchingProbaility) continue;
+
+                if (roomCopy[i].CheckIfReachable(_grid, TileSize))
+                {
+                    int ususedRoomID = GetUnusedRoom();
+                    if (ususedRoomID != -1) AddTerminalBranch(i, ususedRoomID);
+                    else return;
                 }
             }
         }
@@ -548,76 +547,24 @@ namespace PaperSouls.Runtime.DungeonGeneration
             List<Room> newRoomList = new();
             foreach(Room room in _secondaryRoomList)
             {
-                if (!room.CheckIfReachable(_grid, new(Mathf.RoundToInt(TileSize.x), Mathf.RoundToInt(TileSize.z))))
+                if (!room.CheckIfReachable(_grid, TileSize))
                 {
-                    room.RemoveFromGrid(ref _grid, new(Mathf.RoundToInt(TileSize.x), Mathf.RoundToInt(TileSize.z)));
+                    room.RemoveFromGrid(ref _grid, TileSize);
                 }
                 else newRoomList.Add(room);
             }
             _secondaryRoomList = new(newRoomList);
         }
-
-        /// <summary>
-        /// Places a terminal room
-        /// </summary>
-        private bool AddTerminalRoom(int roomID)
-        {
-            if (
-                GenerateRandomMainRoomLocation(
-                        out Vector2Int roomPosition,
-                        out Vector2Int roomSize,
-                        DungeonProperties.GenerationProperties.RoomSize,
-                        DungeonProperties.GenerationProperties.MainRoomSpacing,
-                        0,
-                        TileType.MainRoom
-                )
-            )
-            {
-                int newRoomID = _primaryRoomList.Count;
-
-                CreateNewRoom(roomPosition, roomSize, new(1, 1), newRoomID);
-                _edgeList[roomID].Add(newRoomID);
-                _edgeList[newRoomID] = new();
-                _primaryRoomList[newRoomID].ExitsUsed += 1;
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Add terminal rooms to cap off any open exits
-        /// </summary>
-        private void PlaceTerminalRooms()
-        {
-            List<Room> roomCopy = new(_primaryRoomList);
-
-            foreach (Room room in roomCopy)
-            {
-                int numberOfTries = 0;
-                while (room.ExitsUsed != room.Exits.Count)
-                {
-                    if (numberOfTries > MaxNumberOfRoomPlacementTries)
-                    {
-                        if (!DungeonProperties.GenerationProperties.AllowGridExtensions) break;
-                        numberOfTries = 0;
-                        ExtendGridSize();
-                    }
-
-                    if (AddTerminalRoom(room.ID)) _primaryRoomList[room.ID].ExitsUsed += 1;
-                    numberOfTries += 1;
-                }
-            }
-        }
-
-
+        
         /// <summary>
         /// Find the locations of all exits i.e. room/room and room/hallway
         /// intersetions.
         /// </summary>
-        private void FindSecondaryRoomExits()
-        {
+        private void FindRoomExits()
+        { 
+            foreach (Room room in _primaryRoomList) room.FindExits(_grid, TileSize);
             foreach (Room room in _secondaryRoomList) room.FindExits(_grid, TileSize);
+
         }
 
         /// <summary>
@@ -638,21 +585,21 @@ namespace PaperSouls.Runtime.DungeonGeneration
             //         level progression.
             ConstructLayout();
 
-            // Step 4: Caps off any unused exits on the main or dummy rooms
-            PlaceTerminalRooms();
-
-            // Step 5: Fills the grid with "normal" rooms with a specified density.
+            // Step 4: Fills the grid with "normal" rooms with a specified density.
             //         Lower room density will result in longer hallways and vice versa
             FillGridWithRooms();
 
-            // Step 6: Construct hallway between connecting main rooms
+            // Step 5: Construct hallway between connecting main rooms
             ConstructHallways();
+
+            // Step 6: Adds terminal branches to the dungeon
+            PlaceTerminalBranches();
 
             // Step 7: Removes all rooms that were not used i.e. remove all leafs from the graph
             RemoveUnusedRooms();
 
             // Step 8: Deduce where the exits should be placed on secondary rooms
-            FindSecondaryRoomExits();
+            FindRoomExits();
         }
 
         /// <summary>

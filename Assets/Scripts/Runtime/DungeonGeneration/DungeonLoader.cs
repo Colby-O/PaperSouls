@@ -191,6 +191,31 @@ namespace PaperSouls.Runtime.DungeonGeneration
         }
 
         /// <summary>
+        /// Draw grid for debugging
+        /// </summary>
+        private void DrawGrid()
+        {
+            for (int i = 0; i < _gridSize; i++)
+            {
+                for (int j = 0; j < _gridSize; j++)
+                {
+                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.transform.position = new Vector3(i * _tileSize.x * _dungeonProperties.GenerationProperties.Scale.x, 0, j * _tileSize.y * _dungeonProperties.GenerationProperties.Scale.z);
+                    cube.transform.localScale = new Vector3(_tileSize.x * _dungeonProperties.GenerationProperties.Scale.x, _dungeonProperties.GenerationProperties.Scale.z, _tileSize.y * _dungeonProperties.GenerationProperties.Scale.z);
+
+                    if (_grid[i, j] == TileType.Room) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.red);
+                    else if (_grid[i, j] == TileType.RoomSpacing) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.yellow);
+                    else if (_grid[i, j] == TileType.Empty) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.black);
+                    else if (_grid[i, j] == TileType.Hallway) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.blue);
+                    else if (_grid[i, j] == TileType.HallwayAndRoom) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.white);
+                    else if (_grid[i, j] == TileType.MainRoom) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.magenta);
+                    else if (_grid[i, j] == TileType.Invaild) cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.green);
+                    else cube.GetComponent<Renderer>().material.SetColor("_BaseColor", Color.black);
+                }
+            }
+        }
+
+        /// <summary>
         /// Loads a dungeon given dungeon object
         /// </summary>
         public List<GameObject> Load(Dungeon dungeon)
