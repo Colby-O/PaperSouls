@@ -1,0 +1,6 @@
+[submodule "Assets/DialogueGraph/DialogueGraph"]
+	path = Assets/DialogueGraph/DialogueGraph
+	url = https://github.com/Colby-O/DialogueGraph
+[submodule "Assets/Packages/DialogueGraph"]
+	path = Assets/Packages/DialogueGraph
+	url = https://github.com/Colby-O/DialogueGraph
